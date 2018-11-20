@@ -78,8 +78,6 @@ namespace Coffee.UIExtensions
 				ReleaseMaterial(ref _maskMaterial);
 				_maskMaterial = result;
 
-				Debug.LogFormat("<color=orange>GetModifiedMaterial {0}</color>",this);
-
 				#if UNITY_EDITOR
 				result.EnableKeyword("SOFTMASK_EDITOR");
 				UpdateSceneViewMatrixForShader();
@@ -151,7 +149,6 @@ namespace Coffee.UIExtensions
 			UnityEditor.SceneView sceneView = UnityEditor.SceneView.lastActiveSceneView;
 			if (!sceneView || !sceneView.camera)
 			{
-				Debug.LogWarning("hoge!");
 				return;
 			}
 
@@ -167,7 +164,6 @@ namespace Coffee.UIExtensions
 					mat.SetMatrix("_SceneView", w2c);
 					mat.SetMatrix("_SceneProj", prj);
 				}
-				Debug.Log(sm + ", "+ mat, sm);
 			}
 		}
 
