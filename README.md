@@ -60,7 +60,7 @@ By using SoftMask instead of default Mask, rounded edges of UI elements can be e
 
 #### Known issues
 
-* SceneView does not display SoftMask properly. It is displayed like Mask. ([By design](#why-is-not-it-displayed-properly-in-sceneview?))
+* SceneView does not display SoftMask properly. It is displayed like Mask. ([By design](#why-is-not-it-displayed-properly-in-sceneview))
 
 #### Components
 
@@ -117,7 +117,7 @@ You can support soft masks in your custom shaders, by adding just 3 lines!
 color.a *= SoftMask(IN.vertex);
 ```
 
-For details, please see [UI-Default-SoftMask.shader](https://raw.githubusercontent.com/mob-sakai/SoftMaskForUGUI/master/Assets/Coffee/UIExtensions/SoftMaskForUGUI/Resources/UI-Default-SoftMask.shader).
+As an example of implementation, please see [UI-Default-SoftMask.shader](https://raw.githubusercontent.com/mob-sakai/SoftMaskForUGUI/master/Assets/Coffee/UIExtensions/SoftMaskForUGUI/Resources/UI-Default-SoftMask.shader).
 
 
 <br><br>
