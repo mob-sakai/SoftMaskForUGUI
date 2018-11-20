@@ -193,8 +193,9 @@ namespace Coffee.UIExtensions
 			{
 				s_ActiveSoftMaskables = new List<SoftMaskable>();
 
+				#if UNITY_EDITOR
 				UnityEditor.EditorApplication.update += UpdateSceneViewMatrixForShader;
-//				Canvas.willRenderCanvases += UpdateSceneViewMatrixForShader;
+				#endif
 
 				s_SoftMaskTexId = Shader.PropertyToID("_SoftMaskTex");
 				s_StencilCompId = Shader.PropertyToID("_StencilComp");
