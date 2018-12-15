@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
+using System.Linq;
 
 
 namespace Coffee.UIExtensions.Editors
@@ -14,6 +15,37 @@ namespace Coffee.UIExtensions.Editors
 	[CanEditMultipleObjects]
 	public class SoftMaskEditor : Editor
 	{
+		static readonly List<Graphic> s_Graphics = new List<Graphic> ();
+
+		public override void OnInspectorGUI ()
+		{
+			base.OnInspectorGUI ();
+
+			var current = target as SoftMask;
+			current.GetComponentsInChildren<Graphic> (true, s_Graphics);
+			var fixTargets = s_Graphics.Where (x => x.gameObject != current.gameObject && !x.GetComponent<SoftMaskable> () && (!x.GetComponent<Mask> () || x.GetComponent<Mask> ().showMaskGraphic)).ToList ();
+			if (0 < fixTargets.Count)
+			{
+				GUILayout.BeginHorizontal ();
+				EditorGUILayout.HelpBox ("There are child Graphicss that does not have a SoftMaskable component.\nAdd SoftMaskable component to them.", MessageType.Warning);
+				GUILayout.BeginVertical ();
+				if (GUILayout.Button ("Fix"))
+				{
+					foreach (var p in fixTargets)
+					{
+						p.gameObject.AddComponent<SoftMaskable> ();
+					}
+				}
+				if (GUILayout.Button ("Ping"))
+				{
+					EditorGUIUtility.PingObject (fixTargets[0]);
+				}
+				GUILayout.EndVertical ();
+				GUILayout.EndHorizontal ();
+			}
+		}
+
+
 		//%%%% Context menu for editor %%%%
 		[MenuItem("CONTEXT/Mask/Convert To SoftMask", true)]
 		static bool _ConvertToSoftMask(MenuCommand command)
