@@ -208,7 +208,7 @@ namespace Coffee.UIExtensions
 			{
 				if (!g.material || g.material == Graphic.defaultGraphicMaterial)
 				{
-					g.material = defaultMaterial ?? (defaultMaterial = new Material(Resources.Load<Shader>("UI-Default-SoftMask")));
+					g.material = defaultMaterial ?? (defaultMaterial = new Material (Resources.Load<Shader> ("UI-Default-SoftMask")) { hideFlags = HideFlags.HideAndDontSave, });
 				}
 				g.SetMaterialDirty();
 			}
