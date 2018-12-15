@@ -340,7 +340,10 @@ namespace Coffee.UIExtensions
 		{
 			foreach (var sm in s_ActiveSoftMasks)
 			{
-				sm.UpdateMaskTexture();
+				if(sm)
+				{
+					sm.UpdateMaskTexture ();
+				}
 			}
 		}
 

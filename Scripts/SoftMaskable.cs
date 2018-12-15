@@ -158,11 +158,14 @@ namespace Coffee.UIExtensions
 		
 			foreach (var sm in s_ActiveSoftMaskables)
 			{
-				Material mat = sm._maskMaterial;
-				if (mat)
+				if(sm)
 				{
-					mat.SetMatrix("_SceneView", w2c);
-					mat.SetMatrix("_SceneProj", prj);
+					Material mat = sm._maskMaterial;
+					if (mat)
+					{
+						mat.SetMatrix ("_SceneView", w2c);
+						mat.SetMatrix ("_SceneProj", prj);
+					}
 				}
 			}
 		}
