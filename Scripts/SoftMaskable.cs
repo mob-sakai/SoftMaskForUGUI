@@ -44,7 +44,7 @@ namespace Coffee.UIExtensions
 			}
 
 			// Find the nearest parent softmask.
-			var parentTransform = transform;
+			var parentTransform = transform.parent;
 			while (parentTransform)
 			{
 				var sm = parentTransform.GetComponent<SoftMask>();
