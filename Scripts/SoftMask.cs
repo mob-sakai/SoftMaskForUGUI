@@ -414,19 +414,14 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		void GetDesamplingSize(DesamplingRate rate, out int w, out int h)
 		{
-			#if UNITY_EDITOR
-			if (!Application.isPlaying)
-			{
-				var res = UnityEditor.UnityStats.screenRes.Split('x');
-				w = int.Parse(res[0]);
-				h = int.Parse(res[1]);
-			}
-			else
-		#endif
-		{
-				w = Screen.width;
-				h = Screen.height;
-			}
+#if UNITY_EDITOR
+			var res = UnityEditor.UnityStats.screenRes.Split('x');
+			w = int.Parse(res[0]);
+			h = int.Parse(res[1]);
+#else
+			w = Screen.width;
+			h = Screen.height;
+#endif
 
 			if (rate == DesamplingRate.None)
 				return;
