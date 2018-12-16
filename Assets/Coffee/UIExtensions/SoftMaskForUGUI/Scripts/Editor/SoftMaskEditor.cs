@@ -15,7 +15,14 @@ namespace Coffee.UIExtensions.Editors
 	[CanEditMultipleObjects]
 	public class SoftMaskEditor : Editor
 	{
+		const string k_PrefsPreview = "SoftMaskEditor_Preview";
 		static readonly List<Graphic> s_Graphics = new List<Graphic> ();
+		static bool s_Preview;
+
+		private void OnEnable ()
+		{
+			s_Preview = EditorPrefs.GetBool (k_PrefsPreview, false);
+		}
 
 		public override void OnInspectorGUI ()
 		{
@@ -43,6 +50,22 @@ namespace Coffee.UIExtensions.Editors
 				GUILayout.EndVertical ();
 				GUILayout.EndHorizontal ();
 			}
+
+			// Preview buffer.
+			GUILayout.BeginHorizontal (EditorStyles.helpBox);
+			if (s_Preview != (s_Preview = EditorGUILayout.ToggleLeft ("Preview Buffer", s_Preview, GUILayout.MaxWidth (EditorGUIUtility.labelWidth))))
+			{
+				EditorPrefs.SetBool (k_PrefsPreview, s_Preview);
+			}
+			if (s_Preview)
+			{
+				var tex = current.softMaskBuffer;
+				var wtdth = tex.width * 64 / tex.height;
+				EditorGUI.DrawPreviewTexture (GUILayoutUtility.GetRect (wtdth, 64), tex, null, ScaleMode.ScaleToFit);
+				Repaint ();
+			}
+			GUILayout.FlexibleSpace ();
+			GUILayout.EndHorizontal ();
 		}
 
 
