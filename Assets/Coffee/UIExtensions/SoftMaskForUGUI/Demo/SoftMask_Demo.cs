@@ -25,8 +25,28 @@ namespace Coffee.UIExtensions.Demos
 
 		public void SetWorldSpase(bool flag)
 		{
-			GetComponent<Canvas>().renderMode = flag ? RenderMode.WorldSpace : RenderMode.ScreenSpaceCamera;
-			transform.rotation = flag ? Quaternion.Euler(new Vector3(0, 6, 0)) : Quaternion.identity;
+			if(flag)
+			{
+				GetComponent<Canvas> ().renderMode = RenderMode.ScreenSpaceCamera;
+				GetComponent<Canvas> ().renderMode = RenderMode.WorldSpace;
+				transform.rotation = Quaternion.Euler (new Vector3 (0, 6, 0));
+			}
+		}
+
+		public void SetScreenSpase (bool flag)
+		{
+			if (flag)
+			{
+				GetComponent<Canvas> ().renderMode = RenderMode.ScreenSpaceCamera;
+			}
+		}
+
+		public void SetOverlay (bool flag)
+		{
+			if (flag)
+			{
+				GetComponent<Canvas> ().renderMode = RenderMode.ScreenSpaceOverlay;
+			}
 		}
 	}
 }
