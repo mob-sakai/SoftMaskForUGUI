@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
@@ -12,16 +11,31 @@ using System.IO;
 namespace Coffee.UIExtensions.Editors
 {
 	/// <summary>
-	/// SoftMask editor.
+	/// SoftMaskable editor.
 	/// </summary>
-	[CustomEditor(typeof(SoftMaskable))]
+	[CustomEditor (typeof (SoftMaskable))]
 	[CanEditMultipleObjects]
 	public class SoftMaskableEditor : Editor
 	{
+		static readonly Type s_TypeTMPro = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (x => x.GetTypes ()).FirstOrDefault (x => x.Name == "TMP_Text");
+		static readonly Type s_TypeTMP_SpriteAsset = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (x => x.GetTypes ()).FirstOrDefault (x => x.Name == "TMP_SpriteAsset");
+		static readonly Type s_TypeTMProSettings = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (x => x.GetTypes ()).FirstOrDefault (x => x.Name == "TMP_Settings");
+		static readonly Type s_TypeTMP_SubMesh = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (x => x.GetTypes ()).FirstOrDefault (x => x.Name == "TMP_SubMesh");
+		static readonly Type s_TypeTMP_SubMeshUI = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (x => x.GetTypes ()).FirstOrDefault (x => x.Name == "TMP_SubMeshUI");
+		static PropertyInfo s_PiFontSharedMaterial;
+		static PropertyInfo s_PiFontSharedMaterials;
+		static PropertyInfo s_PiSpriteAsset;
+		static PropertyInfo s_PiRichText;
+		static PropertyInfo s_PiText;
+		static PropertyInfo s_PiDefaultFontAssetPath;
+		static PropertyInfo s_PiDefaultSpriteAssetPath;
+		static FieldInfo s_FiMaterial;
+		static MethodInfo s_miGetSpriteAsset;
 		static readonly List<Graphic> s_Graphics = new List<Graphic> ();
 		Shader _shader;
 		Shader _mobileShader;
 		Shader _spriteShader;
+		List<MaterialEditor> _materialEditors = new List<MaterialEditor> ();
 
 		private void OnEnable ()
 		{
@@ -31,17 +45,19 @@ namespace Coffee.UIExtensions.Editors
 			_mobileShader = Shader.Find ("TextMeshPro/Mobile/Distance Field (SoftMaskable)");
 			_spriteShader = Shader.Find ("TextMeshPro/Sprite (SoftMaskable)");
 
+			if(s_TypeTMPro != null)
+			{
+				s_PiFontSharedMaterial = s_TypeTMPro.GetProperty ("fontSharedMaterial");
+				s_PiSpriteAsset = s_TypeTMPro.GetProperty ("spriteAsset");
+				s_PiRichText = s_TypeTMPro.GetProperty ("richText");
+				s_PiText = s_TypeTMPro.GetProperty ("text");
+				s_FiMaterial = s_TypeTMP_SpriteAsset.GetField ("material");
+				s_PiFontSharedMaterials = s_TypeTMPro.GetProperty ("fontSharedMaterials");
+				s_miGetSpriteAsset = s_TypeTMProSettings.GetMethod ("GetSpriteAsset", BindingFlags.Static | BindingFlags.Public);
 
-			s_PiFontSharedMaterial = s_TypeTMPro.GetProperty ("fontSharedMaterial");
-         s_PiSpriteAsset = s_TypeTMPro.GetProperty ("spriteAsset");
-         s_PiRichText = s_TypeTMPro.GetProperty ("richText");
-         s_PiText = s_TypeTMPro.GetProperty ("text");
-         s_FiMaterial = s_TypeTMP_SpriteAsset.GetField ("material");
-			s_PiFontSharedMaterials = s_TypeTMPro.GetProperty ("fontSharedMaterials");
-			s_miGetSpriteAsset = s_TypeTMProSettings.GetMethod ("GetSpriteAsset", BindingFlags.Static | BindingFlags.Public);
-
-			s_PiDefaultFontAssetPath = s_TypeTMProSettings.GetProperty ("defaultFontAssetPath", BindingFlags.Static | BindingFlags.Public);
-			s_PiDefaultSpriteAssetPath = s_TypeTMProSettings.GetProperty ("defaultSpriteAssetPath", BindingFlags.Static | BindingFlags.Public);
+				s_PiDefaultFontAssetPath = s_TypeTMProSettings.GetProperty ("defaultFontAssetPath", BindingFlags.Static | BindingFlags.Public);
+				s_PiDefaultSpriteAssetPath = s_TypeTMProSettings.GetProperty ("defaultSpriteAssetPath", BindingFlags.Static | BindingFlags.Public);
+			}
 		}
 
 		private void OnDisable ()
@@ -76,36 +92,17 @@ namespace Coffee.UIExtensions.Editors
 				GUILayout.EndHorizontal ();
 			}
 
-			ShowTMProWarning (_shader, _mobileShader, _spriteShader, m => { });
-
-
-			//var current = target as SoftMaskable;
-			var textMeshPro = current.GetComponent (s_TypeTMPro);
-			if (textMeshPro != null)
+			if(s_TypeTMPro != null)
 			{
-				Material[] fontSharedMaterials = s_PiFontSharedMaterials.GetValue (textMeshPro, new object [0]) as Material[];
-				ShowMaterialEditors (fontSharedMaterials, 1, fontSharedMaterials.Length - 1);
+				ShowTMProWarning (_shader, _mobileShader, _spriteShader, m => { });
+				var textMeshPro = current.GetComponent (s_TypeTMPro);
+				if (textMeshPro != null)
+				{
+					Material [] fontSharedMaterials = s_PiFontSharedMaterials.GetValue (textMeshPro, new object [0]) as Material [];
+					ShowMaterialEditors (fontSharedMaterials, 1, fontSharedMaterials.Length - 1);
+				}
 			}
 		}
-
-
-
-		static readonly Type s_TypeTMPro = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (x => x.GetTypes ()).FirstOrDefault (x => x.Name == "TMP_Text");
-		static readonly Type s_TypeTMP_SpriteAsset = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (x => x.GetTypes ()).FirstOrDefault (x => x.Name == "TMP_SpriteAsset");
-		static readonly Type s_TypeTMProSettings = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (x => x.GetTypes ()).FirstOrDefault (x => x.Name == "TMP_Settings");
-		static readonly Type s_TypeTMP_SubMesh = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (x => x.GetTypes ()).FirstOrDefault (x => x.Name == "TMP_SubMesh");
-		static readonly Type s_TypeTMP_SubMeshUI = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (x => x.GetTypes ()).FirstOrDefault (x => x.Name == "TMP_SubMeshUI");
-		static PropertyInfo s_PiFontSharedMaterial;
-		static PropertyInfo s_PiFontSharedMaterials;
-		static PropertyInfo s_PiSpriteAsset;
-		static PropertyInfo s_PiRichText;
-		static PropertyInfo s_PiText;
-		static PropertyInfo s_PiDefaultFontAssetPath;
-		static PropertyInfo s_PiDefaultSpriteAssetPath;
-		static FieldInfo s_FiMaterial; 
-		static MethodInfo s_miGetSpriteAsset;
-		List<MaterialEditor> _materialEditors = new List<MaterialEditor> ();
-
 
 		void ClearMaterialEditors ()
 		{
@@ -150,12 +147,12 @@ namespace Coffee.UIExtensions.Editors
 		{
 			var current = target as SoftMaskable;
 			var textMeshPro = current.GetComponent (s_TypeTMPro);
-			if(textMeshPro == null)
+			if (textMeshPro == null)
 			{
 				return;
 			}
 
-			Material fontSharedMaterial = s_PiFontSharedMaterial.GetValue (textMeshPro, new object[0]) as Material;
+			Material fontSharedMaterial = s_PiFontSharedMaterial.GetValue (textMeshPro, new object [0]) as Material;
 			if (fontSharedMaterial == null)
 			{
 				return;
@@ -171,16 +168,16 @@ namespace Coffee.UIExtensions.Editors
 				{
 					var correctShader = m.shader.name.Contains ("Mobile") ? mobileShader : shader;
 					m = ModifyTMProMaterialPreset (m, correctShader, onCreatedMaterial);
-					s_PiFontSharedMaterial.SetValue (textMeshPro, m, new object[0]);
+					s_PiFontSharedMaterial.SetValue (textMeshPro, m, new object [0]);
 				}
 				EditorGUILayout.EndHorizontal ();
 				return;
 			}
 
 			// Is the sprite asset for dissolve?
-		object spriteAsset = s_PiSpriteAsset.GetValue(textMeshPro, new object[0]) ?? s_miGetSpriteAsset.Invoke(null, new object[0]);
+			object spriteAsset = s_PiSpriteAsset.GetValue (textMeshPro, new object [0]) ?? s_miGetSpriteAsset.Invoke (null, new object [0]);
 			//TMP_SpriteAsset spriteAsset = textMeshPro.spriteAsset ?? TMP_Settings.GetSpriteAsset ();
-			m = s_FiMaterial.GetValue(spriteAsset) as Material;
+			m = s_FiMaterial.GetValue (spriteAsset) as Material;
 			bool hasSprite = (bool)s_PiRichText.GetValue (textMeshPro, new object [0]) && (s_PiText.GetValue (textMeshPro, new object [0]) as string).Contains ("<sprite=");
 			if (m && m.shader != spriteShader && hasSprite)
 			{
@@ -190,8 +187,8 @@ namespace Coffee.UIExtensions.Editors
 				{
 					current.GetComponentsInChildren (s_TypeTMP_SubMesh).Select (x => x.gameObject).ToList ().ForEach (DestroyImmediate);
 					current.GetComponentsInChildren (s_TypeTMP_SubMeshUI).Select (x => x.gameObject).ToList ().ForEach (DestroyImmediate);
-					spriteAsset = ModifyTMProSpriteAsset (m, _spriteShader, mat=> { });
-					s_PiSpriteAsset.SetValue (textMeshPro, spriteAsset, new object[0]);
+					spriteAsset = ModifyTMProSpriteAsset (m, _spriteShader, mat => { });
+					s_PiSpriteAsset.SetValue (textMeshPro, spriteAsset, new object [0]);
 				}
 				EditorGUILayout.EndHorizontal ();
 				return;
@@ -201,7 +198,7 @@ namespace Coffee.UIExtensions.Editors
 		Material ModifyTMProMaterialPreset (Material baseMaterial, Shader shader, System.Action<Material> onCreatedMaterial)
 		{
 			string path = AssetDatabase.GetAssetPath (baseMaterial);
-			string filename = Path.GetFileNameWithoutExtension (path) + " (" + typeof(SoftMaskable).Name + ")";
+			string filename = Path.GetFileNameWithoutExtension (path) + " (" + typeof (SoftMaskable).Name + ")";
 			string defaultAssetPath = s_PiDefaultFontAssetPath.GetValue (null, new object [0]) as string;
 			Material mat = Resources.Load<Material> (defaultAssetPath + filename);
 			if (!mat)
