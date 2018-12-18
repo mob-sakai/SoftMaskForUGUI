@@ -387,6 +387,12 @@ namespace Coffee.UIExtensions
 					rt.hasChanged = false;
 					sm.hasChanged = true;
 				}
+#if UNITY_EDITOR
+				if(!Application.isPlaying)
+				{
+					sm.hasChanged = true;
+				}
+#endif
 			}
 
 			foreach (var sm in s_ActiveSoftMasks)
