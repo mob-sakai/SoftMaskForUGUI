@@ -71,6 +71,7 @@ namespace Coffee.UIExtensions
 				if (m_DesamplingRate != value)
 				{
 					m_DesamplingRate = value;
+					hasChanged = true;
 				}
 			}
 		}
@@ -87,6 +88,7 @@ namespace Coffee.UIExtensions
 				if (m_Softness != value)
 				{
 					m_Softness = value;
+					hasChanged = true;
 				}
 			}
 		}
@@ -103,7 +105,8 @@ namespace Coffee.UIExtensions
 				if (m_IgnoreParent != value)
 				{
 					m_IgnoreParent = value;
-					OnTransformParentChanged();
+					hasChanged = true;
+					OnTransformParentChanged ();
 				}
 			}
 		}
