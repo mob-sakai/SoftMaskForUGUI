@@ -429,14 +429,17 @@ namespace Coffee.UIExtensions
 			_cb.ClearRenderTarget(false, true, s_ClearColors[_stencilDepth]);
 
 			// Set view and projection matrices.
-			var c = graphic.canvas;
+			var c = graphic.canvas.rootCanvas;
 			if (c && c.renderMode != RenderMode.ScreenSpaceOverlay && c.worldCamera)
 			{
 				_cb.SetViewProjectionMatrices(c.worldCamera.worldToCameraMatrix, c.worldCamera.projectionMatrix);
 			}
 			else
 			{
-				_cb.SetViewMatrix(Matrix4x4.TRS(new Vector3(-1, -1, 0), Quaternion.identity, new Vector3(2f / Screen.width, 2f / Screen.height, 1f)));
+				var pos = c.transform.localPosition;
+				var vm = Matrix4x4.TRS (-pos, Quaternion.identity, new Vector3 (1, 1, -1f));
+				var pm = Matrix4x4.TRS (new Vector3 (0, 0, -1), Quaternion.identity, new Vector3 (1 / pos.x, 1 / pos.y, -2 / 1000f));
+				_cb.SetViewProjectionMatrices (vm, pm);
 			}
 
 			// Draw soft masks.
