@@ -3,7 +3,7 @@ SoftMaskForUGUI
 
 Soft masking for uGUI elements in Unity.
 
-![](https://user-images.githubusercontent.com/12690315/48702871-6a8f5400-ec35-11e8-8940-8d6fbb1de688.png)
+![](https://user-images.githubusercontent.com/12690315/50282438-18408d80-0496-11e9-8f86-81e804edadd4.png)
 
 [![](https://img.shields.io/github/release/mob-sakai/SoftMaskForUGUI.svg?label=latest%20version)](https://github.com/mob-sakai/SoftMaskForUGUI/releases)
 [![](https://img.shields.io/github/release-date/mob-sakai/SoftMaskForUGUI.svg)](https://github.com/mob-sakai/SoftMaskForUGUI/releases)
@@ -24,7 +24,7 @@ Soft masking for uGUI elements in Unity.
 SoftMask is a smooth masking component for uGUI elements in Unity.
 By using SoftMask instead of default Mask, rounded edges of UI elements can be expressed beautifully.
 
-![](https://user-images.githubusercontent.com/12690315/48704344-a0363c00-ec39-11e8-87e5-b628b2a89923.png)
+![](https://user-images.githubusercontent.com/12690315/50282806-4b375100-0497-11e9-891c-35309d332c7b.png)
 
 #### Features
 
@@ -48,26 +48,24 @@ By using SoftMask instead of default Mask, rounded edges of UI elements can be e
 * Adjust soft mask buffer size to improve performance.
 * Convert existing Mask to SoftMask from context menu.  
 ![](https://user-images.githubusercontent.com/12690315/48659018-902e2900-ea8e-11e8-9b6e-224365cdde7f.png)
-
-
-#### Future plans
-
 * Render the soft mask buffer only when needed to improve performance.
-* Add a SoftMaskable component to the child UI elements of SoftMask From the inspector.
-* Preview soft mask buffer in inspector.
-* Support TextMeshPro.
-* Component icon.
+* Add a SoftMaskable component to the child UI elements of SoftMask from the inspector.  
+![](https://user-images.githubusercontent.com/12690315/50284153-76bc3a80-049b-11e9-8c55-719af897960a.png)
+* Preview soft mask buffer in inspector.  
+![](https://user-images.githubusercontent.com/12690315/50284151-7459e080-049b-11e9-9cd3-24fb476766dc.png)
+* Support TextMeshPro.  
+![](https://user-images.githubusercontent.com/12690315/50284145-71f78680-049b-11e9-8be1-ac0ccbdf0144.png)
 
 #### Known issues
 
-* SceneView does not display SoftMask properly. It is displayed like Mask. ([By design](#why-is-not-it-displayed-properly-in-sceneview?))
+* SceneView does not display SoftMask properly. It is displayed like Mask. ([By design](#why-is-not-it-displayed-properly-in-sceneview))
 
 #### Components
 
 |Component|Description|Screenshot|
 |-|-|-|
-|SoftMask|Use instead of Mask for smooth masking.<br><br>**Show Mask Graphic:** Show the graphic that is associated with the Mask render area.<br>**Desampling Rate:** The desampling rate for soft mask buffer. The larger the value, the better the performance but the lower the quality.<br>**Softness:** The value used by the soft mask to select the area of influence defined over the soft mask's graphic.<br>**Ignore Parent:** Should the soft mask ignore parent soft masks?|<img src="https://user-images.githubusercontent.com/12690315/48741492-b1656400-ec9e-11e8-8c15-e1dbc41e5a20.png" width="600px">|
-|SoftMaskable|Add this component to Graphic under SoftMask for smooth masking.<br><br>**Inverse:** The graphic will be visible only in areas where no mask is present.|<img src="https://user-images.githubusercontent.com/12690315/48741494-b1fdfa80-ec9e-11e8-9f79-8e88ebbeff45.png" width="600px">|
+|SoftMask|Use instead of Mask for smooth masking.<br><br>**Show Mask Graphic:** Show the graphic that is associated with the Mask render area.<br>**Desampling Rate:** The desampling rate for soft mask buffer. The larger the value, the better the performance but the lower the quality.<br>**Softness:** The value used by the soft mask to select the area of influence defined over the soft mask's graphic.<br>**Ignore Parent:** Should the soft mask ignore parent soft masks?|<img src="https://user-images.githubusercontent.com/12690315/50319746-377a0200-050c-11e9-96ae-a3a0ec81765f.png" width="600px">|
+|SoftMaskable|Add this component to Graphic under SoftMask for smooth masking.<br><br>**Inverse:** The graphic will be visible only in areas where no mask is present.|<img src="https://user-images.githubusercontent.com/12690315/50319747-39dc5c00-050c-11e9-85fa-dd6ea9065daf.png" width="600px">|
 
 
 
@@ -87,7 +85,9 @@ By using SoftMask instead of default Mask, rounded edges of UI elements can be e
 3. Add SoftMask component instead of Mask component. Or, convert existing Mask component to SoftMask component from the context menu.  
 ![](https://user-images.githubusercontent.com/12690315/48659018-902e2900-ea8e-11e8-9b6e-224365cdde7f.png)
 4. Add SoftMaskable components to the child UI elements of SoftMask component.  
-![](https://user-images.githubusercontent.com/12690315/48704424-d4a9f800-ec39-11e8-8d65-8b7d1975750c.png) 
+![](https://user-images.githubusercontent.com/12690315/48704424-d4a9f800-ec39-11e8-8d65-8b7d1975750c.png)  
+Or, add SoftMaskable components from the inspector of SoftMask component.  
+![](https://user-images.githubusercontent.com/12690315/50284153-76bc3a80-049b-11e9-8c55-719af897960a.png)
 5. Adjust softness of SoftMask.  
 ![](https://user-images.githubusercontent.com/12690315/48661087-01ca9f00-eab0-11e8-8878-772a1ed1fb7b.gif)
 6. Enjoy!
@@ -117,7 +117,7 @@ You can support soft masks in your custom shaders, by adding just 3 lines!
 color.a *= SoftMask(IN.vertex);
 ```
 
-For details, please see [UI-Default-SoftMask.shader](https://raw.githubusercontent.com/mob-sakai/SoftMaskForUGUI/master/Assets/Coffee/UIExtensions/SoftMaskForUGUI/Resources/UI-Default-SoftMask.shader).
+As an example of implementation, please see [UI-Default-SoftMask.shader](https://raw.githubusercontent.com/mob-sakai/SoftMaskForUGUI/master/Assets/Coffee/UIExtensions/SoftMaskForUGUI/Resources/UI-Default-SoftMask.shader).
 
 
 <br><br>

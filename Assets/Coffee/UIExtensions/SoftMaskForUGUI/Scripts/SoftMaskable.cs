@@ -44,7 +44,7 @@ namespace Coffee.UIExtensions
 			}
 
 			// Find the nearest parent softmask.
-			var parentTransform = transform;
+			var parentTransform = transform.parent;
 			while (parentTransform)
 			{
 				var sm = parentTransform.GetComponent<SoftMask>();
@@ -158,11 +158,14 @@ namespace Coffee.UIExtensions
 		
 			foreach (var sm in s_ActiveSoftMaskables)
 			{
-				Material mat = sm._maskMaterial;
-				if (mat)
+				if(sm)
 				{
-					mat.SetMatrix("_SceneView", w2c);
-					mat.SetMatrix("_SceneProj", prj);
+					Material mat = sm._maskMaterial;
+					if (mat)
+					{
+						mat.SetMatrix ("_SceneView", w2c);
+						mat.SetMatrix ("_SceneProj", prj);
+					}
 				}
 			}
 		}
@@ -205,7 +208,7 @@ namespace Coffee.UIExtensions
 			{
 				if (!g.material || g.material == Graphic.defaultGraphicMaterial)
 				{
-					g.material = defaultMaterial ?? (defaultMaterial = new Material(Resources.Load<Shader>("UI-Default-SoftMask")));
+					g.material = defaultMaterial ?? (defaultMaterial = new Material (Resources.Load<Shader> ("UI-Default-SoftMask")) { hideFlags = HideFlags.HideAndDontSave, });
 				}
 				g.SetMaterialDirty();
 			}

@@ -1,5 +1,22 @@
 # Changelog
 
+## [v0.2.0](https://github.com/mob-sakai/SoftMaskForUGUI/tree/v0.2.0) (2018-12-21)
+
+[Full Changelog](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v0.1.0...v0.2.0)
+
+**Implemented enhancements:**
+
+- Set default material on disable [\#17](https://github.com/mob-sakai/SoftMaskForUGUI/issues/17)
+- Component icon [\#15](https://github.com/mob-sakai/SoftMaskForUGUI/issues/15)
+- Support TextMeshPro [\#14](https://github.com/mob-sakai/SoftMaskForUGUI/issues/14)
+- Preview soft mask buffer in inspector [\#13](https://github.com/mob-sakai/SoftMaskForUGUI/issues/13)
+- Add a SoftMaskable component to the child UI elements of SoftMask From the inspector [\#12](https://github.com/mob-sakai/SoftMaskForUGUI/issues/12)
+- Render the soft mask buffer only when needed to improve performance [\#11](https://github.com/mob-sakai/SoftMaskForUGUI/issues/11)
+
+**Fixed bugs:**
+
+- Doesn't work with overlay canvas on 2018.3 [\#20](https://github.com/mob-sakai/SoftMaskForUGUI/issues/20)
+
 ## [v0.1.0](https://github.com/mob-sakai/SoftMaskForUGUI/tree/v0.1.0) (2018-11-20)
 
 [Full Changelog](https://github.com/mob-sakai/SoftMaskForUGUI/compare/0d87935fa566cd1cb5e54a6f8826bb72fffb29b8...v0.1.0)

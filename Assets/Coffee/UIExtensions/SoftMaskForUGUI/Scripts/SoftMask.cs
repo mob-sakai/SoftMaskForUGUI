@@ -71,6 +71,7 @@ namespace Coffee.UIExtensions
 				if (m_DesamplingRate != value)
 				{
 					m_DesamplingRate = value;
+					hasChanged = true;
 				}
 			}
 		}
@@ -87,6 +88,7 @@ namespace Coffee.UIExtensions
 				if (m_Softness != value)
 				{
 					m_Softness = value;
+					hasChanged = true;
 				}
 			}
 		}
@@ -103,7 +105,8 @@ namespace Coffee.UIExtensions
 				if (m_IgnoreParent != value)
 				{
 					m_IgnoreParent = value;
-					OnTransformParentChanged();
+					hasChanged = true;
+					OnTransformParentChanged ();
 				}
 			}
 		}
@@ -129,7 +132,29 @@ namespace Coffee.UIExtensions
 					ReleaseRT(ref _softMaskBuffer);
 				}
 
-				return _softMaskBuffer ? _softMaskBuffer : _softMaskBuffer = RenderTexture.GetTemporary(w, h, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Default);
+				if(!_softMaskBuffer)
+				{
+					_softMaskBuffer = RenderTexture.GetTemporary (w, h, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Default);
+					hasChanged = true;
+				}
+
+				return _softMaskBuffer;
+			}
+		}
+
+		public bool hasChanged
+		{
+			get
+			{
+				return _parent ? _parent.hasChanged : _hasChanged;
+			}
+			private set
+			{
+				if(_parent)
+				{
+					_parent.hasChanged = value;
+				}
+				_hasChanged = value;
 			}
 		}
 
@@ -140,6 +165,7 @@ namespace Coffee.UIExtensions
 		/// <param name="baseMaterial">Configured Material.</param>
 		public override Material GetModifiedMaterial(Material baseMaterial)
 		{
+			hasChanged = true;
 			var result = base.GetModifiedMaterial(baseMaterial);
 			if (m_IgnoreParent && result != baseMaterial)
 			{
@@ -154,6 +180,7 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		void IMeshModifier.ModifyMesh(Mesh mesh)
 		{
+			hasChanged = true;
 			_mesh = mesh;
 		}
 
@@ -166,6 +193,7 @@ namespace Coffee.UIExtensions
 			{
 				verts.FillMesh(mesh);
 			}
+			hasChanged = true;
 		}
 
 		/// <summary>
@@ -212,6 +240,8 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		protected override void OnEnable()
 		{
+			hasChanged = true;
+
 			// Register.
 			if (s_ActiveSoftMasks.Count == 0)
 			{
@@ -284,6 +314,7 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		protected override void OnTransformParentChanged()
 		{
+			hasChanged = true;
 			SoftMask newParent = null;
 			if (isActiveAndEnabled && !m_IgnoreParent)
 			{
@@ -295,9 +326,15 @@ namespace Coffee.UIExtensions
 				}
 			}
 			SetParent(newParent);
+			hasChanged = true;
 		}
 
-		#if UNITY_EDITOR
+		protected override void OnRectTransformDimensionsChange ()
+		{
+			hasChanged = true;
+		}
+
+#if UNITY_EDITOR
 		/// <summary>
 		/// This function is called when the script is loaded or a value is changed in the inspector (Called in the editor only).
 		/// </summary>
@@ -328,6 +365,7 @@ namespace Coffee.UIExtensions
 		Mesh _mesh;
 		SoftMask _parent;
 		List<SoftMask> _children = new List<SoftMask>();
+		bool _hasChanged = false;
 
 		Material material { get { return _material ? _material : _material = new Material(s_SoftMaskShader ? s_SoftMaskShader : s_SoftMaskShader = Resources.Load<Shader>("SoftMask")){ hideFlags = HideFlags.HideAndDontSave }; } }
 
@@ -340,7 +378,33 @@ namespace Coffee.UIExtensions
 		{
 			foreach (var sm in s_ActiveSoftMasks)
 			{
-				sm.UpdateMaskTexture();
+				if (!sm || sm._hasChanged)
+					continue;
+
+				var rt = sm.rectTransform;
+				if(rt.hasChanged)
+				{
+					rt.hasChanged = false;
+					sm.hasChanged = true;
+				}
+#if UNITY_EDITOR
+				if(!Application.isPlaying)
+				{
+					sm.hasChanged = true;
+				}
+#endif
+			}
+
+			foreach (var sm in s_ActiveSoftMasks)
+			{
+				if (!sm || !sm._hasChanged)
+					continue;
+
+				sm._hasChanged = false;
+				if (!sm._parent)
+				{
+					sm.UpdateMaskTexture ();
+				}
 			}
 		}
 
@@ -349,9 +413,6 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		void UpdateMaskTexture()
 		{
-			if (_parent)
-				return;
-		
 			Transform stopAfter = MaskUtilities.FindRootSortOverrideCanvas(transform);
 			_stencilDepth = MaskUtilities.GetStencilDepth(transform, stopAfter);
 
@@ -374,14 +435,17 @@ namespace Coffee.UIExtensions
 			_cb.ClearRenderTarget(false, true, s_ClearColors[_stencilDepth]);
 
 			// Set view and projection matrices.
-			var c = graphic.canvas;
+			var c = graphic.canvas.rootCanvas;
 			if (c && c.renderMode != RenderMode.ScreenSpaceOverlay && c.worldCamera)
 			{
 				_cb.SetViewProjectionMatrices(c.worldCamera.worldToCameraMatrix, c.worldCamera.projectionMatrix);
 			}
 			else
 			{
-				_cb.SetViewMatrix(Matrix4x4.TRS(new Vector3(-1, -1, 0), Quaternion.identity, new Vector3(2f / Screen.width, 2f / Screen.height, 1f)));
+				var pos = c.transform.localPosition;
+				var vm = Matrix4x4.TRS (-pos, Quaternion.identity, new Vector3 (1, 1, -1f));
+				var pm = Matrix4x4.TRS (new Vector3 (0, 0, -1), Quaternion.identity, new Vector3 (1 / pos.x, 1 / pos.y, -2 / 1000f));
+				_cb.SetViewProjectionMatrices (vm, pm);
 			}
 
 			// Draw soft masks.
@@ -411,19 +475,14 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		void GetDesamplingSize(DesamplingRate rate, out int w, out int h)
 		{
-			#if UNITY_EDITOR
-			if (!Application.isPlaying)
-			{
-				var res = UnityEditor.UnityStats.screenRes.Split('x');
-				w = int.Parse(res[0]);
-				h = int.Parse(res[1]);
-			}
-			else
-		#endif
-		{
-				w = Screen.width;
-				h = Screen.height;
-			}
+#if UNITY_EDITOR
+			var res = UnityEditor.UnityStats.screenRes.Split('x');
+			w = int.Parse(res[0]);
+			h = int.Parse(res[1]);
+#else
+			w = Screen.width;
+			h = Screen.height;
+#endif
 
 			if (rate == DesamplingRate.None)
 				return;
