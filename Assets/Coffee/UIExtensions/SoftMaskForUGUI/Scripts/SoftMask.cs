@@ -413,6 +413,11 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		void UpdateMaskTexture()
 		{
+			if(!graphic || !graphic.canvas)
+			{
+				return;
+			}
+
 			Transform stopAfter = MaskUtilities.FindRootSortOverrideCanvas(transform);
 			_stencilDepth = MaskUtilities.GetStencilDepth(transform, stopAfter);
 

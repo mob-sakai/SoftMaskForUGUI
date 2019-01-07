@@ -1,5 +1,17 @@
 # Changelog
 
+## [v0.3.0](https://github.com/mob-sakai/SoftMaskForUGUI/tree/v0.3.0) (2019-01-07)
+
+[Full Changelog](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v0.2.0...v0.3.0)
+
+**Implemented enhancements:**
+
+- Remove TMPro resources in repo [\#21](https://github.com/mob-sakai/SoftMaskForUGUI/issues/21)
+
+**Fixed bugs:**
+
+- An error occur when SoftMask is destroyed on editor [\#23](https://github.com/mob-sakai/SoftMaskForUGUI/issues/23)
+
 ## [v0.2.0](https://github.com/mob-sakai/SoftMaskForUGUI/tree/v0.2.0) (2018-12-21)
 
 [Full Changelog](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v0.1.0...v0.2.0)
