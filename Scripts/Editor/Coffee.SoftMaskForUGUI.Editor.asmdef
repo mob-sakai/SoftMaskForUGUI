@@ -1,0 +1,10 @@
+{
+    "name": "Coffee.SoftMaskForUGUI.Editor",
+    "references": [
+        "Coffee.SoftMaskForUGUI"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": []
+}
