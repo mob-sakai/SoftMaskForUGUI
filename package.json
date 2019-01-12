@@ -1,0 +1,10 @@
+{
+  "name": "SoftMaskForUGUI",
+  "version": "0.3.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mob-sakai/SoftMaskForUGUI.git"
+  },
+  "src": "Assets/Coffee/UIExtensions/SoftMaskForUGUI",
+  "license": "MIT"
+}
