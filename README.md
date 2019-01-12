@@ -10,11 +10,13 @@ Soft masking for uGUI elements in Unity.
 ![](https://img.shields.io/badge/unity-2017%2B-green.svg)
 [![](https://img.shields.io/github/license/mob-sakai/SoftMaskForUGUI.svg)](https://github.com/mob-sakai/SoftMaskForUGUI/blob/master/LICENSE.txt)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-orange.svg)](http://makeapullrequest.com)
+[![](https://img.shields.io/twitter/follow/mob_sakai.svg?label=Follow&style=social)](https://twitter.com/intent/follow?screen_name=mob_sakai)
 
 << [Description](#Description) | [WebGL Demo](#demo) | [Download](https://github.com/mob-sakai/SoftMaskForUGUI/releases) | [Usage](#usage) | [Development Note](#development-note) >>
 
 ### What's new? [See changelog ![](https://img.shields.io/github/release-date/mob-sakai/SoftMaskForUGUI.svg?label=last%20updated)](https://github.com/mob-sakai/SoftMaskForUGUI/blob/develop/CHANGELOG.md)
 ### Do you want to receive notifications for new releases? [Watch this repo ![](https://img.shields.io/github/watchers/mob-sakai/SoftMaskForUGUI.svg?style=social&label=Watch)](https://github.com/mob-sakai/SoftMaskForUGUI/subscription)
+### Support me on Patreon! [![become_a_patron](https://user-images.githubusercontent.com/12690315/50731629-3b18b480-11ad-11e9-8fad-4b13f27969c1.png)](https://www.patreon.com/join/2343451?)
 
 
 
@@ -77,20 +79,41 @@ By using SoftMask instead of default Mask, rounded edges of UI elements can be e
 
 
 <br><br><br><br>
+## Install
+
+#### Using UnityPackageManager (for Unity 2018.3+)
+
+Find the manifest.json file in the Packages folder of your project and edit it to look like this:
+```js
+{
+  "dependencies": {
+    "com.coffee.softmask-for-ugui": "https://github.com/mob-sakai/SoftMaskForUGUI.git#0.4.0",
+    ...
+  },
+}
+```
+
+#### Using .unitypackage file (for Unity 2017.1+)
+
+Download `*.unitypackage` from [Releases](https://github.com/mob-sakai/SoftMaskForUGUI/releases) and import the package into your Unity project.  
+Select `Assets > Import Package > Custom Package` from the menu.  
+![](https://user-images.githubusercontent.com/12690315/46570979-edbb5a00-c9a7-11e8-845d-c5ee279effec.png)
+
+
+
+<br><br><br><br>
 ## Usage
 
-1. Download `*.unitypackage` from [Releases](https://github.com/mob-sakai/SoftMaskForUGUI/releases).
-2. Import the package into your Unity project. Select `Import Package > Custom Package` from the `Assets` menu.  
-![](https://user-images.githubusercontent.com/12690315/46570979-edbb5a00-c9a7-11e8-845d-c5ee279effec.png)
-3. Add SoftMask component instead of Mask component. Or, convert existing Mask component to SoftMask component from the context menu.  
+1. Add SoftMask component instead of Mask component.  
+Or, convert existing Mask component to SoftMask component from the context menu.  
 ![](https://user-images.githubusercontent.com/12690315/48659018-902e2900-ea8e-11e8-9b6e-224365cdde7f.png)
-4. Add SoftMaskable components to the child UI elements of SoftMask component.  
+2. Add SoftMaskable components to the child UI elements of SoftMask component.  
 ![](https://user-images.githubusercontent.com/12690315/48704424-d4a9f800-ec39-11e8-8d65-8b7d1975750c.png)  
 Or, add SoftMaskable components from the inspector of SoftMask component.  
 ![](https://user-images.githubusercontent.com/12690315/50284153-76bc3a80-049b-11e9-8c55-719af897960a.png)
-5. Adjust softness of SoftMask.  
+3. Adjust softness of SoftMask.  
 ![](https://user-images.githubusercontent.com/12690315/48661087-01ca9f00-eab0-11e8-8878-772a1ed1fb7b.gif)
-6. Enjoy!
+4. Enjoy!
 
 
 ##### Requirement
@@ -288,6 +311,8 @@ UnityEditor.EditorApplication.update += ()
 ## Author
 
 [mob-sakai](https://github.com/mob-sakai)
+[![](https://img.shields.io/twitter/follow/mob_sakai.svg?label=Follow&style=social)](https://twitter.com/intent/follow?screen_name=mob_sakai)  
+[![become_a_patron](https://user-images.githubusercontent.com/12690315/50731615-ce9db580-11ac-11e9-964f-e0423533dc69.png)](https://www.patreon.com/join/2343451?)
 
 
 
