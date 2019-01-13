@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.4.0](https://github.com/mob-sakai/SoftMaskForUGUI/tree/0.4.0) (2019-01-13)
+
+[Full Changelog](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v0.3.0...0.4.0)
+
+**Implemented enhancements:**
+
+- Integrate with UnityPackageManager [\#22](https://github.com/mob-sakai/SoftMaskForUGUI/issues/22)
+
+**Fixed bugs:**
+
+- Flipped soft mask texture [\#25](https://github.com/mob-sakai/SoftMaskForUGUI/issues/25)
+
 ## [v0.3.0](https://github.com/mob-sakai/SoftMaskForUGUI/tree/v0.3.0) (2019-01-07)
 
 [Full Changelog](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v0.2.0...v0.3.0)
