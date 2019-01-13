@@ -6,5 +6,5 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Demo/SoftMask_Demo.unity
+    path: Assets/SoftMask_Demo/SoftMask_Demo.unity
     guid: aa372e7b286d0416eb942adfc3e442ec
