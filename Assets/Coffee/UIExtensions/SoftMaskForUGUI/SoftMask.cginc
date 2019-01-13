@@ -22,6 +22,10 @@ fixed Approximately(float4x4 a, float4x4 b)
 half SoftMask(float4 clipPos)
 {
 	half2 view = clipPos.xy/_ScreenParams.xy;
+	#if UNITY_UV_STARTS_AT_TOP
+		view.y = 1.0 - view.y;
+	#endif
+	
 	half alpha =
 		lerp(1, tex2D(_SoftMaskTex, view).a, step(15, _Stencil))
 		* lerp(1, tex2D(_SoftMaskTex, view).b, step(7, _Stencil))

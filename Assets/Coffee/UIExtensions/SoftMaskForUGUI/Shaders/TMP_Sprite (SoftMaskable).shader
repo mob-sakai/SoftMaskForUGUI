@@ -56,7 +56,7 @@ Shader "TextMeshPro/Sprite (SoftMaskable)"
 			#pragma multi_compile __ UNITY_UI_CLIP_RECT
 			#pragma multi_compile __ UNITY_UI_ALPHACLIP
             
-            #include "Assets/Coffee/UIExtensions/SoftMaskForUGUI/SoftMask.cginc"
+            #include "./../SoftMask.cginc"
             #pragma shader_feature __ SOFTMASK_EDITOR
 			
 			struct appdata_t
