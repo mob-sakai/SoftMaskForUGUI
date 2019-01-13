@@ -102,6 +102,17 @@ Select `Assets > Import Package > Custom Package` from the menu.
 
 
 <br><br><br><br>
+## How to play demo
+
+* Import `SoftMask_Demo.unitypackage` into your project.  
+* The unitypackage exists in `Assets/Assets/Coffee/UIExtensions/SoftMaskForUGUI` or `Packages/Soft Mask For uGUI`.  
+![](https://user-images.githubusercontent.com/12690315/51080546-ff3b9d00-1720-11e9-8a58-9e22003714af.png)
+* Open SoftMask_Demo scene and play it.
+* The demo requires `TextMeshPro` and `TextMeshPro Essential Resources`. Import it before playing.
+
+
+
+<br><br><br><br>
 ## Usage
 
 1. Add SoftMask component instead of Mask component.  
