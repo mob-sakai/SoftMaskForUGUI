@@ -2,11 +2,10 @@
 #define UI_SOFTMASK_INCLUDED
 
 sampler2D _SoftMaskTex;
-fixed _SoftMaskInverse;
 float _Stencil;
 float4x4 _SceneView;
 float4x4 _SceneProj;
-
+half4 _MaskInteraction;
 
 fixed Approximately(float4x4 a, float4x4 b)
 {
@@ -19,20 +18,25 @@ fixed Approximately(float4x4 a, float4x4 b)
 		0.01);
 }
 
+fixed GetMaskAlpha(fixed alpha, fixed stencilId, fixed interaction)
+{
+	fixed onStencil = step(stencilId, _Stencil);
+	alpha = lerp(1, alpha, onStencil * step(1, interaction));
+	return lerp(alpha, 1 - alpha, onStencil * step(2, interaction));
+}
+
 half SoftMask(float4 clipPos)
 {
 	half2 view = clipPos.xy/_ScreenParams.xy;
 	#if UNITY_UV_STARTS_AT_TOP
 		view.y = 1.0 - view.y;
 	#endif
-	
-	half alpha =
-		lerp(1, tex2D(_SoftMaskTex, view).a, step(15, _Stencil))
-		* lerp(1, tex2D(_SoftMaskTex, view).b, step(7, _Stencil))
-		* lerp(1, tex2D(_SoftMaskTex, view).g, step(3, _Stencil))
-		* lerp(1, tex2D(_SoftMaskTex, view).r, step(1, _Stencil));
 
-	alpha = lerp(alpha, 1 - alpha, _SoftMaskInverse);
+	fixed4 mask = tex2D(_SoftMaskTex, view);
+	half alpha = GetMaskAlpha(mask.x, 1, _MaskInteraction.x)
+		* GetMaskAlpha(mask.y, 3, _MaskInteraction.y)
+		* GetMaskAlpha(mask.z, 7, _MaskInteraction.z)
+		* GetMaskAlpha(mask.w, 15, _MaskInteraction.w);
 
 	#if SOFTMASK_EDITOR
 	fixed isSceneView = max(Approximately(UNITY_MATRIX_V, _SceneView), Approximately(UNITY_MATRIX_P, _SceneProj));
@@ -41,6 +45,5 @@ half SoftMask(float4 clipPos)
 
 	return alpha;
 }
-
 
 #endif // UI_SOFTMASK_INCLUDED
