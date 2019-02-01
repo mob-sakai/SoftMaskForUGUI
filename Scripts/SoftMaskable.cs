@@ -33,7 +33,7 @@ namespace Coffee.UIExtensions
 		[HideInInspector]
 		[SerializeField] int m_MaskInteraction = kVisibleInside;
 		[Tooltip("Use stencil for masking.")]
-		[SerializeField] bool m_UseStencil = true;
+		[SerializeField] bool m_UseStencil = false;
 
 
 		//################################
@@ -325,11 +325,13 @@ namespace Coffee.UIExtensions
 
 		void ISerializationCallbackReceiver.OnAfterDeserialize()
 		{
+			#pragma warning disable 0612
 			if (m_Inverse)
 			{
 				m_Inverse = false;
 				m_MaskInteraction = (2 << 0) + (2 << 2) + (2 << 4) + (2 << 6);
 			}
+			#pragma warning restore 0612
 		}
 	}
 }
