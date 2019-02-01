@@ -8,7 +8,7 @@ Soft masking for uGUI elements in Unity.
 [![](https://img.shields.io/github/release/mob-sakai/SoftMaskForUGUI.svg?label=latest%20version)](https://github.com/mob-sakai/SoftMaskForUGUI/releases)
 [![](https://img.shields.io/github/release-date/mob-sakai/SoftMaskForUGUI.svg)](https://github.com/mob-sakai/SoftMaskForUGUI/releases)
 ![](https://img.shields.io/badge/unity-2017%2B-green.svg)
-[![](https://img.shields.io/github/license/mob-sakai/SoftMaskForUGUI.svg)](https://github.com/mob-sakai/SoftMaskForUGUI/blob/master/LICENSE.txt)
+[![](https://img.shields.io/github/license/mob-sakai/SoftMaskForUGUI.svg)](https://github.com/mob-sakai/SoftMaskForUGUI/blob/upm/LICENSE.txt)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-orange.svg)](http://makeapullrequest.com)
 [![](https://img.shields.io/twitter/follow/mob_sakai.svg?label=Follow&style=social)](https://twitter.com/intent/follow?screen_name=mob_sakai)
 
@@ -58,9 +58,6 @@ By using SoftMask instead of default Mask, rounded edges of UI elements can be e
 * Support TextMeshPro.  
 ![](https://user-images.githubusercontent.com/12690315/50284145-71f78680-049b-11e9-8be1-ac0ccbdf0144.png)
 
-#### Known issues
-
-* SceneView does not display SoftMask properly. It is displayed like Mask. ([By design](#why-is-not-it-displayed-properly-in-sceneview))
 
 #### Components
 
@@ -151,20 +148,7 @@ You can support soft masks in your custom shaders, by adding just 3 lines!
 color.a *= SoftMask(IN.vertex);
 ```
 
-As an example of implementation, please see [UI-Default-SoftMask.shader](https://raw.githubusercontent.com/mob-sakai/SoftMaskForUGUI/master/Assets/Coffee/UIExtensions/SoftMaskForUGUI/Resources/UI-Default-SoftMask.shader).
-
-
-<br><br>
-#### Why is not it displayed properly in SceneView?
-
-SoftMask calculates the final alpha value based on the value of each channel of the soft mask buffer.
-The soft mask buffer is a buffer generated based on GameView's screen space.
-
-Since SceneView has a view matrix and a projection matrix independent of GameView, the SceneView's camera can not refer to the soft mask buffer properly.
-
-Therefore, in GameView, it is displayed properly. but in ScreenView, it is displayed like default Mask.
-
-![](https://user-images.githubusercontent.com/12690315/48704647-80ebde80-ec3a-11e8-8b2a-99095af85442.png)
+As an example of implementation, please see [UI-Default-SoftMask.shader](https://raw.githubusercontent.com/mob-sakai/SoftMaskForUGUI/upm/Shaders/Resources/UI-Default-SoftMask.shader).
 
 
 <br><br>
@@ -247,7 +231,7 @@ static void ConvertToMask(MenuCommand command)
 }
 ```
 
-For details, please see [SoftMaskEditor.cs](https://raw.githubusercontent.com/mob-sakai/SoftMaskForUGUI/master/Assets/Coffee/UIExtensions/SoftMaskForUGUI/Scripts/Editor/SoftMaskEditor.cs).
+For details, please see [SoftMaskEditor.cs](https://raw.githubusercontent.com/mob-sakai/SoftMaskForUGUI/upm/Scripts/Editor/SoftMaskEditor.cs).
 
 
 <br><br>
@@ -333,4 +317,4 @@ UnityEditor.EditorApplication.update += ()
 * Releases : https://github.com/mob-sakai/SoftMaskForUGUI/releases
 * Issue tracker : https://github.com/mob-sakai/SoftMaskForUGUI/issues
 * Current project : https://github.com/mob-sakai/SoftMaskForUGUI/projects/1
-* Change log : https://github.com/mob-sakai/SoftMaskForUGUI/blob/master/CHANGELOG.md
+* Change log : https://github.com/mob-sakai/SoftMaskForUGUI/blob/upm/CHANGELOG.md
