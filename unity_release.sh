@@ -27,8 +27,6 @@ case "$ynEditorOnly" in [yY]*) EDITOR_ONLY=true;; *) ;; esac
 [ -z $UNITY_PACKAGE_MANAGER ] && read -p "[? Is package for UnityPackageManager? (y/N):" ynUPM
 case "$ynUPM" in [yY]*) UNITY_PACKAGE_MANAGER=true;; *) ;; esac
 
-[ "$UNITY_PACKAGE_MANAGER" == "true" ] && RELEASE_VERSION_TAG="${RELEASE_VERSION}" || RELEASE_VERSION_TAG="v${RELEASE_VERSION}"
-
 echo -e ">> OK"
 
 
@@ -47,7 +45,7 @@ UNITY_EDITOR="/Applications/Unity/Hub/Editor/${UNITY_VER}/Unity.app/Contents/Mac
 UNITY_LOG="unity.log"
 UNITY_ARGS="-quit -batchmode -projectPath `pwd` -logFile $UNITY_LOG"
 UNITY_PACKAGE_SRC=`node -pe 'require("./package.json").src'`
-UNITY_PACKAGE_NAME="${PACKAGE_NAME}_v${RELEASE_VERSION_TAG}.unitypackage"
+UNITY_PACKAGE_NAME="${PACKAGE_NAME}_v${RELEASE_VERSION}.unitypackage"
 echo -e "\n>> (3/8) Check exporting package is available..."
 echo -e "Version: $UNITY_VER ($UNITY_EDITOR)"
 echo -e "Package Source: $UNITY_PACKAGE_SRC"
@@ -75,7 +73,7 @@ set -e
 
 # 4. << Generate change log >>
 CHANGELOG_GENERATOR_ARG=`grep -o -e ".*git\"$" package.json | sed -e "s/^.*\/\([^\/]*\)\/\([^\/]*\).git.*$/--user \1 --project \2/"`
-CHANGELOG_GENERATOR_ARG="--future-release v${RELEASE_VERSION_TAG} ${CHANGELOG_GENERATOR_ARG}"
+CHANGELOG_GENERATOR_ARG="--future-release v${RELEASE_VERSION} ${CHANGELOG_GENERATOR_ARG}"
 echo -e "\n>> (4/8) Generate change log... ${CHANGELOG_GENERATOR_ARG}"
 github_changelog_generator ${CHANGELOG_GENERATOR_ARG}
 
@@ -100,7 +98,7 @@ echo -e ">> OK"
 # 6. << Commit release files >>
 echo -e "\n>> (6/8) Commit release files..."
 git add -u
-git commit -m "update documents for v$RELEASE_VERSION_TAG"
+git commit -m "update documents for v$RELEASE_VERSION"
 echo -e ">> OK"
 
 
@@ -109,7 +107,7 @@ echo -e ">> OK"
 # 7. << Merge and push master and develop branch >>
 echo -e "\n>> (7/8) Merge and push..."
 git checkout master
-git merge --no-ff release -m "release v$RELEASE_VERSION_TAG"
+git merge --no-ff release -m "release v$RELEASE_VERSION"
 git branch -D release
 git push origin master
 git checkout develop
@@ -130,9 +128,10 @@ echo -e ">> OK"
 if [ "$UNITY_PACKAGE_MANAGER" == "true" ]; then
   echo -e "\n>> Split for upm..."
   git subtree split --prefix="$UNITY_PACKAGE_SRC" --branch upm
-  git push origin upm
+  git tag $RELEASE_VERSION upm
+  git push origin upm --tags
 fi
 
 
 
-echo -e "\n\n>> $PACKAGE_NAME v$RELEASE_VERSION_TAG has been successfully released!\n"
+echo -e "\n\n>> $PACKAGE_NAME v$RELEASE_VERSION has been successfully released!\n"
