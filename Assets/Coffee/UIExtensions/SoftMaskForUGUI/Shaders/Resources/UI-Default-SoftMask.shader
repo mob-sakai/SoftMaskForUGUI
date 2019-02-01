@@ -108,7 +108,7 @@ Shader "UI/Default-SoftMask"
                 clip (color.a - 0.001);
                 #endif
 
-                color.a *= SoftMask(IN.vertex);	// Add for soft mask
+                color.a *= SoftMask(IN.vertex, IN.worldPosition);	// Add for soft mask
 
                 return color;
             }

@@ -175,6 +175,9 @@ namespace Coffee.UIExtensions
 		static int s_SoftMaskTexId;
 		static int s_StencilCompId;
 		static int s_MaskInteractionId;
+		static int s_SceneVId;
+		static int s_ScenePId;
+		static int s_GameVPId;
 		static List<SoftMaskable> s_ActiveSoftMaskables;
 		static int[] s_Interactions = new int[4];
 		static Material s_DefaultMaterial;
@@ -195,16 +198,30 @@ namespace Coffee.UIExtensions
 			Matrix4x4 w2c = cam.worldToCameraMatrix;
 			Matrix4x4 prj = cam.projectionMatrix;
 		
+			s_ActiveSoftMaskables.RemoveAll(x=>!x);
 			foreach (var sm in s_ActiveSoftMaskables)
 			{
-				if (sm)
+				if (!sm || !sm._maskMaterial || !sm.graphic || !sm.graphic.canvas)
 				{
-					Material mat = sm._maskMaterial;
-					if (mat)
-					{
-						mat.SetMatrix("_SceneView", w2c);
-						mat.SetMatrix("_SceneProj", prj);
-					}
+					continue;
+				}
+
+				Material mat = sm._maskMaterial;
+				mat.SetMatrix(s_SceneVId, w2c);
+				mat.SetMatrix(s_ScenePId, prj);
+
+				var c = sm.graphic.canvas.rootCanvas;
+				if (c.renderMode != RenderMode.ScreenSpaceOverlay && c.worldCamera)
+				{
+					var wcam = c.worldCamera;
+					var pv = wcam.projectionMatrix * wcam.worldToCameraMatrix;
+					mat.SetMatrix(s_GameVPId, pv);
+				}
+				else
+				{
+					var pos = c.transform.localPosition;
+					var pv = Matrix4x4.TRS(new Vector3(0, 0, 0), Quaternion.identity, new Vector3(1 / pos.x, 1 / pos.y, -2 / 1000f)) * Matrix4x4.Translate(-pos);
+					mat.SetMatrix(s_GameVPId, pv);
 				}
 			}
 		}
@@ -233,6 +250,9 @@ namespace Coffee.UIExtensions
 
 				#if UNITY_EDITOR
 				UnityEditor.EditorApplication.update += UpdateSceneViewMatrixForShader;
+				s_SceneVId = Shader.PropertyToID("_SceneV");
+				s_ScenePId = Shader.PropertyToID("_SceneP");
+				s_GameVPId = Shader.PropertyToID("_GameVP");
 				#endif
 
 				s_SoftMaskTexId = Shader.PropertyToID("_SoftMaskTex");
