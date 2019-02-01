@@ -14,7 +14,7 @@ Soft masking for uGUI elements in Unity.
 
 << [Description](#Description) | [WebGL Demo](#demo) | [Download](https://github.com/mob-sakai/SoftMaskForUGUI/releases) | [Usage](#usage) | [Development Note](#development-note) >>
 
-### What's new? [See changelog ![](https://img.shields.io/github/release-date/mob-sakai/SoftMaskForUGUI.svg?label=last%20updated)](https://github.com/mob-sakai/SoftMaskForUGUI/blob/upm/CHANGELOG.md)
+### What's new? [See changelog ![](https://img.shields.io/github/release-date/mob-sakai/SoftMaskForUGUI.svg?label=last%20updated)](https://github.com/mob-sakai/SoftMaskForUGUI/blob/develop/CHANGELOG.md)
 ### Do you want to receive notifications for new releases? [Watch this repo ![](https://img.shields.io/github/watchers/mob-sakai/SoftMaskForUGUI.svg?style=social&label=Watch)](https://github.com/mob-sakai/SoftMaskForUGUI/subscription)
 ### Support me on Patreon! [![become_a_patron](https://user-images.githubusercontent.com/12690315/50731629-3b18b480-11ad-11e9-8fad-4b13f27969c1.png)](https://www.patreon.com/join/2343451?)
 
