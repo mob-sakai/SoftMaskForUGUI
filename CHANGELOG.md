@@ -1,1 +1,0 @@
-Assets/Coffee/UIExtensions/SoftMaskForUGUI/CHANGELOG.md

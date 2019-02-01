@@ -1,1 +1,0 @@
-Assets/Coffee/UIExtensions/SoftMaskForUGUI/README.md
