@@ -6,6 +6,7 @@ using System.Linq;
 using System;
 using System.Reflection;
 using Object = UnityEngine.Object;
+using MaskIntr = UnityEngine.SpriteMaskInteraction;
 using System.IO;
 
 namespace Coffee.UIExtensions.Editors
@@ -17,6 +18,38 @@ namespace Coffee.UIExtensions.Editors
 	[CanEditMultipleObjects]
 	public class SoftMaskableEditor : Editor
 	{
+		//################################
+		// Constant or Static Members.
+		//################################
+		public enum MaskInteraction : int
+		{
+			VisibleInsideMask = (1 << 0) + (1 << 2) + (1 << 4) + (1 << 6),
+			VisibleOutsideMask = (2 << 0) + (2 << 2) + (2 << 4) + (2 << 6),
+			Custom = -1,
+		}
+
+		MaskInteraction maskInteraction
+		{
+			get
+			{
+				int value = _spMaskInteraction.intValue;
+				return _custom
+					? MaskInteraction.Custom
+						: System.Enum.IsDefined(typeof(MaskInteraction), value)
+						? (MaskInteraction)value
+						: MaskInteraction.Custom;
+			}
+			set
+			{
+				_custom = (value == MaskInteraction.Custom);
+				if (!_custom)
+				{
+					_spMaskInteraction.intValue = (int)value;
+				}
+			}
+		}
+		bool _custom = false;
+
 		static readonly Type s_TypeTMPro = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (x => x.GetTypes ()).FirstOrDefault (x => x.Name == "TMP_Text");
 		static readonly Type s_TypeTMP_SpriteAsset = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (x => x.GetTypes ()).FirstOrDefault (x => x.Name == "TMP_SpriteAsset");
 		static readonly Type s_TypeTMProSettings = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (x => x.GetTypes ()).FirstOrDefault (x => x.Name == "TMP_Settings");
@@ -36,9 +69,13 @@ namespace Coffee.UIExtensions.Editors
 		Shader _mobileShader;
 		Shader _spriteShader;
 		List<MaterialEditor> _materialEditors = new List<MaterialEditor> ();
+		SerializedProperty _spMaskInteraction;
 
 		private void OnEnable ()
 		{
+			_spMaskInteraction = serializedObject.FindProperty("m_MaskInteraction");
+			_custom = (maskInteraction == MaskInteraction.Custom);
+
 			ClearMaterialEditors ();
 
 			_shader = Shader.Find ("TextMeshPro/Distance Field (SoftMaskable)");
@@ -58,6 +95,8 @@ namespace Coffee.UIExtensions.Editors
 				s_PiDefaultFontAssetPath = s_TypeTMProSettings.GetProperty ("defaultFontAssetPath", BindingFlags.Static | BindingFlags.Public);
 				s_PiDefaultSpriteAssetPath = s_TypeTMProSettings.GetProperty ("defaultSpriteAssetPath", BindingFlags.Static | BindingFlags.Public);
 			}
+
+			s_MaskWarning = new GUIContent(EditorGUIUtility.FindTexture("console.warnicon.sml"), "This component is not SoftMask. Use SoftMask instead of Mask.");
 		}
 
 		private void OnDisable ()
@@ -65,10 +104,105 @@ namespace Coffee.UIExtensions.Editors
 			ClearMaterialEditors ();
 		}
 
+		List<Mask> tmpMasks = new List<Mask>();
+
+		void DrawMaskInteractions()
+		{
+			(target as SoftMaskable).GetComponentsInParent<Mask>(true, tmpMasks);
+			tmpMasks.RemoveAll(x => !x.enabled);
+			tmpMasks.Reverse();
+
+			maskInteraction = (MaskInteraction)EditorGUILayout.EnumPopup("Mask Interaction", maskInteraction);
+			if (_custom)
+			{
+				var l = EditorGUIUtility.labelWidth;
+				EditorGUIUtility.labelWidth = 45;
+
+				using (var ccs = new EditorGUI.ChangeCheckScope())
+				{
+					int intr0 = DrawMaskInteraction(0);
+					int intr1 = DrawMaskInteraction(1);
+					int intr2 = DrawMaskInteraction(2);
+					int intr3 = DrawMaskInteraction(3);
+
+					if (ccs.changed) {
+						_spMaskInteraction.intValue = (intr0 << 0) + (intr1 << 2) + (intr2 << 4) + (intr3 << 6);
+					}
+				}
+
+				EditorGUIUtility.labelWidth = l;
+			}
+		}
+
+		static GUIContent s_MaskWarning = new GUIContent();
+
+		int DrawMaskInteraction(int layer)
+		{
+			Mask mask = layer < tmpMasks.Count ? tmpMasks[layer] : null;
+			MaskIntr intr = (MaskIntr)((_spMaskInteraction.intValue >> layer * 2) & 0x3);
+			if (!mask)
+			{
+				return (int)intr;
+			}
+
+			using (new EditorGUILayout.HorizontalScope())
+			{
+				EditorGUILayout.LabelField(mask is SoftMask ? GUIContent.none : s_MaskWarning, GUILayout.Width(16));
+				GUILayout.Space(-5);
+				EditorGUILayout.ObjectField("Mask " + layer, mask, typeof(Mask), false);
+				GUILayout.Space(-15);
+				return (int)(MaskIntr)EditorGUILayout.EnumPopup(intr);
+			}
+		}
+
 		public override void OnInspectorGUI ()
 		{
 			base.OnInspectorGUI ();
 
+			serializedObject.Update();
+			DrawMaskInteractions();
+
+//			maskInteraction = (MaskInteraction)EditorGUILayout.EnumPopup("Mask Interaction", maskInteraction);
+			serializedObject.ApplyModifiedProperties();
+			/*
+			EditorGUI.indentLevel++;
+			var l = EditorGUIUtility.labelWidth;
+			EditorGUIUtility.labelWidth = 60;
+			using (new EditorGUILayout.HorizontalScope())
+			{
+				EditorGUILayout.ObjectField("Mask 0", null, typeof(Mask), false);
+				EditorGUILayout.EnumPopup (MaskIntr.None);
+			}
+			EditorGUIUtility.labelWidth = l;
+			EditorGUI.indentLevel--;
+
+			var spMaskInteraction = serializedObject.FindProperty ("m_MaskInteraction");
+			MaskIntr intr0 = (MaskIntr)((spMaskInteraction.intValue >> 0) & 0x3);
+			MaskIntr intr1 = (MaskIntr)((spMaskInteraction.intValue >> 2) & 0x3);
+			MaskIntr intr2 = (MaskIntr)((spMaskInteraction.intValue >> 4) & 0x3);
+			MaskIntr intr3 = (MaskIntr)((spMaskInteraction.intValue >> 6) & 0x3);
+
+			using (var ccs = new EditorGUI.ChangeCheckScope ()) {
+
+				intr0 = (MaskIntr)EditorGUILayout.EnumPopup ("Layer 0", intr0);
+				intr1 = (MaskIntr)EditorGUILayout.EnumPopup ("Layer 1", intr1);
+				intr2 = (MaskIntr)EditorGUILayout.EnumPopup ("Layer 2", intr2);
+				intr3 = (MaskIntr)EditorGUILayout.EnumPopup ("Layer 3", intr3);
+
+				if (ccs.changed) {
+					current.SetMaskInteractions (intr0,intr1,intr2,intr3);
+				}
+			}
+			*/
+
+//			spMaskInteraction.intValue = (intr0 << 0) | (intr1 << 2) | (intr2 << 4) | (intr3 << 6);
+//
+//			serializedObject.ApplyModifiedProperties ();
+
+
+
+
+//			var current = target as SoftMaskable;
 			var current = target as SoftMaskable;
 			current.GetComponentsInChildren<Graphic> (true, s_Graphics);
 			var fixTargets = s_Graphics.Where (x => x.gameObject != current.gameObject && !x.GetComponent<SoftMaskable> () && (!x.GetComponent<Mask> () || x.GetComponent<Mask> ().showMaskGraphic)).ToList ();

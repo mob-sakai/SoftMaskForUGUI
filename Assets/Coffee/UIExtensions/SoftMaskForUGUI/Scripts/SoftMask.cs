@@ -12,7 +12,7 @@ namespace Coffee.UIExtensions
 	/// Soft mask.
 	/// Use instead of Mask for smooth masking.
 	/// </summary>
-	public class SoftMask : Mask, IMeshModifier, ICanvasRaycastFilter
+	public class SoftMask : Mask, IMeshModifier
 	{
 		//################################
 		// Constant or Static Members.
@@ -106,7 +106,7 @@ namespace Coffee.UIExtensions
 				{
 					m_IgnoreParent = value;
 					hasChanged = true;
-					OnTransformParentChanged ();
+					OnTransformParentChanged();
 				}
 			}
 		}
@@ -132,9 +132,9 @@ namespace Coffee.UIExtensions
 					ReleaseRT(ref _softMaskBuffer);
 				}
 
-				if(!_softMaskBuffer)
+				if (!_softMaskBuffer)
 				{
-					_softMaskBuffer = RenderTexture.GetTemporary (w, h, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Default);
+					_softMaskBuffer = RenderTexture.GetTemporary(w, h, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Default);
 					hasChanged = true;
 				}
 
@@ -150,13 +150,22 @@ namespace Coffee.UIExtensions
 			}
 			private set
 			{
-				if(_parent)
+				if (_parent)
 				{
 					_parent.hasChanged = value;
 				}
 				_hasChanged = value;
 			}
 		}
+
+		public SoftMask parent
+		{
+			get
+			{
+				return _parent;
+			}
+		}
+
 
 		/// <summary>
 		/// Perform material modification in this function.
@@ -203,33 +212,22 @@ namespace Coffee.UIExtensions
 		/// <param name="sp">Screen position.</param>
 		/// <param name="eventCamera">Raycast camera.</param>
 		/// <param name="g">Target graphic.</param>
-		public bool IsRaycastLocationValid(Vector2 sp, Camera eventCamera, Graphic g)
+		public bool IsRaycastLocationValid(Vector2 sp, Camera eventCamera, Graphic g, int[] interactions)
 		{
 			if (!isActiveAndEnabled || (g == graphic && !g.raycastTarget))
 			{
 				return true;
 			}
-			if (!RectTransformUtility.RectangleContainsScreenPoint(rectTransform, sp, eventCamera))
-			{
-				return false;
-			}
 
 			int x = (int)(softMaskBuffer.width * sp.x / Screen.width);
 			int y = (int)(softMaskBuffer.height * sp.y / Screen.height);
-			return 0.5f < GetPixelValue(x, y);
+			return 0.5f < GetPixelValue(x, y, interactions);
 		}
 
-		/// <summary>
-		/// Given a point and a camera is the raycast valid.
-		/// </summary>
-		/// <returns>Valid.</returns>
-		/// <param name="sp">Screen position.</param>
-		/// <param name="eventCamera">Raycast camera.</param>
 		public override bool IsRaycastLocationValid(Vector2 sp, Camera eventCamera)
 		{
-			return IsRaycastLocationValid(sp, eventCamera, graphic);
+			return true;
 		}
-
 
 		//################################
 		// Protected Members.
@@ -329,12 +327,12 @@ namespace Coffee.UIExtensions
 			hasChanged = true;
 		}
 
-		protected override void OnRectTransformDimensionsChange ()
+		protected override void OnRectTransformDimensionsChange()
 		{
 			hasChanged = true;
 		}
 
-#if UNITY_EDITOR
+		#if UNITY_EDITOR
 		/// <summary>
 		/// This function is called when the script is loaded or a value is changed in the inspector (Called in the editor only).
 		/// </summary>
@@ -382,13 +380,13 @@ namespace Coffee.UIExtensions
 					continue;
 
 				var rt = sm.rectTransform;
-				if(rt.hasChanged)
+				if (rt.hasChanged)
 				{
 					rt.hasChanged = false;
 					sm.hasChanged = true;
 				}
 #if UNITY_EDITOR
-				if(!Application.isPlaying)
+				if (!Application.isPlaying)
 				{
 					sm.hasChanged = true;
 				}
@@ -403,7 +401,7 @@ namespace Coffee.UIExtensions
 				sm._hasChanged = false;
 				if (!sm._parent)
 				{
-					sm.UpdateMaskTexture ();
+					sm.UpdateMaskTexture();
 				}
 			}
 		}
@@ -413,13 +411,12 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		void UpdateMaskTexture()
 		{
-			if(!graphic || !graphic.canvas)
+			if (!graphic || !graphic.canvas)
 			{
 				return;
 			}
 
-			Transform stopAfter = MaskUtilities.FindRootSortOverrideCanvas(transform);
-			_stencilDepth = MaskUtilities.GetStencilDepth(transform, stopAfter);
+			_stencilDepth = MaskUtilities.GetStencilDepth(transform, MaskUtilities.FindRootSortOverrideCanvas(transform));
 
 			// Collect children soft masks.
 			int depth = 0;
@@ -448,9 +445,9 @@ namespace Coffee.UIExtensions
 			else
 			{
 				var pos = c.transform.localPosition;
-				var vm = Matrix4x4.TRS (-pos, Quaternion.identity, new Vector3 (1, 1, -1f));
-				var pm = Matrix4x4.TRS (new Vector3 (0, 0, -1), Quaternion.identity, new Vector3 (1 / pos.x, 1 / pos.y, -2 / 1000f));
-				_cb.SetViewProjectionMatrices (vm, pm);
+				var vm = Matrix4x4.TRS(new Vector3(-pos.x, -pos.y, -1000), Quaternion.identity, new Vector3(1, 1, -1f));
+				var pm = Matrix4x4.TRS(new Vector3(0, 0, -1), Quaternion.identity, new Vector3(1 / pos.x, 1 / pos.y, -2 / 10000f));
+				_cb.SetViewProjectionMatrices(vm, pm);
 			}
 
 			// Draw soft masks.
@@ -460,6 +457,11 @@ namespace Coffee.UIExtensions
 				for (int j = 0; j < count; j++)
 				{
 					var sm = s_TmpSoftMasks[i][j];
+
+					if (i != 0)
+					{
+						sm._stencilDepth = MaskUtilities.GetStencilDepth(sm.transform, MaskUtilities.FindRootSortOverrideCanvas(sm.transform));
+					}
 
 					// Set material property.
 					sm.material.SetInt(s_ColorMaskId, (int)1 << (3 - _stencilDepth - i));
@@ -562,7 +564,7 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Gets the pixel value.
 		/// </summary>
-		float GetPixelValue(int x, int y)
+		float GetPixelValue(int x, int y, int[] interactions)
 		{
 			if (!s_ReadTexture)
 			{
@@ -576,18 +578,23 @@ namespace Coffee.UIExtensions
 			RenderTexture.active = currentRT;
 
 			var colors = s_ReadTexture.GetRawTextureData();
+
+			for (int i = 0; i < 4; i++)
+			{
+				switch (interactions[(i + 3)%4])
+				{
+					case 0: colors[i] = 255; break;
+					case 2: colors[i] = (byte)(255 - colors[i]); break;
+				}
+			}
+
 			switch (_stencilDepth)
 			{
-				case 0:
-					return (colors[1] / 255f);
-				case 1:
-					return (colors[1] / 255f) * (colors[2] / 255f);
-				case 2:
-					return (colors[1] / 255f) * (colors[2] / 255f) * (colors[3] / 255f);
-				case 3:
-					return (colors[1] / 255f) * (colors[2] / 255f) * (colors[3] / 255f) * (colors[0] / 255f);
-				default:
-					return 0;
+				case 0: return (colors[1] / 255f);
+				case 1: return (colors[1] / 255f) * (colors[2] / 255f);
+				case 2: return (colors[1] / 255f) * (colors[2] / 255f) * (colors[3] / 255f);
+				case 3: return (colors[1] / 255f) * (colors[2] / 255f) * (colors[3] / 255f) * (colors[0] / 255f);
+				default: return 0;
 			}
 		}
 	}

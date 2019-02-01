@@ -102,15 +102,13 @@ Shader "UI/Default-SoftMask"
             {
                 half4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd) * IN.color;
 
-                #ifdef UNITY_UI_CLIP_RECT
                 color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
-                #endif
 
                 #ifdef UNITY_UI_ALPHACLIP
                 clip (color.a - 0.001);
                 #endif
 
-                color.a *= SoftMask(IN.vertex);	// Add for soft mask
+                color.a *= SoftMask(IN.vertex, IN.worldPosition);	// Add for soft mask
 
                 return color;
             }
