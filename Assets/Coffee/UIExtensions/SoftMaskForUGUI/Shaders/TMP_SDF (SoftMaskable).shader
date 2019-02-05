@@ -110,6 +110,7 @@ SubShader {
 
 	Pass {
 		CGPROGRAM
+		#pragma exclude_renderers d3d9
 		#pragma target 3.0
 		#pragma vertex VertShader
 		#pragma fragment PixShader
