@@ -19,14 +19,18 @@ fixed Approximately(float4x4 a, float4x4 b)
 		1);
 }
 
-fixed GetMaskAlpha(fixed alpha, fixed stencilId, fixed interaction)
+float GetMaskAlpha(float alpha, int stencilId, float interaction)
 {
 	fixed onStencil = step(stencilId, _Stencil);
 	alpha = lerp(1, alpha, onStencil * step(1, interaction));
 	return lerp(alpha, 1 - alpha, onStencil * step(2, interaction));
 }
 
-half SoftMask(float4 clipPos, float4 wpos)
+#if SOFTMASK_EDITOR
+float SoftMaskInternal(float4 clipPos, float4 wpos)
+#else
+float SoftMaskInternal(float4 clipPos)
+#endif
 {
 	half2 view = clipPos.xy/_ScreenParams.xy;
 	#if SOFTMASK_EDITOR
@@ -43,9 +47,18 @@ half SoftMask(float4 clipPos, float4 wpos)
 	half alpha = GetMaskAlpha(mask.x, 1, _MaskInteraction.x)
 		* GetMaskAlpha(mask.y, 3, _MaskInteraction.y)
 		* GetMaskAlpha(mask.z, 7, _MaskInteraction.z)
-		* GetMaskAlpha(mask.w, 15, _MaskInteraction.w);
+		* GetMaskAlpha(mask.w, 15, _MaskInteraction.w)
+		;
 
 	return alpha;
 }
+
+#if SOFTMASK_EDITOR
+	#define SOFTMASK_EDITOR_ONLY(x) x
+	#define SoftMask(clipPos, worldPosition) SoftMaskInternal(clipPos, worldPosition)
+#else
+	#define SOFTMASK_EDITOR_ONLY(x) 
+	#define SoftMask(clipPos, worldPosition) SoftMaskInternal(clipPos)
+#endif
 
 #endif // UI_SOFTMASK_INCLUDED
