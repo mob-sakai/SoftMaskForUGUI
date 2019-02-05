@@ -104,7 +104,7 @@ Shader "TextMeshPro/Sprite (SoftMaskable)"
 					color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
 				#endif
                 
-                color.a *= SoftMask(IN.vertex);
+                color.a *= SoftMask(IN.vertex, IN.worldPosition);
                 
 				#ifdef UNITY_UI_ALPHACLIP
 					clip (color.a - 0.001);
