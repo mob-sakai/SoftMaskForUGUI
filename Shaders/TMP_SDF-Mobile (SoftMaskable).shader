@@ -79,6 +79,10 @@ SubShader {
 
 	Pass {
 		CGPROGRAM
+		#pragma exclude_renderers d3d9
+		#if !defined(SHADER_API_D3D11_9X)
+		#pragma target 3.0
+		#endif
 		#pragma vertex VertShader
 		#pragma fragment PixShader
 		#pragma shader_feature __ OUTLINE_ON
