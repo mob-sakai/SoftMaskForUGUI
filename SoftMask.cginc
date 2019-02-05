@@ -48,6 +48,9 @@ float SoftMaskInternal(float4 clipPos)
 		* GetMaskAlpha(mask.y, 3, _MaskInteraction.y)
 		* GetMaskAlpha(mask.z, 7, _MaskInteraction.z)
 		* GetMaskAlpha(mask.w, 15, _MaskInteraction.w)
+	#if SOFTMASK_EDITOR
+		* step(0, view.x) * step(view.x, 1) * step(0, view.y) * step(view.y, 1)
+	#endif
 		;
 
 	return alpha;
