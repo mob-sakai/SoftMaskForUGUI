@@ -79,6 +79,10 @@ SubShader {
 
 	Pass {
 		CGPROGRAM
+		#pragma exclude_renderers d3d9
+		#if !defined(SHADER_API_D3D11_9X)
+		#pragma target 3.0
+		#endif
 		#pragma vertex VertShader
 		#pragma fragment PixShader
 		#pragma shader_feature __ OUTLINE_ON
@@ -113,6 +117,7 @@ SubShader {
 			float4	texcoord1		: TEXCOORD3;			// Texture UV, alpha, reserved
 			half2	underlayParam	: TEXCOORD4;			// Scale(x), Bias(y)
 		#endif
+			SOFTMASK_EDITOR_ONLY(float4 worldPosition : TEXCOORD5;)
 		};
 
 
@@ -180,6 +185,7 @@ SubShader {
 				float4(input.texcoord0 + layerOffset, input.color.a, 0),
 				half2(layerScale, layerBias),
 			#endif
+				SOFTMASK_EDITOR_ONLY(input.vertex)
 			};
 
 			return output;
@@ -218,7 +224,7 @@ SubShader {
 			c *= input.texcoord1.z;
 		#endif
         
-        c *= SoftMask(input.vertex);
+        c *= SoftMask(input.vertex, input.worldPosition);
         
 		#if UNITY_UI_ALPHACLIP
 			clip(c.a - 0.001);
