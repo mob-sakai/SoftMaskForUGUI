@@ -3,9 +3,8 @@
 
 sampler2D _SoftMaskTex;
 float _Stencil;
-float4x4 _SceneV;
-float4x4 _SceneP;
 float4x4 _GameVP;
+float4x4 _GameTVP;
 half4 _MaskInteraction;
 
 fixed Approximately(float4x4 a, float4x4 b)
@@ -16,7 +15,7 @@ fixed Approximately(float4x4 a, float4x4 b)
 		max(d._m10,max(d._m11,max(d._m12,max(d._m13,
 		max(d._m20,max(d._m21,max(d._m22,max(d._m23,
 		max(d._m30,max(d._m31,max(d._m32,d._m33))))))))))))))),
-		1);
+		0.01);
 }
 
 float GetMaskAlpha(float alpha, int stencilId, float interaction)
@@ -34,8 +33,8 @@ float SoftMaskInternal(float4 clipPos)
 {
 	half2 view = clipPos.xy/_ScreenParams.xy;
 	#if SOFTMASK_EDITOR
-		fixed isSceneView = max(Approximately(UNITY_MATRIX_V, _SceneV), Approximately(UNITY_MATRIX_P, _SceneP));
-		float4 cpos = mul(_GameVP, mul(UNITY_MATRIX_M, wpos));
+		fixed isSceneView = 1 - Approximately(UNITY_MATRIX_VP, _GameVP);
+		float4 cpos = mul(_GameTVP, mul(UNITY_MATRIX_M, wpos));
 		view = lerp(view, cpos.xy / cpos.w * 0.5 + 0.5, isSceneView);
 	#endif
 
