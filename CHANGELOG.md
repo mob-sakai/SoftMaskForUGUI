@@ -1,5 +1,23 @@
 # Changelog
 
+## [v0.7.0](https://github.com/mob-sakai/SoftMaskForUGUI/tree/v0.7.0) (2019-03-11)
+
+[Full Changelog](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v0.6.0...v0.7.0)
+
+Add 'part of parent' option to make multiple holes on one background  
+![](https://user-images.githubusercontent.com/12690315/54102470-f5c26e80-440b-11e9-89d1-899aa4dca00d.png)
+
+
+
+**Implemented enhancements:**
+
+- 'Parts of parent' option [\#29](https://github.com/mob-sakai/SoftMaskForUGUI/issues/29)
+
+**Fixed bugs:**
+
+- scene view flickering [\#38](https://github.com/mob-sakai/SoftMaskForUGUI/issues/38)
+- Flipped soft mask texture on Windows [\#37](https://github.com/mob-sakai/SoftMaskForUGUI/issues/37)
+
 ## [v0.6.0](https://github.com/mob-sakai/SoftMaskForUGUI/tree/v0.6.0) (2019-02-07)
 
 [Full Changelog](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v0.5.0...v0.6.0)
