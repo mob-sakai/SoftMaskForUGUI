@@ -55,6 +55,8 @@ namespace Coffee.UIExtensions
 		[SerializeField][Range(0.01f, 1)] float m_Softness = 1;
 		[Tooltip("Should the soft mask ignore parent soft masks?")]
 		[SerializeField] bool m_IgnoreParent = false;
+		[Tooltip("Is the soft mask a part of parent soft mask?")]
+		[SerializeField] bool m_PartOfParent = false;
 
 
 		//################################
@@ -105,6 +107,23 @@ namespace Coffee.UIExtensions
 				if (m_IgnoreParent != value)
 				{
 					m_IgnoreParent = value;
+					hasChanged = true;
+					OnTransformParentChanged();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Is the soft mask a part of parent soft mask?
+		/// </summary>
+		public bool partOfParent
+		{
+			get { return m_PartOfParent; }
+			set
+			{
+				if (m_PartOfParent != value)
+				{
+					m_PartOfParent = value;
 					hasChanged = true;
 					OnTransformParentChanged();
 				}
@@ -426,7 +445,14 @@ namespace Coffee.UIExtensions
 				int count = s_TmpSoftMasks[depth].Count;
 				for (int i = 0; i < count; i++)
 				{
-					s_TmpSoftMasks[depth + 1].AddRange(s_TmpSoftMasks[depth][i]._children);
+					List<SoftMask> children = s_TmpSoftMasks[depth][i]._children;
+					int childCount = children.Count;
+					for (int j = 0; j < childCount; j++)
+					{
+						var child = children[j];
+						var childDepth = child.m_PartOfParent ? depth : depth + 1;
+						s_TmpSoftMasks[childDepth].Add(child);
+					}
 				}
 				depth++;
 			}

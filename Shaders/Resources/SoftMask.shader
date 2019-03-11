@@ -6,7 +6,7 @@ SubShader {
 	
     Cull Off
 	ZWrite Off
-	Blend SrcAlpha OneMinusSrcAlpha 
+	Blend SrcAlpha One
 	ColorMask [_ColorMask]
 
 	Pass {  
