@@ -464,9 +464,10 @@ namespace Coffee.UIExtensions
 
 			// Set view and projection matrices.
 			var c = graphic.canvas.rootCanvas;
-			if (c && c.renderMode != RenderMode.ScreenSpaceOverlay && c.worldCamera)
+			var cam = c.worldCamera ?? Camera.main;
+			if (c && c.renderMode != RenderMode.ScreenSpaceOverlay && cam)
 			{
-				_cb.SetViewProjectionMatrices(c.worldCamera.worldToCameraMatrix, c.worldCamera.projectionMatrix);
+				_cb.SetViewProjectionMatrices(cam.worldToCameraMatrix, cam.projectionMatrix);
 			}
 			else
 			{
