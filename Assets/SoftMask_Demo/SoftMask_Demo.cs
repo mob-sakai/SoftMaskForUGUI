@@ -7,14 +7,17 @@ namespace Coffee.UIExtensions.Demos
 {
 	public class SoftMask_Demo : MonoBehaviour
 	{
-		[SerializeField] RawImage softMaskBufferViewer;
-		[SerializeField] SoftMask softMask;
+		[SerializeField] RawImage[] softMaskBufferViewer;
+		[SerializeField] SoftMask[] softMask;
 
 
 		// Use this for initialization
 		void OnEnable()
 		{
-			softMaskBufferViewer.texture = softMask.softMaskBuffer;
+			for (int i = 0; i < softMask.Length; i++)
+			{
+				softMaskBufferViewer[i].texture = softMask[i].softMaskBuffer;
+			}
 		}
 	
 		// Update is called once per frame
