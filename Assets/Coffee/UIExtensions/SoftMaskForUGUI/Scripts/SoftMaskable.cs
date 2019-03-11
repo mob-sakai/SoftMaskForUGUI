@@ -206,9 +206,9 @@ namespace Coffee.UIExtensions
 
 				Material mat = sm._maskMaterial;
 				var c = sm.graphic.canvas.rootCanvas;
-				if (c.renderMode != RenderMode.ScreenSpaceOverlay && c.worldCamera)
+				var wcam = c.worldCamera ?? Camera.main;
+				if (c.renderMode != RenderMode.ScreenSpaceOverlay && wcam)
 				{
-					var wcam = c.worldCamera;
 					var pv = GL.GetGPUProjectionMatrix (wcam.projectionMatrix, false) * wcam.worldToCameraMatrix;
 					mat.SetMatrix(s_GameVPId, pv);
 					mat.SetMatrix(s_GameTVPId, pv);
