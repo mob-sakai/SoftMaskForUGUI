@@ -126,7 +126,6 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// The graphic will be visible only in areas where no mask is present.
 		/// </summary>
-		[System.Obsolete("Use SetMaskInteractions method instead.")]
 		public bool inverse
 		{
 			get { return m_MaskInteraction == kVisibleOutside; }
