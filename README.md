@@ -57,13 +57,15 @@ By using SoftMask instead of default Mask, rounded edges of UI elements can be e
 ![](https://user-images.githubusercontent.com/12690315/50284151-7459e080-049b-11e9-9cd3-24fb476766dc.png)
 * Support TextMeshPro.  
 ![](https://user-images.githubusercontent.com/12690315/50284145-71f78680-049b-11e9-8be1-ac0ccbdf0144.png)
+* Make multiple holes on one background by 'Parts of parent' option  
+![](https://user-images.githubusercontent.com/12690315/54102470-f5c26e80-440b-11e9-89d1-899aa4dca00d.png)
 
 
 #### Components
 
 |Component|Description|Screenshot|
 |-|-|-|
-|SoftMask|Use instead of Mask for smooth masking.<br><br>**Show Mask Graphic:** Show the graphic that is associated with the Mask render area.<br>**Desampling Rate:** The desampling rate for soft mask buffer. The larger the value, the better the performance but the lower the quality.<br>**Softness:** The value used by the soft mask to select the area of influence defined over the soft mask's graphic.<br>**Ignore Parent:** Should the soft mask ignore parent soft masks?|<img src="https://user-images.githubusercontent.com/12690315/50319746-377a0200-050c-11e9-96ae-a3a0ec81765f.png" width="600px">|
+|SoftMask|Use instead of Mask for smooth masking.<br><br>**Show Mask Graphic:** Show the graphic that is associated with the Mask render area.<br>**Desampling Rate:** The desampling rate for soft mask buffer. The larger the value, the better the performance but the lower the quality.<br>**Softness:** The value used by the soft mask to select the area of influence defined over the soft mask's graphic.<br>**Ignore Parent:** Should the soft mask ignore parent soft masks?<br>**Part Of Parent:** Is the soft mask a part of parent soft mask?|<img src="https://user-images.githubusercontent.com/12690315/50319746-377a0200-050c-11e9-96ae-a3a0ec81765f.png" width="600px">|
 |SoftMaskable|Add this component to Graphic under SoftMask for smooth masking.<br><br>**Inverse:** The graphic will be visible only in areas where no mask is present.|<img src="https://user-images.githubusercontent.com/12690315/50319747-39dc5c00-050c-11e9-85fa-dd6ea9065daf.png" width="600px">|
 
 
@@ -84,12 +86,13 @@ Find the manifest.json file in the Packages folder of your project and edit it t
 ```js
 {
   "dependencies": {
-    "com.coffee.softmask-for-ugui": "https://github.com/mob-sakai/SoftMaskForUGUI.git#0.6.0",
+    "com.coffee.softmask-for-ugui": "https://github.com/mob-sakai/SoftMaskForUGUI.git#0.7.0",
     ...
   },
 }
 ```
-To update the package, change `#{version}` to the target version.
+To update the package, change `#{version}` to the target version.  
+Or, use [UpmGitExtension](https://github.com/mob-sakai/UpmGitExtension).
 
 #### Using .unitypackage file (for Unity 2017.1+)
 
