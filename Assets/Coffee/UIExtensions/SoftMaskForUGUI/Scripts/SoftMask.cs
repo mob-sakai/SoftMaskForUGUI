@@ -467,7 +467,7 @@ namespace Coffee.UIExtensions
 			var cam = c.worldCamera ?? Camera.main;
 			if (c && c.renderMode != RenderMode.ScreenSpaceOverlay && cam)
 			{
-				_cb.SetViewProjectionMatrices(cam.worldToCameraMatrix, cam.projectionMatrix);
+				_cb.SetViewProjectionMatrices(cam.worldToCameraMatrix, GL.GetGPUProjectionMatrix(cam.projectionMatrix, true));
 			}
 			else
 			{

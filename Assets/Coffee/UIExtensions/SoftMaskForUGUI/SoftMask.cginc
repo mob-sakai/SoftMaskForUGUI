@@ -36,9 +36,10 @@ float SoftMaskInternal(float4 clipPos)
 		fixed isSceneView = 1 - Approximately(UNITY_MATRIX_VP, _GameVP);
 		float4 cpos = mul(_GameTVP, mul(UNITY_MATRIX_M, wpos));
 		view = lerp(view, cpos.xy / cpos.w * 0.5 + 0.5, isSceneView);
-	#endif
-
-	#if UNITY_UV_STARTS_AT_TOP && !defined(SHADER_API_D3D11) && !defined(SHADER_API_D3D11_9X) && !defined(SHADER_API_D3D9)
+		#if UNITY_UV_STARTS_AT_TOP
+			view.y = lerp(view.y, 1 - view.y, step(0, _ProjectionParams.x));
+		#endif
+	#elif UNITY_UV_STARTS_AT_TOP
 		view.y = 1.0 - view.y;
 	#endif
 
