@@ -13,8 +13,8 @@ fixed Approximately(float4x4 a, float4x4 b)
 	return step(
 		max(d._m00,max(d._m01,max(d._m02,max(d._m03,
 		max(d._m10,max(d._m11,max(d._m12,max(d._m13,
-		max(d._m20,max(d._m21,max(d._m22,max(d._m23,
-		max(d._m30,max(d._m31,max(d._m32,d._m33))))))))))))))),
+		max(d._m20,max(d._m21,max(d._m22,//max(d._m23,
+		max(d._m30,max(d._m31,max(d._m32,d._m33)))))))))))))),
 		0.01);
 }
 
@@ -40,7 +40,7 @@ float SoftMaskInternal(float4 clipPos)
 			view.y = lerp(view.y, 1 - view.y, step(0, _ProjectionParams.x));
 		#endif
 	#elif UNITY_UV_STARTS_AT_TOP
-		view.y = 1.0 - view.y;
+		view.y = lerp(view.y, 1 - view.y, step(0, _ProjectionParams.x));
 	#endif
 
 	fixed4 mask = tex2D(_SoftMaskTex, view);
