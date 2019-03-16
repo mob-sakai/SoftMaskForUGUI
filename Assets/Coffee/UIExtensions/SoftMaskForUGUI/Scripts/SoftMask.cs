@@ -155,6 +155,7 @@ namespace Coffee.UIExtensions
 				{
 					_softMaskBuffer = RenderTexture.GetTemporary(w, h, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Default);
 					hasChanged = true;
+					_hasStencilStateChanged = true;
 				}
 
 				return _softMaskBuffer;
@@ -289,6 +290,7 @@ namespace Coffee.UIExtensions
 			graphic.SetVerticesDirty();
 
 			base.OnEnable();
+			_hasStencilStateChanged = false;
 		}
 
 		/// <summary>
@@ -324,6 +326,7 @@ namespace Coffee.UIExtensions
 			ReleaseRT(ref _softMaskBuffer);
 
 			base.OnDisable();
+			_hasStencilStateChanged = false;
 		}
 
 		/// <summary>
@@ -360,6 +363,7 @@ namespace Coffee.UIExtensions
 			graphic.SetMaterialDirty();
 			OnTransformParentChanged();
 			base.OnValidate();
+			_hasStencilStateChanged = false;
 		}
 		#endif
 
@@ -383,6 +387,8 @@ namespace Coffee.UIExtensions
 		SoftMask _parent;
 		List<SoftMask> _children = new List<SoftMask>();
 		bool _hasChanged = false;
+		bool _hasStencilStateChanged = false;
+
 
 		Material material { get { return _material ? _material : _material = new Material(s_SoftMaskShader ? s_SoftMaskShader : s_SoftMaskShader = Resources.Load<Shader>("SoftMask")){ hideFlags = HideFlags.HideAndDontSave }; } }
 
@@ -421,6 +427,11 @@ namespace Coffee.UIExtensions
 				if (!sm._parent)
 				{
 					sm.UpdateMaskTexture();
+					if (sm._hasStencilStateChanged)
+					{
+						sm._hasStencilStateChanged = false;
+						MaskUtilities.NotifyStencilStateChanged (sm);
+					}
 				}
 			}
 		}
