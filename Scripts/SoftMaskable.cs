@@ -186,15 +186,6 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		static void UpdateSceneViewMatrixForShader()
 		{
-			UnityEditor.SceneView sceneView = UnityEditor.SceneView.lastActiveSceneView;
-			if (!sceneView || !sceneView.camera)
-			{
-				return;
-			}
-
-			Camera cam = sceneView.camera;
-			Matrix4x4 w2c = cam.worldToCameraMatrix;
-			Matrix4x4 prj = cam.projectionMatrix;
 		
 			s_ActiveSoftMaskables.RemoveAll(x=>!x);
 			foreach (var sm in s_ActiveSoftMaskables)
