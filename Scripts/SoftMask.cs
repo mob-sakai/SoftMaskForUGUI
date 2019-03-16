@@ -553,6 +553,7 @@ namespace Coffee.UIExtensions
 		{
 			if (tmpRT)
 			{
+				tmpRT.Release();
 				RenderTexture.ReleaseTemporary(tmpRT);
 				tmpRT = null;
 			}
