@@ -186,15 +186,6 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		static void UpdateSceneViewMatrixForShader()
 		{
-			UnityEditor.SceneView sceneView = UnityEditor.SceneView.lastActiveSceneView;
-			if (!sceneView || !sceneView.camera)
-			{
-				return;
-			}
-
-			Camera cam = sceneView.camera;
-			Matrix4x4 w2c = cam.worldToCameraMatrix;
-			Matrix4x4 prj = cam.projectionMatrix;
 		
 			s_ActiveSoftMaskables.RemoveAll(x=>!x);
 			foreach (var sm in s_ActiveSoftMaskables)
@@ -215,10 +206,11 @@ namespace Coffee.UIExtensions
 				}
 				else
 				{
+					var scale = c.transform.localScale.x;
+					var size = (c.transform as RectTransform).sizeDelta;
 					var pos = c.transform.localPosition;
-					var pv = Matrix4x4.TRS(new Vector3(0, 0, 0), Quaternion.identity, new Vector3(1 / pos.x, 1 / pos.y, -2 / 2000f));
-					mat.SetMatrix(s_GameVPId, pv);
-					mat.SetMatrix(s_GameTVPId, pv * Matrix4x4.Translate(-pos));
+					mat.SetMatrix(s_GameVPId, Matrix4x4.TRS(new Vector3(0, 0, 0.5f), Quaternion.identity, new Vector3(2 / size.x, 2 / size.y, 0.0005f * scale)));
+					mat.SetMatrix(s_GameTVPId, Matrix4x4.TRS(new Vector3(0, 0, 0), Quaternion.identity, new Vector3(1 / pos.x, 1 / pos.y, -2/2000f)) * Matrix4x4.Translate(-pos));
 				}
 			}
 		}

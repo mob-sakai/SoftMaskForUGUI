@@ -13,8 +13,8 @@ fixed Approximately(float4x4 a, float4x4 b)
 	return step(
 		max(d._m00,max(d._m01,max(d._m02,max(d._m03,
 		max(d._m10,max(d._m11,max(d._m12,max(d._m13,
-		max(d._m20,max(d._m21,max(d._m22,max(d._m23,
-		max(d._m30,max(d._m31,max(d._m32,d._m33))))))))))))))),
+		max(d._m20,max(d._m21,max(d._m22,//max(d._m23,
+		max(d._m30,max(d._m31,max(d._m32,d._m33)))))))))))))),
 		0.01);
 }
 
@@ -36,10 +36,11 @@ float SoftMaskInternal(float4 clipPos)
 		fixed isSceneView = 1 - Approximately(UNITY_MATRIX_VP, _GameVP);
 		float4 cpos = mul(_GameTVP, mul(UNITY_MATRIX_M, wpos));
 		view = lerp(view, cpos.xy / cpos.w * 0.5 + 0.5, isSceneView);
-	#endif
-
-	#if UNITY_UV_STARTS_AT_TOP && !defined(SHADER_API_D3D11) && !defined(SHADER_API_D3D11_9X) && !defined(SHADER_API_D3D9)
-		view.y = 1.0 - view.y;
+		#if UNITY_UV_STARTS_AT_TOP
+			view.y = lerp(view.y, 1 - view.y, step(0, _ProjectionParams.x));
+		#endif
+	#elif UNITY_UV_STARTS_AT_TOP
+		view.y = lerp(view.y, 1 - view.y, step(0, _ProjectionParams.x));
 	#endif
 
 	fixed4 mask = tex2D(_SoftMaskTex, view);
