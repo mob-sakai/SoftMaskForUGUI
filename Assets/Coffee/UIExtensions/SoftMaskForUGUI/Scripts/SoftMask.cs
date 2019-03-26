@@ -482,7 +482,7 @@ namespace Coffee.UIExtensions
 			}
 			else
 			{
-				var pos = c.transform.localPosition;
+				var pos = c.transform.position;
 				var vm = Matrix4x4.TRS(new Vector3(-pos.x, -pos.y, -1000), Quaternion.identity, new Vector3(1, 1, -1f));
 				var pm = Matrix4x4.TRS(new Vector3(0, 0, -1), Quaternion.identity, new Vector3(1 / pos.x, 1 / pos.y, -2 / 10000f));
 				_cb.SetViewProjectionMatrices(vm, pm);

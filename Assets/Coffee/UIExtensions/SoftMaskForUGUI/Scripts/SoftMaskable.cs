@@ -208,7 +208,7 @@ namespace Coffee.UIExtensions
 				{
 					var scale = c.transform.localScale.x;
 					var size = (c.transform as RectTransform).sizeDelta;
-					var pos = c.transform.localPosition;
+					var pos = c.transform.position;
 					mat.SetMatrix(s_GameVPId, Matrix4x4.TRS(new Vector3(0, 0, 0.5f), Quaternion.identity, new Vector3(2 / size.x, 2 / size.y, 0.0005f * scale)));
 					mat.SetMatrix(s_GameTVPId, Matrix4x4.TRS(new Vector3(0, 0, 0), Quaternion.identity, new Vector3(1 / pos.x, 1 / pos.y, -2/2000f)) * Matrix4x4.Translate(-pos));
 				}
