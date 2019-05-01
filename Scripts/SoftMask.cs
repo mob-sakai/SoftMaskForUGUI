@@ -388,7 +388,10 @@ namespace Coffee.UIExtensions
 		List<SoftMask> _children = new List<SoftMask>();
 		bool _hasChanged = false;
 		bool _hasStencilStateChanged = false;
-
+#if !UNITY_2018_1_OR_NEWER
+		static readonly Dictionary<int, Matrix4x4> s_previousViewProjectionMatrices = new Dictionary<int, Matrix4x4> ();
+		static readonly Dictionary<int, Matrix4x4> s_nowViewProjectionMatrices = new Dictionary<int, Matrix4x4> ();
+#endif
 
 		Material material { get { return _material ? _material : _material = new Material(s_SoftMaskShader ? s_SoftMaskShader : s_SoftMaskShader = Resources.Load<Shader>("SoftMask")){ hideFlags = HideFlags.HideAndDontSave }; } }
 
@@ -403,6 +406,27 @@ namespace Coffee.UIExtensions
 			{
 				if (!sm || sm._hasChanged)
 					continue;
+
+				var canvas = sm.graphic.canvas;
+				if (canvas.renderMode == RenderMode.WorldSpace)
+				{
+					var cam = canvas.worldCamera;
+					Matrix4x4 nowsVP = cam.projectionMatrix * cam.worldToCameraMatrix;
+
+#if UNITY_2018_1_OR_NEWER
+					Matrix4x4 previousVP = cam.reviousViewProjectionMatrix;
+#else
+					Matrix4x4 previousVP = default(Matrix4x4);
+					int id = cam.GetInstanceID ();
+					s_previousViewProjectionMatrices.TryGetValue (id, out previousVP);
+					s_nowViewProjectionMatrices[id] = nowsVP;
+#endif
+
+					if (previousVP != nowsVP)
+					{
+						sm.hasChanged = true;
+					}
+				}
 
 				var rt = sm.rectTransform;
 				if (rt.hasChanged)
@@ -434,6 +458,16 @@ namespace Coffee.UIExtensions
 					}
 				}
 			}
+
+
+#if !UNITY_2018_1_OR_NEWER
+			s_previousViewProjectionMatrices.Clear ();
+			foreach (int id in s_previousViewProjectionMatrices.Keys)
+			{
+				s_previousViewProjectionMatrices [id] = s_nowViewProjectionMatrices [id];
+			}
+			s_nowViewProjectionMatrices.Clear ();
+#endif
 		}
 
 		/// <summary>
