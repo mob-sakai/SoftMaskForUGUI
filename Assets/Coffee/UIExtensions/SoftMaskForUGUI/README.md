@@ -57,8 +57,10 @@ By using SoftMask instead of default Mask, rounded edges of UI elements can be e
 ![](https://user-images.githubusercontent.com/12690315/50284151-7459e080-049b-11e9-9cd3-24fb476766dc.png)
 * Support TextMeshPro.  
 ![](https://user-images.githubusercontent.com/12690315/50284145-71f78680-049b-11e9-8be1-ac0ccbdf0144.png)
-* Make multiple holes on one background by 'Parts of parent' option  
+* Make multiple holes on one background by 'Parts of parent' option.  
 ![](https://user-images.githubusercontent.com/12690315/54102470-f5c26e80-440b-11e9-89d1-899aa4dca00d.png)
+* Camera movement affects the mask rendering when on a World Space Canvas.  
+![](https://user-images.githubusercontent.com/12690315/57015752-68540b80-6c51-11e9-8511-2d4534dd9d58.gif)
 
 
 #### Components
@@ -86,7 +88,7 @@ Find the manifest.json file in the Packages folder of your project and edit it t
 ```js
 {
   "dependencies": {
-    "com.coffee.softmask-for-ugui": "https://github.com/mob-sakai/SoftMaskForUGUI.git#0.7.0",
+    "com.coffee.softmask-for-ugui": "https://github.com/mob-sakai/SoftMaskForUGUI.git#0.8.0",
     ...
   },
 }
