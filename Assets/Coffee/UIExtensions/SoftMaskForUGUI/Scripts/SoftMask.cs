@@ -414,7 +414,7 @@ namespace Coffee.UIExtensions
 					Matrix4x4 nowsVP = cam.projectionMatrix * cam.worldToCameraMatrix;
 
 #if UNITY_2018_1_OR_NEWER
-					Matrix4x4 previousVP = cam.reviousViewProjectionMatrix;
+					Matrix4x4 previousVP = cam.previousViewProjectionMatrix;
 #else
 					Matrix4x4 previousVP = default(Matrix4x4);
 					int id = cam.GetInstanceID ();
