@@ -1,4 +1,3 @@
-﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -34,7 +33,7 @@ namespace Coffee.UIExtensions.Editors
 			if (0 < fixTargets.Count)
 			{
 				GUILayout.BeginHorizontal ();
-				EditorGUILayout.HelpBox ("There are child Graphicss that does not have a SoftMaskable component.\nAdd SoftMaskable component to them.", MessageType.Warning);
+				EditorGUILayout.HelpBox ("There are child Graphics that does not have a SoftMaskable component.\nAdd SoftMaskable component to them.", MessageType.Warning);
 				GUILayout.BeginVertical ();
 				if (GUILayout.Button ("Fix"))
 				{
@@ -42,6 +41,8 @@ namespace Coffee.UIExtensions.Editors
 					{
 						p.gameObject.AddComponent<SoftMaskable> ();
 					}
+					
+					Utils.MarkPrefabDirty ();
 				}
 				if (GUILayout.Button ("Ping"))
 				{
@@ -60,8 +61,8 @@ namespace Coffee.UIExtensions.Editors
 			if (s_Preview)
 			{
 				var tex = current.softMaskBuffer;
-				var wtdth = tex.width * 64 / tex.height;
-				EditorGUI.DrawPreviewTexture (GUILayoutUtility.GetRect (wtdth, 64), tex, null, ScaleMode.ScaleToFit);
+				var width = tex.width * 64 / tex.height;
+				EditorGUI.DrawPreviewTexture (GUILayoutUtility.GetRect (width, 64), tex, null, ScaleMode.ScaleToFit);
 				Repaint ();
 			}
 			GUILayout.FlexibleSpace ();
