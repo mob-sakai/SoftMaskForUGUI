@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
@@ -71,7 +71,7 @@ namespace Coffee.UIExtensions.Editors
 		List<MaterialEditor> _materialEditors = new List<MaterialEditor> ();
 		SerializedProperty _spMaskInteraction;
 
-		private void OnEnable ()
+		void OnEnable ()
 		{
 			_spMaskInteraction = serializedObject.FindProperty("m_MaskInteraction");
 			_custom = (maskInteraction == MaskInteraction.Custom);
@@ -98,8 +98,8 @@ namespace Coffee.UIExtensions.Editors
 
 			s_MaskWarning = new GUIContent(EditorGUIUtility.FindTexture("console.warnicon.sml"), "This component is not SoftMask. Use SoftMask instead of Mask.");
 		}
-
-		private void OnDisable ()
+		
+		void OnDisable ()
 		{
 			ClearMaterialEditors ();
 		}
@@ -201,15 +201,14 @@ namespace Coffee.UIExtensions.Editors
 
 
 
-
-//			var current = target as SoftMaskable;
 			var current = target as SoftMaskable;
+
 			current.GetComponentsInChildren<Graphic> (true, s_Graphics);
 			var fixTargets = s_Graphics.Where (x => x.gameObject != current.gameObject && !x.GetComponent<SoftMaskable> () && (!x.GetComponent<Mask> () || x.GetComponent<Mask> ().showMaskGraphic)).ToList ();
 			if (0 < fixTargets.Count)
 			{
 				GUILayout.BeginHorizontal ();
-				EditorGUILayout.HelpBox ("There are child Graphicss that does not have a SoftMaskable component.\nAdd SoftMaskable component to them.", MessageType.Warning);
+				EditorGUILayout.HelpBox ("There are child Graphics that does not have a SoftMaskable component.\nAdd SoftMaskable component to them.", MessageType.Warning);
 				GUILayout.BeginVertical ();
 				if (GUILayout.Button ("Fix"))
 				{
@@ -236,6 +235,34 @@ namespace Coffee.UIExtensions.Editors
 					ShowMaterialEditors (fontSharedMaterials, 1, fontSharedMaterials.Length - 1);
 				}
 			}
+			
+			if (!DetectMask (current.transform.parent))
+			{
+				GUILayout.BeginHorizontal ();
+				EditorGUILayout.HelpBox ("This is unnecessary SoftMaskable.\nCan't find any SoftMask components above.", MessageType.Warning);
+				if (GUILayout.Button ("Remove", GUILayout.Height (40)))
+				{
+					DestroyImmediate (current);
+					
+					Utils.MarkPrefabDirty ();
+				}
+				GUILayout.EndHorizontal ();
+			}
+		}
+
+		static bool DetectMask (Transform transform)
+		{
+			if (transform == null)
+			{
+				return false;
+			}
+
+			if (transform.GetComponent<SoftMask> () != null)
+			{
+				return true;
+			}
+
+			return DetectMask (transform.parent);
 		}
 
 		void ClearMaterialEditors ()

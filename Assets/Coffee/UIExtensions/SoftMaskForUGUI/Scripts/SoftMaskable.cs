@@ -12,7 +12,11 @@ namespace Coffee.UIExtensions
 	/// Soft maskable.
 	/// Add this component to Graphic under SoftMask for smooth masking.
 	/// </summary>
+#if UNITY_2018_3_OR_NEWER
+	[ExecuteAlways]
+#else
 	[ExecuteInEditMode]
+# endif
 	public class SoftMaskable : MonoBehaviour, IMaterialModifier, ICanvasRaycastFilter, ISerializationCallbackReceiver
 	{
 		//################################
