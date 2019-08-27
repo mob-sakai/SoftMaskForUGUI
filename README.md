@@ -7,7 +7,7 @@ Soft masking for uGUI elements in Unity.
 
 [![](https://img.shields.io/github/release/mob-sakai/SoftMaskForUGUI.svg?label=latest%20version)](https://github.com/mob-sakai/SoftMaskForUGUI/releases)
 [![](https://img.shields.io/github/release-date/mob-sakai/SoftMaskForUGUI.svg)](https://github.com/mob-sakai/SoftMaskForUGUI/releases)
-![](https://img.shields.io/badge/unity-2017%2B-green.svg)
+![](https://img.shields.io/badge/unity-2017%20or%20later-green.svg)
 [![](https://img.shields.io/github/license/mob-sakai/SoftMaskForUGUI.svg)](https://github.com/mob-sakai/SoftMaskForUGUI/blob/upm/LICENSE.txt)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-orange.svg)](http://makeapullrequest.com)
 [![](https://img.shields.io/twitter/follow/mob_sakai.svg?label=Follow&style=social)](https://twitter.com/intent/follow?screen_name=mob_sakai)
@@ -16,7 +16,9 @@ Soft masking for uGUI elements in Unity.
 
 ### What's new? [See changelog ![](https://img.shields.io/github/release-date/mob-sakai/SoftMaskForUGUI.svg?label=last%20updated)](https://github.com/mob-sakai/SoftMaskForUGUI/blob/develop/CHANGELOG.md)
 ### Do you want to receive notifications for new releases? [Watch this repo ![](https://img.shields.io/github/watchers/mob-sakai/SoftMaskForUGUI.svg?style=social&label=Watch)](https://github.com/mob-sakai/SoftMaskForUGUI/subscription)
-### Support me on Patreon! [![become_a_patron](https://user-images.githubusercontent.com/12690315/50731629-3b18b480-11ad-11e9-8fad-4b13f27969c1.png)](https://www.patreon.com/join/2343451?)
+### Support me on Patreon!  
+[![become_a_patron](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/join/2343451?)
+
 
 
 
@@ -82,7 +84,7 @@ By using SoftMask instead of default Mask, rounded edges of UI elements can be e
 <br><br><br><br>
 ## Install
 
-#### Using UnityPackageManager (for Unity 2018.3+)
+#### Using UnityPackageManager (for Unity 2018.3 or later)
 
 Find the manifest.json file in the Packages folder of your project and edit it to look like this:
 ```js
@@ -96,7 +98,7 @@ Find the manifest.json file in the Packages folder of your project and edit it t
 To update the package, change `#{version}` to the target version.  
 Or, use [UpmGitExtension](https://github.com/mob-sakai/UpmGitExtension).
 
-#### Using .unitypackage file (for Unity 2017.1+)
+#### Using .unitypackage file (for Unity 2017.1 or later)
 
 Download `*.unitypackage` from [Releases](https://github.com/mob-sakai/SoftMaskForUGUI/releases) and import the package into your Unity project.  
 Select `Assets > Import Package > Custom Package` from the menu.  
@@ -132,7 +134,7 @@ Or, add SoftMaskable components from the inspector of SoftMask component.
 
 ##### Requirement
 
-* Unity 2017+ *(including Unity 2018.x)* 
+* Unity 2017 or later *(including Unity 2018.x)* 
 * No other SDK are required
 
 
@@ -144,14 +146,17 @@ Or, add SoftMaskable components from the inspector of SoftMask component.
 
 You can support soft masks in your custom shaders, by adding just 3 lines!
 
-1. Add `#pragma` and `#include`.  `SOFTMASK_EDITOR` is a keyword for editor, not included in the build.
+1. Add `#pragma` and `#include`.  `SOFTMASK_EDITOR` is a keyword for editor only, not included in the build.  
+If you installed using packageManager, include `Packages/com.coffee.softmask-for-ugui/SoftMask.cginc` instead of.
 ```
 #include "Assets/Coffee/UIExtensions/SoftMaskForUGUI/SoftMask.cginc"
 #pragma shader_feature __ SOFTMASK_EDITOR
 ```
-2. Apply a soft mask in the fragment shader. `IN.vertex` is clip position.
+2. Apply a soft mask in the fragment shader.
+  - `IN.vertex` is clip position
+  - `IN.worldPosition` is world position
 ```
-color.a *= SoftMask(IN.vertex);
+color.a *= SoftMask(IN.vertex, IN.worldPosition);
 ```
 
 As an example of implementation, please see [UI-Default-SoftMask.shader](https://raw.githubusercontent.com/mob-sakai/SoftMaskForUGUI/upm/Shaders/Resources/UI-Default-SoftMask.shader).
@@ -313,7 +318,8 @@ UnityEditor.EditorApplication.update += ()
 
 [mob-sakai](https://github.com/mob-sakai)
 [![](https://img.shields.io/twitter/follow/mob_sakai.svg?label=Follow&style=social)](https://twitter.com/intent/follow?screen_name=mob_sakai)  
-[![become_a_patron](https://user-images.githubusercontent.com/12690315/50731615-ce9db580-11ac-11e9-964f-e0423533dc69.png)](https://www.patreon.com/join/2343451?)
+[![become_a_patron](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/join/2343451?)
+
 
 
 
