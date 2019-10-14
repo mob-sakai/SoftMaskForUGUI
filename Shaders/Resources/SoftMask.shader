@@ -19,10 +19,11 @@ SubShader {
 
 			sampler2D _MainTex;
 			float _Softness;
+			float _Alpha;
 
 			fixed4 frag (v2f_img i) : SV_Target
 			{
-				return saturate(tex2D(_MainTex, i.uv).a/_Softness);
+				return saturate(tex2D(_MainTex, i.uv).a/_Softness) * _Alpha;
 			}
 		ENDCG
 	}
