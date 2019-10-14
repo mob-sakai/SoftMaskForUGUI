@@ -53,6 +53,8 @@ namespace Coffee.UIExtensions
 		[SerializeField] DesamplingRate m_DesamplingRate = DesamplingRate.None;
 		[Tooltip("The value used by the soft mask to select the area of influence defined over the soft mask's graphic.")]
 		[SerializeField][Range(0.01f, 1)] float m_Softness = 1;
+		[Tooltip("The transparency of the whole masked graphic.")]
+		[SerializeField][Range(0f, 1f)] float m_Alpha = 1;
 		[Tooltip("Should the soft mask ignore parent soft masks?")]
 		[SerializeField] bool m_IgnoreParent = false;
 		[Tooltip("Is the soft mask a part of parent soft mask?")]
@@ -90,6 +92,23 @@ namespace Coffee.UIExtensions
 				if (m_Softness != value)
 				{
 					m_Softness = value;
+					hasChanged = true;
+				}
+			}
+		}
+		
+		/// <summary>
+		/// The transparency of the whole masked graphic.
+		/// </summary>
+		public float alpha
+		{
+			get { return m_Alpha; }
+			set
+			{
+				value = Mathf.Clamp01(value);
+				if (m_Alpha != value)
+				{
+					m_Alpha = value;
 					hasChanged = true;
 				}
 			}
@@ -271,6 +290,7 @@ namespace Coffee.UIExtensions
 					s_ColorMaskId = Shader.PropertyToID("_ColorMask");
 					s_MainTexId = Shader.PropertyToID("_MainTex");
 					s_SoftnessId = Shader.PropertyToID("_Softness");
+					s_Alpha = Shader.PropertyToID("_Alpha");
 				}
 			}
 			s_ActiveSoftMasks.Add(this);
@@ -378,6 +398,7 @@ namespace Coffee.UIExtensions
 		static int s_ColorMaskId;
 		static int s_MainTexId;
 		static int s_SoftnessId;
+		static int s_Alpha;
 		MaterialPropertyBlock _mpb;
 		CommandBuffer _cb;
 		Material _material;
@@ -539,6 +560,7 @@ namespace Coffee.UIExtensions
 					sm.material.SetInt(s_ColorMaskId, (int)1 << (3 - _stencilDepth - i));
 					sm._mpb.SetTexture(s_MainTexId, sm.graphic.mainTexture);
 					sm._mpb.SetFloat(s_SoftnessId, sm.m_Softness);
+					sm._mpb.SetFloat(s_Alpha, sm.m_Alpha);
 
 					// Draw mesh.
 					_cb.DrawMesh(sm.mesh, sm.transform.localToWorldMatrix, sm.material, 0, 0, sm._mpb);
