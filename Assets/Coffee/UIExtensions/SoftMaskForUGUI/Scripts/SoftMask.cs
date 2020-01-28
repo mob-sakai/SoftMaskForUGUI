@@ -45,6 +45,8 @@ namespace Coffee.UIExtensions
 			new Color(1, 1, 1, 0),
 		};
 
+		static bool s_UVStartsAtTop;
+
 
 		//################################
 		// Serialize Members.
@@ -53,6 +55,8 @@ namespace Coffee.UIExtensions
 		[SerializeField] DesamplingRate m_DesamplingRate = DesamplingRate.None;
 		[Tooltip("The value used by the soft mask to select the area of influence defined over the soft mask's graphic.")]
 		[SerializeField][Range(0.01f, 1)] float m_Softness = 1;
+		[Tooltip("The transparency of the whole masked graphic.")]
+		[SerializeField][Range(0f, 1f)] float m_Alpha = 1;
 		[Tooltip("Should the soft mask ignore parent soft masks?")]
 		[SerializeField] bool m_IgnoreParent = false;
 		[Tooltip("Is the soft mask a part of parent soft mask?")]
@@ -90,6 +94,23 @@ namespace Coffee.UIExtensions
 				if (m_Softness != value)
 				{
 					m_Softness = value;
+					hasChanged = true;
+				}
+			}
+		}
+		
+		/// <summary>
+		/// The transparency of the whole masked graphic.
+		/// </summary>
+		public float alpha
+		{
+			get { return m_Alpha; }
+			set
+			{
+				value = Mathf.Clamp01(value);
+				if (m_Alpha != value)
+				{
+					m_Alpha = value;
 					hasChanged = true;
 				}
 			}
@@ -240,7 +261,9 @@ namespace Coffee.UIExtensions
 			}
 
 			int x = (int)((softMaskBuffer.width - 1) * Mathf.Clamp01(sp.x / Screen.width));
-			int y = (int)((softMaskBuffer.height - 1) * Mathf.Clamp01(sp.y / Screen.height));
+			int y = s_UVStartsAtTop
+				? (int)((softMaskBuffer.height - 1) * Mathf.Clamp01(sp.y / Screen.height))
+				: (int)((softMaskBuffer.height - 1) * (1 - Mathf.Clamp01(sp.y / Screen.height)));
 			return 0.5f < GetPixelValue(x, y, interactions);
 		}
 
@@ -263,6 +286,7 @@ namespace Coffee.UIExtensions
 			// Register.
 			if (s_ActiveSoftMasks.Count == 0)
 			{
+				s_UVStartsAtTop = SystemInfo.graphicsUVStartsAtTop;
 				Canvas.willRenderCanvases += UpdateMaskTextures;
 
 				if (s_StencilCompId == 0)
@@ -271,6 +295,7 @@ namespace Coffee.UIExtensions
 					s_ColorMaskId = Shader.PropertyToID("_ColorMask");
 					s_MainTexId = Shader.PropertyToID("_MainTex");
 					s_SoftnessId = Shader.PropertyToID("_Softness");
+					s_Alpha = Shader.PropertyToID("_Alpha");
 				}
 			}
 			s_ActiveSoftMasks.Add(this);
@@ -378,6 +403,7 @@ namespace Coffee.UIExtensions
 		static int s_ColorMaskId;
 		static int s_MainTexId;
 		static int s_SoftnessId;
+		static int s_Alpha;
 		MaterialPropertyBlock _mpb;
 		CommandBuffer _cb;
 		Material _material;
@@ -388,10 +414,8 @@ namespace Coffee.UIExtensions
 		List<SoftMask> _children = new List<SoftMask>();
 		bool _hasChanged = false;
 		bool _hasStencilStateChanged = false;
-#if !UNITY_2018_1_OR_NEWER
 		static readonly Dictionary<int, Matrix4x4> s_previousViewProjectionMatrices = new Dictionary<int, Matrix4x4> ();
 		static readonly Dictionary<int, Matrix4x4> s_nowViewProjectionMatrices = new Dictionary<int, Matrix4x4> ();
-#endif
 
 		Material material { get { return _material ? _material : _material = new Material(s_SoftMaskShader ? s_SoftMaskShader : s_SoftMaskShader = Resources.Load<Shader>("SoftMask")){ hideFlags = HideFlags.HideAndDontSave }; } }
 
@@ -408,21 +432,23 @@ namespace Coffee.UIExtensions
 					continue;
 
 				var canvas = sm.graphic.canvas;
+				if(!canvas)
+					continue;
+
 				if (canvas.renderMode == RenderMode.WorldSpace)
 				{
 					var cam = canvas.worldCamera;
-					Matrix4x4 nowsVP = cam.projectionMatrix * cam.worldToCameraMatrix;
+					if(!cam)
+						continue;
 
-#if UNITY_2018_1_OR_NEWER
-					Matrix4x4 previousVP = cam.previousViewProjectionMatrix;
-#else
+					Matrix4x4 nowVP = cam.projectionMatrix * cam.worldToCameraMatrix;
+
 					Matrix4x4 previousVP = default(Matrix4x4);
 					int id = cam.GetInstanceID ();
 					s_previousViewProjectionMatrices.TryGetValue (id, out previousVP);
-					s_nowViewProjectionMatrices[id] = nowsVP;
-#endif
+					s_nowViewProjectionMatrices[id] = nowVP;
 
-					if (previousVP != nowsVP)
+					if (previousVP != nowVP)
 					{
 						sm.hasChanged = true;
 					}
@@ -459,15 +485,12 @@ namespace Coffee.UIExtensions
 				}
 			}
 
-
-#if !UNITY_2018_1_OR_NEWER
 			s_previousViewProjectionMatrices.Clear ();
-			foreach (int id in s_previousViewProjectionMatrices.Keys)
+			foreach (int id in s_nowViewProjectionMatrices.Keys)
 			{
 				s_previousViewProjectionMatrices [id] = s_nowViewProjectionMatrices [id];
 			}
 			s_nowViewProjectionMatrices.Clear ();
-#endif
 		}
 
 		/// <summary>
@@ -539,6 +562,7 @@ namespace Coffee.UIExtensions
 					sm.material.SetInt(s_ColorMaskId, (int)1 << (3 - _stencilDepth - i));
 					sm._mpb.SetTexture(s_MainTexId, sm.graphic.mainTexture);
 					sm._mpb.SetFloat(s_SoftnessId, sm.m_Softness);
+					sm._mpb.SetFloat(s_Alpha, sm.m_Alpha);
 
 					// Draw mesh.
 					_cb.DrawMesh(sm.mesh, sm.transform.localToWorldMatrix, sm.material, 0, 0, sm._mpb);
