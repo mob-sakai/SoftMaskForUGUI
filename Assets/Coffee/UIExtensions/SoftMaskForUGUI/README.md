@@ -90,12 +90,15 @@ Find the manifest.json file in the Packages folder of your project and edit it t
 ```js
 {
   "dependencies": {
-    "com.coffee.softmask-for-ugui": "https://github.com/mob-sakai/SoftMaskForUGUI.git#0.8.1",
+    "com.coffee.softmask-for-ugui": "https://github.com/mob-sakai/SoftMaskForUGUI.git",
     ...
   },
 }
 ```
-To update the package, change `#{version}` to the target version.  
+To update the package, change prefix `#{version}` to the target version.
+
+* `"com.coffee.softmask-for-ugui": "https://github.com/mob-sakai/SoftMaskForUGUI.git#0.9.2",`
+
 Or, use [UpmGitExtension](https://github.com/mob-sakai/UpmGitExtension).
 
 #### Using .unitypackage file (for Unity 2017.1 or later)
