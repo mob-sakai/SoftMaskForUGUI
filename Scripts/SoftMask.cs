@@ -409,10 +409,8 @@ namespace Coffee.UIExtensions
 		List<SoftMask> _children = new List<SoftMask>();
 		bool _hasChanged = false;
 		bool _hasStencilStateChanged = false;
-#if !UNITY_2018_1_OR_NEWER
 		static readonly Dictionary<int, Matrix4x4> s_previousViewProjectionMatrices = new Dictionary<int, Matrix4x4> ();
 		static readonly Dictionary<int, Matrix4x4> s_nowViewProjectionMatrices = new Dictionary<int, Matrix4x4> ();
-#endif
 
 		Material material { get { return _material ? _material : _material = new Material(s_SoftMaskShader ? s_SoftMaskShader : s_SoftMaskShader = Resources.Load<Shader>("SoftMask")){ hideFlags = HideFlags.HideAndDontSave }; } }
 
@@ -438,18 +436,14 @@ namespace Coffee.UIExtensions
 					if(!cam)
 						continue;
 
-					Matrix4x4 nowsVP = cam.projectionMatrix * cam.worldToCameraMatrix;
+					Matrix4x4 nowVP = cam.projectionMatrix * cam.worldToCameraMatrix;
 
-#if UNITY_2018_1_OR_NEWER
-					Matrix4x4 previousVP = cam.previousViewProjectionMatrix;
-#else
 					Matrix4x4 previousVP = default(Matrix4x4);
 					int id = cam.GetInstanceID ();
 					s_previousViewProjectionMatrices.TryGetValue (id, out previousVP);
-					s_nowViewProjectionMatrices[id] = nowsVP;
-#endif
+					s_nowViewProjectionMatrices[id] = nowVP;
 
-					if (previousVP != nowsVP)
+					if (previousVP != nowVP)
 					{
 						sm.hasChanged = true;
 					}
