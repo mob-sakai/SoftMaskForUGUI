@@ -485,15 +485,12 @@ namespace Coffee.UIExtensions
 				}
 			}
 
-
-#if !UNITY_2018_1_OR_NEWER
 			s_previousViewProjectionMatrices.Clear ();
-			foreach (int id in s_previousViewProjectionMatrices.Keys)
+			foreach (int id in s_nowViewProjectionMatrices.Keys)
 			{
 				s_previousViewProjectionMatrices [id] = s_nowViewProjectionMatrices [id];
 			}
 			s_nowViewProjectionMatrices.Clear ();
-#endif
 		}
 
 		/// <summary>
