@@ -24,7 +24,7 @@ namespace Coffee.UIExtensions
 		//################################
 		const int kVisibleInside = (1 << 0) + (1 << 2) + (1 << 4) + (1 << 6);
 		const int kVisibleOutside = (2 << 0) + (2 << 2) + (2 << 4) + (2 << 6);
-
+		private static readonly Dictionary<Material,Dictionary<SoftMask,Material>> s_clonedMaterials = new Dictionary<Material,Dictionary<SoftMask,Material>>();
 
 		//################################
 		// Serialize Members.
@@ -69,9 +69,18 @@ namespace Coffee.UIExtensions
 				parentTransform = parentTransform.parent;
 			}
 
+			Dictionary<SoftMask,Material> dictBySoftMask = null;
 			Material result = baseMaterial;
+
 			if (_softMask)
 			{
+				if (s_clonedMaterials.TryGetValue(baseMaterial, out dictBySoftMask))
+				{
+					Material clonedMat;
+					if (dictBySoftMask.TryGetValue(_softMask, out clonedMat))
+						return clonedMat;
+				}
+
 				result = new Material(baseMaterial);
 				result.hideFlags = HideFlags.HideAndDontSave;
 				result.SetTexture(s_SoftMaskTexId, _softMask.softMaskBuffer);
@@ -83,7 +92,6 @@ namespace Coffee.UIExtensions
 						((m_MaskInteraction >> 6) & 0x3)
 					));
 
-				StencilMaterial.Remove(baseMaterial);
 				ReleaseMaterial(ref _maskMaterial);
 				_maskMaterial = result;
 
@@ -95,8 +103,16 @@ namespace Coffee.UIExtensions
 			else
 			{
 				baseMaterial.SetTexture(s_SoftMaskTexId, Texture2D.whiteTexture);
+				return baseMaterial;
 			}
 
+			if (dictBySoftMask == null)
+			{
+				dictBySoftMask = new Dictionary<SoftMask, Material>();
+				s_clonedMaterials.Add(baseMaterial, dictBySoftMask);
+			}
+
+			dictBySoftMask.Add(_softMask, result);
 			return result;
 		}
 
