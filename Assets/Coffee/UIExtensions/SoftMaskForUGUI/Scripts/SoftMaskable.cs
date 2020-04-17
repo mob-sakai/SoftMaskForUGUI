@@ -78,7 +78,22 @@ namespace Coffee.UIExtensions
 				{
 					Material clonedMat;
 					if (dictBySoftMask.TryGetValue(_softMask, out clonedMat))
-						return clonedMat;
+					{
+						// we need to check for null, because the material might have been disposed in ReleaseMaterial()
+						if (clonedMat != null)
+							return clonedMat;
+
+						// When we have found a null entry, we remove it from the dicts.
+						// We do that here and not in ReleaseMaterial(), because here we have the baseMaterial ready
+						// and don't need to iterate the whole dict.
+						dictBySoftMask.Remove(_softMask);
+
+						if (dictBySoftMask.Count == 0)
+						{
+							s_clonedMaterials.Remove(baseMaterial);
+							dictBySoftMask = null;
+						}
+					}
 				}
 
 				result = new Material(baseMaterial);
