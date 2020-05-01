@@ -1,0 +1,14 @@
+{
+    "name": "Coffee.SoftMaskForUGUI_Demo",
+    "references": [
+        "Coffee.SoftMaskForUGUI"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": []
+}

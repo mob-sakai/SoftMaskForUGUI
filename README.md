@@ -1,24 +1,22 @@
 SoftMaskForUGUI
 ===
 
-Soft masking for uGUI elements in Unity.
+UI Soft Mask is a smooth masking component for Unity UI (uGUI) elements.
+
+By using SoftMask instead of the default Mask component, you can beautifully represent the rounded edges of UI elements.
 
 ![](https://user-images.githubusercontent.com/12690315/50282438-18408d80-0496-11e9-8f86-81e804edadd4.png)
 
-[![](https://img.shields.io/github/release/mob-sakai/SoftMaskForUGUI.svg?label=latest%20version)](https://github.com/mob-sakai/SoftMaskForUGUI/releases)
-[![](https://img.shields.io/github/release-date/mob-sakai/SoftMaskForUGUI.svg)](https://github.com/mob-sakai/SoftMaskForUGUI/releases)
-![](https://img.shields.io/badge/unity-2017%20or%20later-green.svg)
+[![](https://img.shields.io/npm/v/com.coffee.softmask-for-ugui?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.coffee.softmask-for-ugui/)
+[![](https://img.shields.io/github/v/release/mob-sakai/SoftMaskForUGUI?include_prereleases)](https://github.com/mob-sakai/SoftMaskForUGUI/releases)
+[![](https://img.shields.io/github/release-date/mob-sakai/SoftMaskForUGUI.svg)](https://github.com/mob-sakai/SoftMaskForUGUI/releases)  
+![](https://img.shields.io/badge/unity-2017.1%20or%20later-green.svg)
 [![](https://img.shields.io/github/license/mob-sakai/SoftMaskForUGUI.svg)](https://github.com/mob-sakai/SoftMaskForUGUI/blob/upm/LICENSE.txt)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-orange.svg)](http://makeapullrequest.com)
+[![](https://img.shields.io/github/watchers/mob-sakai/SoftMaskForUGUI.svg?style=social&label=Watch)](https://github.com/mob-sakai/SoftMaskForUGUI/subscription)
 [![](https://img.shields.io/twitter/follow/mob_sakai.svg?label=Follow&style=social)](https://twitter.com/intent/follow?screen_name=mob_sakai)
 
-<< [Description](#Description) | [WebGL Demo](#demo) | [Download](https://github.com/mob-sakai/SoftMaskForUGUI/releases) | [Usage](#usage) | [Development Note](#development-note) >>
-
-### What's new? [See changelog ![](https://img.shields.io/github/release-date/mob-sakai/SoftMaskForUGUI.svg?label=last%20updated)](https://github.com/mob-sakai/SoftMaskForUGUI/blob/develop/CHANGELOG.md)
-### Do you want to receive notifications for new releases? [Watch this repo ![](https://img.shields.io/github/watchers/mob-sakai/SoftMaskForUGUI.svg?style=social&label=Watch)](https://github.com/mob-sakai/SoftMaskForUGUI/subscription)
-### Support me on Patreon!  
-[![become_a_patron](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/join/2343451?)
-
+<< [Description](#Description) | [WebGL Demo](#demo) | [Installation](#installation) | [Usage](#usage) | [For Your Custom Shader](#support-soft-masks-with-your-custom-shaders) >>
 
 
 
@@ -45,7 +43,7 @@ By using SoftMask instead of default Mask, rounded edges of UI elements can be e
 ![](https://user-images.githubusercontent.com/12690315/48708328-a0d4cf80-ec45-11e8-9945-e877faabc968.png)
 * Support overlay, camera space and world space.  
 ![](https://user-images.githubusercontent.com/12690315/48708329-a0d4cf80-ec45-11e8-8328-16b697f981ec.png)
-* Raycast is filtered only for the visible part.  
+* (Option) Raycast is filtered only for the visible part.  
 ![](https://user-images.githubusercontent.com/12690315/48708330-a16d6600-ec45-11e8-94bf-afecd1bd9a39.png)
 * Contain soft maskable UI shader.
 * Support soft masks in your custom shaders by adding just 3 lines. For details, please see [Development Note](#support-soft-masks-in-your-custom-shaders). 
@@ -57,12 +55,9 @@ By using SoftMask instead of default Mask, rounded edges of UI elements can be e
 ![](https://user-images.githubusercontent.com/12690315/50284153-76bc3a80-049b-11e9-8c55-719af897960a.png)
 * Preview soft mask buffer in inspector.  
 ![](https://user-images.githubusercontent.com/12690315/50284151-7459e080-049b-11e9-9cd3-24fb476766dc.png)
-* Support TextMeshPro.  
-![](https://user-images.githubusercontent.com/12690315/50284145-71f78680-049b-11e9-8be1-ac0ccbdf0144.png)
 * Make multiple holes on one background by 'Parts of parent' option.  
 ![](https://user-images.githubusercontent.com/12690315/54102470-f5c26e80-440b-11e9-89d1-899aa4dca00d.png)
-* Camera movement affects the mask rendering when on a World Space Canvas.  
-![](https://user-images.githubusercontent.com/12690315/57015752-68540b80-6c51-11e9-8511-2d4534dd9d58.gif)
+
 
 
 #### Components
@@ -84,225 +79,100 @@ By using SoftMask instead of default Mask, rounded edges of UI elements can be e
 <br><br><br><br>
 ## Install
 
-#### Using UnityPackageManager (for Unity 2018.3 or later)
+#### Requirement
+
+* Unity 2017.1 or later
+* No other SDK are required
+
+#### Using OpenUPM (for Unity 2018.3 or later)
+
+This package is available on [OpenUPM](https://openupm.com). 
+You can install it via [openupm-cli](https://github.com/openupm/openupm-cli).
+```
+openupm add com.coffee.softmask-for-ugui
+```
+
+#### Using Git (for Unity 2018.3 or later)
 
 Find the manifest.json file in the Packages folder of your project and edit it to look like this:
 ```js
 {
   "dependencies": {
-    "com.coffee.softmask-for-ugui": "https://github.com/mob-sakai/SoftMaskForUGUI.git#0.8.1",
+    "com.coffee.softmask-for-ugui": "https://github.com/mob-sakai/SoftMaskForUGUI.git",
     ...
   },
 }
 ```
-To update the package, change `#{version}` to the target version.  
-Or, use [UpmGitExtension](https://github.com/mob-sakai/UpmGitExtension).
 
-#### Using .unitypackage file (for Unity 2017.1 or later)
+To update the package, change suffix `#{version}` to the target version.
 
-Download `*.unitypackage` from [Releases](https://github.com/mob-sakai/SoftMaskForUGUI/releases) and import the package into your Unity project.  
-Select `Assets > Import Package > Custom Package` from the menu.  
-![](https://user-images.githubusercontent.com/12690315/46570979-edbb5a00-c9a7-11e8-845d-c5ee279effec.png)
+* e.g. `"com.coffee.softmask-for-ugui": "https://github.com/mob-sakai/SoftMaskForUGUI.git#1.0.0",`
+
+Or, use [UpmGitExtension](https://github.com/mob-sakai/UpmGitExtension) to install and update the package.
+
+#### For Unity 2018.2 or earlier
+
+1. Download a source code zip file from [Releases](https://github.com/mob-sakai/SoftMaskForUGUI/releases) page
+2. Extract it
+3. Import it into the following directory in your Unity project
+   - `Packages` (It works as an embedded package. For Unity 2018.1 or later)
+   - `Assets` (Legacy way. For Unity 2017.1 or later)
 
 
 
 <br><br><br><br>
 ## How to play demo
 
-* Import `SoftMask_Demo.unitypackage` into your project.  
-* The unitypackage exists in `Assets/Assets/Coffee/UIExtensions/SoftMaskForUGUI` or `Packages/Soft Mask For uGUI`.  
-![](https://user-images.githubusercontent.com/12690315/51080546-ff3b9d00-1720-11e9-8a58-9e22003714af.png)
-* Open SoftMask_Demo scene and play it.
-* The demo requires `TextMeshPro` and `TextMeshPro Essential Resources`. Import it before playing.
+#### For Unity 2019.1 or later
 
+1. Open `Package Manager` window and select `UI Soft Mask` package in package list
+2. Click `Import in project` button  
+![](https://user-images.githubusercontent.com/12690315/79000480-a8bd4880-7b87-11ea-89c7-a17033a486ba.png)
+3. The demo will be imported into `Assets/Samples/UI Soft Mask/{version}/Demo`; open `UISoftMask_Demo` scene and play it
+
+#### For Unity 2018.4 or earlier
+
+1. Select `Assets/Samples/UI Soft Mask Demo` from menu  
+![Assets_と_Menubar](https://user-images.githubusercontent.com/12690315/79001101-dd7dcf80-7b88-11ea-9cf2-b44c6c5c9b17.png)
+2. The demo will be imported into `Assets/Samples/UI Soft Mask/{version}/Demo`; open `UISoftMask_Demo` scene and play it
 
 
 <br><br><br><br>
 ## Usage
 
-1. Add SoftMask component instead of Mask component.  
-Or, convert existing Mask component to SoftMask component from the context menu.  
+1. Add a SoftMask component instead of Mask component.  
+Or, convert an existing Mask component to SoftMask component from the context menu.  
 ![](https://user-images.githubusercontent.com/12690315/48659018-902e2900-ea8e-11e8-9b6e-224365cdde7f.png)
-2. Add SoftMaskable components to the child UI elements of SoftMask component.  
+2. Add a SoftMaskable components to the child UI elements of the SoftMask component.  
 ![](https://user-images.githubusercontent.com/12690315/48704424-d4a9f800-ec39-11e8-8d65-8b7d1975750c.png)  
-Or, add SoftMaskable components from the inspector of SoftMask component.  
+Or, add a SoftMaskable components from the inspector of the SoftMask component.  
 ![](https://user-images.githubusercontent.com/12690315/50284153-76bc3a80-049b-11e9-8c55-719af897960a.png)
-3. Adjust softness of SoftMask.  
+3. Adjust softness setting of SoftMask.  
 ![](https://user-images.githubusercontent.com/12690315/48661087-01ca9f00-eab0-11e8-8878-772a1ed1fb7b.gif)
 4. Enjoy!
 
 
-##### Requirement
-
-* Unity 2017 or later *(including Unity 2018.x)* 
-* No other SDK are required
-
-
 
 <br><br><br><br>
-## Development Note
+## Support soft masks with your custom shaders
 
-#### Support soft masks in your custom shaders
+<b>With just three additional lines,</b> you can now support softmasks in your custom shaders!
 
-You can support soft masks in your custom shaders, by adding just 3 lines!
-
-1. Add `#pragma` and `#include`.  `SOFTMASK_EDITOR` is a keyword for editor only, not included in the build.  
-If you installed using packageManager, include `Packages/com.coffee.softmask-for-ugui/SoftMask.cginc` instead of.
+1. Add `#pragma` and `#include` directives, where `SOFTMASK_EDITOR` is an editor-only keyword and is not included in the build.
+If you didn't use package manager to install, include `SoftMask.cginc` in the appropriate path instead.
 ```
-#include "Assets/Coffee/UIExtensions/SoftMaskForUGUI/SoftMask.cginc"
+#include "Packages/com.coffee.softmask-for-ugui/Shaders/SoftMask.cginc"
 #pragma shader_feature __ SOFTMASK_EDITOR
 ```
-2. Apply a soft mask in the fragment shader.
-  - `IN.vertex` is clip position
-  - `IN.worldPosition` is world position
+2. Apply a soft mask in the fragment shader.  
+This operation determines the final alpha according to the soft mask buffer.  
+  - `IN.vertex`: the clip position
+  - `IN.worldPosition`: the world position
 ```
 color.a *= SoftMask(IN.vertex, IN.worldPosition);
 ```
 
 As an example of implementation, please see [UI-Default-SoftMask.shader](https://raw.githubusercontent.com/mob-sakai/SoftMaskForUGUI/upm/Shaders/Resources/UI-Default-SoftMask.shader).
-
-
-<br><br>
-#### Tips: Convert component from context menu
-
-Converting components from the context menu is very convenient.
-You can convert multiple components at the same time, without having to remove the source components.
-
-![](https://user-images.githubusercontent.com/12690315/48659018-902e2900-ea8e-11e8-9b6e-224365cdde7f.png)
-
-If the destination component has the same properties as the source component, the value is set automatically.
-
-In addition, if the destination component is compatible with the source component, it will not lose its reference.
-For example, if `public Mask mask;` refers to a Mask, converting it to SoftMask in this way does not lose references.
-
-This way consists of two generic methods.
-
-```cs
-/// <summary>
-/// Verify whether it can be converted to the specified component.
-/// </summary>
-protected static bool CanConvertTo<T>(Object context)
-	where T : MonoBehaviour
-{
-	return context && context.GetType() != typeof(T);
-}
-
-/// <summary>
-/// Convert to the specified component.
-/// </summary>
-protected static void ConvertTo<T>(Object context) where T : MonoBehaviour
-{
-	var target = context as MonoBehaviour;
-	var so = new SerializedObject(target);
-	so.Update();
-
-	bool oldEnable = target.enabled;
-	target.enabled = false;
-
-	// Find MonoScript of the specified component.
-	foreach (var script in Resources.FindObjectsOfTypeAll<MonoScript>())
-	{
-		if (script.GetClass() != typeof(T))
-			continue;
-
-		// Set 'm_Script' to convert.
-		so.FindProperty("m_Script").objectReferenceValue = script;
-		so.ApplyModifiedProperties();
-		break;
-	}
-
-	(so.targetObject as MonoBehaviour).enabled = oldEnable;
-}
-```
-
-In SoftMask, they are implemented as follows.
-* Mask and SoftMask can be converted to each other.
-* If conversion is not possible, gray out the context menu.
-
-```cs
-[MenuItem("CONTEXT/Mask/Convert To SoftMask", true)]
-static bool _ConvertToSoftMask(MenuCommand command)
-{
-	return CanConvertTo<SoftMask>(command.context);
-}
-[MenuItem("CONTEXT/Mask/Convert To SoftMask", false)]
-static void ConvertToSoftMask(MenuCommand command)
-{
-	ConvertTo<SoftMask>(command.context);
-}
-[MenuItem("CONTEXT/Mask/Convert To Mask", true)]
-static bool _ConvertToMask(MenuCommand command)
-{
-	return CanConvertTo<Mask>(command.context);
-}
-[MenuItem("CONTEXT/Mask/Convert To Mask", false)]
-static void ConvertToMask(MenuCommand command)
-{
-	ConvertTo<Mask>(command.context);
-}
-```
-
-For details, please see [SoftMaskEditor.cs](https://raw.githubusercontent.com/mob-sakai/SoftMaskForUGUI/upm/Scripts/Editor/SoftMaskEditor.cs).
-
-
-<br><br>
-#### Tips: Shader code for editor only
-
-Do you know how to implement shader code "for editor only"?
-SoftMask uses `SOFTMASK_EDITOR` keyword in shader code to determine whether it is running in the editor.
-
-`#pragma shader_feature __ SOFTMASK_EDITOR`
-
-`SOFTMASK_EDITOR` keyword is set from the editor script, but it is not set after it is built. Also, this shader variant will be excluded from build.
-
-```cs
-#if UNITY_EDITOR
-material = new Material(shader);
-material.hideFlags = HideFlags.HideAndDontSave;
-material.EnableKeyword("SOFTMASK_EDITOR");
-#endif
-```
-
-
-<br><br>
-#### Tips: Shader code for SceneView only
-
-Do you know how to implement shader code "for SceneView only"?
-SoftMask understands that the current rendering is for SceneView, when SceneView's view projection matrix and UNITY_MATRIX_VP match.
-
-`fixed isSceneView = 1 - any(UNITY_MATRIX_VP - _SceneViewVP);`
-
-Actually, because of the movement operation in SceneView, use "approximate" instead of "match".
-
-```cs
-float4x4 _SceneViewVP;
-
-fixed Approximate(float4x4 a, float4x4 b)
-{
-	float4x4 d = abs(a - b);
-	return step(
-		max(d._m00,max(d._m01,max(d._m02,max(d._m03,
-		max(d._m10,max(d._m11,max(d._m12,max(d._m13,
-		max(d._m20,max(d._m21,max(d._m22,max(d._m23,
-		max(d._m30,max(d._m31,max(d._m32,d._m33))))))))))))))),
-		0.01);
-}
-
-fixed isSceneView = Approximate(UNITY_MATRIX_VP, _SceneViewVP);
-```
-
-`_SceneViewVP` is set every frame from the editor script.
-
-```cs
-#if UNITY_EDITOR
-UnityEditor.EditorApplication.update += ()
-{
-    Camera cam = UnityEditor.SceneView.lastActiveSceneView.camera;
-    Matrix4x4 vp = cam.projectionMatrix * cam.worldToCameraMatrix;
-    material.SetMatrix("_SceneViewVP", vp);
-};
-#endif
-```
 
 
 
@@ -314,12 +184,22 @@ UnityEditor.EditorApplication.update += ()
 
 
 
+<br><br><br><br>
+## Support
+
+This is an open-source project that I am developing in my free time. 
+If you like it, you can support me. 
+By supporting, you let me spend more time working on better tools that you can use for free. :)
+
+[![become_a_patron_on_patreon](https://user-images.githubusercontent.com/12690315/50731629-3b18b480-11ad-11e9-8fad-4b13f27969c1.png)](https://www.patreon.com/join/2343451?)  
+[![become_a_sponsor_on_github](https://user-images.githubusercontent.com/12690315/66942881-03686280-f085-11e9-9586-fc0b6011029f.png)](https://github.com/users/mob-sakai/sponsorship)
+
+
+
 ## Author
 
 [mob-sakai](https://github.com/mob-sakai)
-[![](https://img.shields.io/twitter/follow/mob_sakai.svg?label=Follow&style=social)](https://twitter.com/intent/follow?screen_name=mob_sakai)  
-[![become_a_patron](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/join/2343451?)
-
+[![](https://img.shields.io/twitter/follow/mob_sakai.svg?label=Follow&style=social)](https://twitter.com/intent/follow?screen_name=mob_sakai) 
 
 
 
@@ -328,5 +208,4 @@ UnityEditor.EditorApplication.update += ()
 * GitHub page : https://github.com/mob-sakai/SoftMaskForUGUI
 * Releases : https://github.com/mob-sakai/SoftMaskForUGUI/releases
 * Issue tracker : https://github.com/mob-sakai/SoftMaskForUGUI/issues
-* Current project : https://github.com/mob-sakai/SoftMaskForUGUI/projects/1
 * Change log : https://github.com/mob-sakai/SoftMaskForUGUI/blob/upm/CHANGELOG.md

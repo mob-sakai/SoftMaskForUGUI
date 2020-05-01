@@ -1,16 +1,16 @@
 Shader "Hidden/SoftMask" {
 
-SubShader {
-	Tags {"Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent"}
-	LOD 100
-	
-    Cull Off
-	ZWrite Off
-	Blend SrcAlpha One
-	ColorMask [_ColorMask]
+	SubShader {
+		Tags {"Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent"}
+		LOD 100
+		
+		Cull Off
+		ZWrite Off
+		Blend SrcAlpha One
+		ColorMask [_ColorMask]
 
-	Pass {  
-		CGPROGRAM
+		Pass {  
+			CGPROGRAM
 			#pragma vertex vert_img
 			#pragma fragment frag
 			#pragma target 2.0
@@ -25,8 +25,8 @@ SubShader {
 			{
 				return saturate(tex2D(_MainTex, i.uv).a/_Softness) * _Alpha;
 			}
-		ENDCG
+			ENDCG
+		}
 	}
-}
 
 }

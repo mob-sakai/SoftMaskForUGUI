@@ -1,3 +1,16 @@
+# [0.10.0-preview.1](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v0.9.1...v0.10.0-preview.1) (2020-05-01)
+
+
+### Bug Fixes
+
+* softmask not working on PS4 ([b391c10](https://github.com/mob-sakai/SoftMaskForUGUI/commit/b391c103c57cdb3a848701ee5663b86b962031cd)), closes [#74](https://github.com/mob-sakai/SoftMaskForUGUI/issues/74)
+
+
+### Features
+
+* add sample importer ([d98a241](https://github.com/mob-sakai/SoftMaskForUGUI/commit/d98a241e78f81a92bf22181d94a7622c6a65b589))
+* raycast filter is now optional feature ([3b42727](https://github.com/mob-sakai/SoftMaskForUGUI/commit/3b427274c9842c46dd90fa8845dc5156822b04e1)), closes [#73](https://github.com/mob-sakai/SoftMaskForUGUI/issues/73)
+
 # Changelog
 
 ## [v0.9.1](https://github.com/mob-sakai/SoftMaskForUGUI/tree/v0.9.1) (2020-01-28)

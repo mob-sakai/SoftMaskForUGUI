@@ -46,10 +46,9 @@ Shader "UI/Default-SoftMask"
         Pass
         {
             Name "Default"
-        CGPROGRAM
+            CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-            #pragma target 2.0
 
             #include "UnityCG.cginc"
             #include "UnityUI.cginc"
@@ -57,8 +56,8 @@ Shader "UI/Default-SoftMask"
             #pragma multi_compile __ UNITY_UI_CLIP_RECT
             #pragma multi_compile __ UNITY_UI_ALPHACLIP
 
-            #include "./../../SoftMask.cginc"	// Add for soft mask
-			#pragma shader_feature __ SOFTMASK_EDITOR	// Add for soft mask
+            #include "Packages/com.coffee.softmask-for-ugui/Shaders/SoftMask.cginc"	// Add for soft mask
+            #pragma shader_feature __ SOFTMASK_EDITOR	// Add for soft mask
 
             struct appdata_t
             {
@@ -105,14 +104,14 @@ Shader "UI/Default-SoftMask"
                 color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
 
                 #ifdef UNITY_UI_ALPHACLIP
-                clip (color.a - 0.001);
+                    clip (color.a - 0.001);
                 #endif
 
                 color.a *= SoftMask(IN.vertex, IN.worldPosition);	// Add for soft mask
 
                 return color;
             }
-        ENDCG
+            ENDCG
         }
     }
 }

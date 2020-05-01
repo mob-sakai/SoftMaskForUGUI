@@ -262,8 +262,8 @@ namespace Coffee.UIExtensions
 
 			int x = (int)((softMaskBuffer.width - 1) * Mathf.Clamp01(sp.x / Screen.width));
 			int y = s_UVStartsAtTop
-				? (int)((softMaskBuffer.height - 1) * Mathf.Clamp01(sp.y / Screen.height))
-				: (int)((softMaskBuffer.height - 1) * (1 - Mathf.Clamp01(sp.y / Screen.height)));
+				? (int)((softMaskBuffer.height - 1) * (1 - Mathf.Clamp01(sp.y / Screen.height)))
+				: (int)((softMaskBuffer.height - 1) * Mathf.Clamp01(sp.y / Screen.height));
 			return 0.5f < GetPixelValue(x, y, interactions);
 		}
 
@@ -286,11 +286,11 @@ namespace Coffee.UIExtensions
 			// Register.
 			if (s_ActiveSoftMasks.Count == 0)
 			{
-				s_UVStartsAtTop = SystemInfo.graphicsUVStartsAtTop;
 				Canvas.willRenderCanvases += UpdateMaskTextures;
 
 				if (s_StencilCompId == 0)
 				{
+				    s_UVStartsAtTop = SystemInfo.graphicsUVStartsAtTop;
 					s_StencilCompId = Shader.PropertyToID("_StencilComp");
 					s_ColorMaskId = Shader.PropertyToID("_ColorMask");
 					s_MainTexId = Shader.PropertyToID("_MainTex");

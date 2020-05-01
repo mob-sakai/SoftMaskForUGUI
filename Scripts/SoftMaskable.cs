@@ -36,8 +36,10 @@ namespace Coffee.UIExtensions
 		[Tooltip("The interaction for each masks.")]
 		[HideInInspector]
 		[SerializeField] int m_MaskInteraction = kVisibleInside;
-		[Tooltip("Use stencil for masking.")]
+		[Tooltip("Use stencil to mask.")]
 		[SerializeField] bool m_UseStencil = false;
+		[Tooltip("Use soft-masked raycast target.\n\nNote: This option is expensive.")]
+		[SerializeField] bool m_RaycastFilter = false;
 
 
 		//################################
@@ -115,6 +117,10 @@ namespace Coffee.UIExtensions
 			{
 				return false;
 			}
+            else if (!m_RaycastFilter)
+            {
+				return true;
+            }
 
 			var sm = _softMask;
 			for (int i = 0; i < 4; i++)
@@ -142,6 +148,15 @@ namespace Coffee.UIExtensions
 					graphic.SetMaterialDirty();
 				}
 			}
+		}
+
+		/// <summary>
+		/// Use soft-masked raycast target. This option is expensive.
+		/// </summary>
+		public bool raycastFilter
+		{
+			get { return m_RaycastFilter; }
+			set { m_RaycastFilter = value; }
 		}
 
 		/// <summary>
