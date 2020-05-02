@@ -73,6 +73,7 @@ namespace Coffee.UIExtensions
 			if (_softMask)
 			{
 				result = new Material(baseMaterial);
+				result.CopyPropertiesFromMaterial(baseMaterial);
 				result.hideFlags = HideFlags.HideAndDontSave;
 				result.SetTexture(s_SoftMaskTexId, _softMask.softMaskBuffer);
 				result.SetInt(s_StencilCompId, m_UseStencil ? (int)CompareFunction.Equal : (int)CompareFunction.Always);
