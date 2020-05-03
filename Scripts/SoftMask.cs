@@ -98,7 +98,7 @@ namespace Coffee.UIExtensions
 				}
 			}
 		}
-		
+
 		/// <summary>
 		/// The transparency of the whole masked graphic.
 		/// </summary>
@@ -296,6 +296,11 @@ namespace Coffee.UIExtensions
 					s_MainTexId = Shader.PropertyToID("_MainTex");
 					s_SoftnessId = Shader.PropertyToID("_Softness");
 					s_Alpha = Shader.PropertyToID("_Alpha");
+#if UNITY_EDITOR
+					UnityEditor.EditorApplication.update += UpdateGameViewMatrixForShader;
+					s_GameVPId = Shader.PropertyToID("_GameVP");
+					s_GameTVPId = Shader.PropertyToID("_GameTVP");
+#endif
 				}
 			}
 			s_ActiveSoftMasks.Add(this);
@@ -379,7 +384,33 @@ namespace Coffee.UIExtensions
 			hasChanged = true;
 		}
 
-		#if UNITY_EDITOR
+// #if UNITY_EDITOR
+		/// <summary>
+		/// Update the scene view matrix for shader.
+		/// </summary>
+		static void UpdateGameViewMatrixForShader()
+		{
+			foreach (var sm in s_ActiveSoftMasks)
+			{
+				var c = sm.graphic.canvas.rootCanvas;
+				var wcam = c.worldCamera ?? Camera.main;
+				if (c.renderMode != RenderMode.ScreenSpaceOverlay && wcam)
+				{
+					var pv = GL.GetGPUProjectionMatrix (wcam.projectionMatrix, false) * wcam.worldToCameraMatrix;
+					Shader.SetGlobalMatrix(s_GameVPId, pv);
+					Shader.SetGlobalMatrix(s_GameTVPId, pv);
+				}
+				else
+				{
+					var scale = c.transform.localScale.x;
+					var size = (c.transform as RectTransform).sizeDelta;
+					var pos = c.transform.position;
+					Shader.SetGlobalMatrix(s_GameVPId, Matrix4x4.TRS(new Vector3(0, 0, 0.5f), Quaternion.identity, new Vector3(2 / size.x, 2 / size.y, 0.0005f * scale)));
+					Shader.SetGlobalMatrix(s_GameTVPId, Matrix4x4.TRS(new Vector3(0, 0, 0), Quaternion.identity, new Vector3(1 / pos.x, 1 / pos.y, -2/2000f)) * Matrix4x4.Translate(-pos));
+				}
+			}
+		}
+
 		/// <summary>
 		/// This function is called when the script is loaded or a value is changed in the inspector (Called in the editor only).
 		/// </summary>
@@ -390,7 +421,7 @@ namespace Coffee.UIExtensions
 			base.OnValidate();
 			_hasStencilStateChanged = false;
 		}
-		#endif
+// #endif
 
 		//################################
 		// Private Members.
@@ -403,6 +434,8 @@ namespace Coffee.UIExtensions
 		static int s_ColorMaskId;
 		static int s_MainTexId;
 		static int s_SoftnessId;
+		static int s_GameVPId;
+		static int s_GameTVPId;
 		static int s_Alpha;
 		MaterialPropertyBlock _mpb;
 		CommandBuffer _cb;
@@ -491,6 +524,10 @@ namespace Coffee.UIExtensions
 				s_previousViewProjectionMatrices [id] = s_nowViewProjectionMatrices [id];
 			}
 			s_nowViewProjectionMatrices.Clear ();
+
+#if UNITY_EDITOR
+			UpdateGameViewMatrixForShader();
+#endif
 		}
 
 		/// <summary>

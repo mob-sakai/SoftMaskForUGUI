@@ -1,3 +1,10 @@
+# [0.10.0-preview.2](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v0.10.0-preview.1...v0.10.0-preview.2) (2020-05-03)
+
+
+### Bug Fixes
+
+* visual bug with ScreenSpaceCamera canvas on editor ([482b967](https://github.com/mob-sakai/SoftMaskForUGUI/commit/482b96709b9dce680e48214df26c81b7e963dc09)), closes [#78](https://github.com/mob-sakai/SoftMaskForUGUI/issues/78)
+
 # [0.10.0-preview.1](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v0.9.1...v0.10.0-preview.1) (2020-05-01)
 
 

@@ -13,9 +13,9 @@ fixed Approximately(float4x4 a, float4x4 b)
 	return step(
 		max(d._m00,max(d._m01,max(d._m02,max(d._m03,
 		max(d._m10,max(d._m11,max(d._m12,max(d._m13,
-		max(d._m20,max(d._m21,max(d._m22,//max(d._m23,
-		max(d._m30,max(d._m31,max(d._m32,d._m33)))))))))))))),
-		0.01);
+		max(d._m20,max(d._m21,max(d._m22,max(d._m23,
+		max(d._m30,max(d._m31,max(d._m32,d._m33))))))))))))))),
+		0.0000001);
 }
 
 float GetMaskAlpha(float alpha, int stencilId, float interaction)
@@ -60,7 +60,7 @@ float SoftMaskInternal(float4 clipPos)
 	#define SOFTMASK_EDITOR_ONLY(x) x
 	#define SoftMask(clipPos, worldPosition) SoftMaskInternal(clipPos, worldPosition)
 #else
-	#define SOFTMASK_EDITOR_ONLY(x) 
+	#define SOFTMASK_EDITOR_ONLY(x)
 	#define SoftMask(clipPos, worldPosition) SoftMaskInternal(clipPos)
 #endif
 

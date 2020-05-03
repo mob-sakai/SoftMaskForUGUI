@@ -3,8 +3,6 @@ SoftMaskForUGUI
 
 UI Soft Mask is a smooth masking component for Unity UI (uGUI) elements.
 
-By using SoftMask instead of the default Mask component, you can beautifully represent the rounded edges of UI elements.
-
 ![](https://user-images.githubusercontent.com/12690315/50282438-18408d80-0496-11e9-8f86-81e804edadd4.png)
 
 [![](https://img.shields.io/npm/v/com.coffee.softmask-for-ugui?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.coffee.softmask-for-ugui/)
@@ -23,8 +21,7 @@ By using SoftMask instead of the default Mask component, you can beautifully rep
 <br><br><br><br>
 ## Description
 
-SoftMask is a smooth masking component for uGUI elements in Unity.
-By using SoftMask instead of default Mask, rounded edges of UI elements can be expressed beautifully.
+By using SoftMask instead of the default Mask component, you can beautifully represent the rounded edges of UI elements.
 
 ![](https://user-images.githubusercontent.com/12690315/50282806-4b375100-0497-11e9-891c-35309d332c7b.png)
 
@@ -77,7 +74,7 @@ By using SoftMask instead of default Mask, rounded edges of UI elements can be e
 
 
 <br><br><br><br>
-## Install
+## Installation
 
 #### Requirement
 
@@ -128,13 +125,15 @@ Or, use [UpmGitExtension](https://github.com/mob-sakai/UpmGitExtension) to insta
 1. Open `Package Manager` window and select `UI Soft Mask` package in package list
 2. Click `Import in project` button  
 ![](https://user-images.githubusercontent.com/12690315/79000480-a8bd4880-7b87-11ea-89c7-a17033a486ba.png)
-3. The demo will be imported into `Assets/Samples/UI Soft Mask/{version}/Demo`; open `UISoftMask_Demo` scene and play it
+3. The demo will be imported into `Assets/Samples/UI Soft Mask/{version}/Demo`｡  
+Open `UISoftMask_Demo` scene and play it
 
 #### For Unity 2018.4 or earlier
 
 1. Select `Assets/Samples/UI Soft Mask Demo` from menu  
 ![Assets_と_Menubar](https://user-images.githubusercontent.com/12690315/79001101-dd7dcf80-7b88-11ea-9cf2-b44c6c5c9b17.png)
-2. The demo will be imported into `Assets/Samples/UI Soft Mask/{version}/Demo`; open `UISoftMask_Demo` scene and play it
+2. The demo will be imported into `Assets/Samples/UI Soft Mask/{version}/Demo`.  
+Open `UISoftMask_Demo` scene and play it
 
 
 <br><br><br><br>

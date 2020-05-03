@@ -91,7 +91,6 @@ namespace Coffee.UIExtensions
 
 				#if UNITY_EDITOR
 				result.EnableKeyword("SOFTMASK_EDITOR");
-				UpdateSceneViewMatrixForShader();
 				#endif
 			}
 			else
@@ -112,7 +111,7 @@ namespace Coffee.UIExtensions
 		{
 			if (!isActiveAndEnabled || !_softMask)
 				return true;
-		
+
 			if (!RectTransformUtility.RectangleContainsScreenPoint(transform as RectTransform, sp, eventCamera))
 			{
 				return false;
@@ -193,47 +192,11 @@ namespace Coffee.UIExtensions
 		static int s_SoftMaskTexId;
 		static int s_StencilCompId;
 		static int s_MaskInteractionId;
-		static int s_GameVPId;
-		static int s_GameTVPId;
 		static List<SoftMaskable> s_ActiveSoftMaskables;
 		static int[] s_Interactions = new int[4];
 		static Material s_DefaultMaterial;
 
-		#if UNITY_EDITOR
-		/// <summary>
-		/// Update the scene view matrix for shader.
-		/// </summary>
-		static void UpdateSceneViewMatrixForShader()
-		{
-		
-			s_ActiveSoftMaskables.RemoveAll(x=>!x);
-			foreach (var sm in s_ActiveSoftMaskables)
-			{
-				if (!sm || !sm._maskMaterial || !sm.graphic || !sm.graphic.canvas)
-				{
-					continue;
-				}
-
-				Material mat = sm._maskMaterial;
-				var c = sm.graphic.canvas.rootCanvas;
-				var wcam = c.worldCamera ?? Camera.main;
-				if (c.renderMode != RenderMode.ScreenSpaceOverlay && wcam)
-				{
-					var pv = GL.GetGPUProjectionMatrix (wcam.projectionMatrix, false) * wcam.worldToCameraMatrix;
-					mat.SetMatrix(s_GameVPId, pv);
-					mat.SetMatrix(s_GameTVPId, pv);
-				}
-				else
-				{
-					var scale = c.transform.localScale.x;
-					var size = (c.transform as RectTransform).sizeDelta;
-					var pos = c.transform.position;
-					mat.SetMatrix(s_GameVPId, Matrix4x4.TRS(new Vector3(0, 0, 0.5f), Quaternion.identity, new Vector3(2 / size.x, 2 / size.y, 0.0005f * scale)));
-					mat.SetMatrix(s_GameTVPId, Matrix4x4.TRS(new Vector3(0, 0, 0), Quaternion.identity, new Vector3(1 / pos.x, 1 / pos.y, -2/2000f)) * Matrix4x4.Translate(-pos));
-				}
-			}
-		}
-
+#if UNITY_EDITOR
 		/// <summary>
 		/// This function is called when the script is loaded or a value is changed in the inspector (Called in the editor only).
 		/// </summary>
@@ -244,7 +207,7 @@ namespace Coffee.UIExtensions
 				graphic.SetMaterialDirty();
 			}
 		}
-		#endif
+#endif
 
 		/// <summary>
 		/// This function is called when the object becomes enabled and active.
@@ -255,12 +218,6 @@ namespace Coffee.UIExtensions
 			if (s_ActiveSoftMaskables == null)
 			{
 				s_ActiveSoftMaskables = new List<SoftMaskable>();
-
-				#if UNITY_EDITOR
-				UnityEditor.EditorApplication.update += UpdateSceneViewMatrixForShader;
-				s_GameVPId = Shader.PropertyToID("_GameVP");
-				s_GameTVPId = Shader.PropertyToID("_GameTVP");
-				#endif
 
 				s_SoftMaskTexId = Shader.PropertyToID("_SoftMaskTex");
 				s_StencilCompId = Shader.PropertyToID("_StencilComp");
