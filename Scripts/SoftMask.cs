@@ -297,7 +297,6 @@ namespace Coffee.UIExtensions
 					s_SoftnessId = Shader.PropertyToID("_Softness");
 					s_Alpha = Shader.PropertyToID("_Alpha");
 #if UNITY_EDITOR
-					UnityEditor.EditorApplication.update += UpdateGameViewMatrixForShader;
 					s_GameVPId = Shader.PropertyToID("_GameVP");
 					s_GameTVPId = Shader.PropertyToID("_GameTVP");
 #endif
@@ -384,32 +383,10 @@ namespace Coffee.UIExtensions
 			hasChanged = true;
 		}
 
-// #if UNITY_EDITOR
+#if UNITY_EDITOR
 		/// <summary>
 		/// Update the scene view matrix for shader.
 		/// </summary>
-		static void UpdateGameViewMatrixForShader()
-		{
-			foreach (var sm in s_ActiveSoftMasks)
-			{
-				var c = sm.graphic.canvas.rootCanvas;
-				var wcam = c.worldCamera ?? Camera.main;
-				if (c.renderMode != RenderMode.ScreenSpaceOverlay && wcam)
-				{
-					var pv = GL.GetGPUProjectionMatrix (wcam.projectionMatrix, false) * wcam.worldToCameraMatrix;
-					Shader.SetGlobalMatrix(s_GameVPId, pv);
-					Shader.SetGlobalMatrix(s_GameTVPId, pv);
-				}
-				else
-				{
-					var scale = c.transform.localScale.x;
-					var size = (c.transform as RectTransform).sizeDelta;
-					var pos = c.transform.position;
-					Shader.SetGlobalMatrix(s_GameVPId, Matrix4x4.TRS(new Vector3(0, 0, 0.5f), Quaternion.identity, new Vector3(2 / size.x, 2 / size.y, 0.0005f * scale)));
-					Shader.SetGlobalMatrix(s_GameTVPId, Matrix4x4.TRS(new Vector3(0, 0, 0), Quaternion.identity, new Vector3(1 / pos.x, 1 / pos.y, -2/2000f)) * Matrix4x4.Translate(-pos));
-				}
-			}
-		}
 
 		/// <summary>
 		/// This function is called when the script is loaded or a value is changed in the inspector (Called in the editor only).
@@ -421,7 +398,7 @@ namespace Coffee.UIExtensions
 			base.OnValidate();
 			_hasStencilStateChanged = false;
 		}
-// #endif
+#endif
 
 		//################################
 		// Private Members.
@@ -525,9 +502,6 @@ namespace Coffee.UIExtensions
 			}
 			s_nowViewProjectionMatrices.Clear ();
 
-#if UNITY_EDITOR
-			UpdateGameViewMatrixForShader();
-#endif
 		}
 
 		/// <summary>
@@ -573,6 +547,12 @@ namespace Coffee.UIExtensions
 			if (c && c.renderMode != RenderMode.ScreenSpaceOverlay && cam)
 			{
 				_cb.SetViewProjectionMatrices(cam.worldToCameraMatrix, GL.GetGPUProjectionMatrix(cam.projectionMatrix, false));
+
+#if UNITY_EDITOR
+				var pv = GL.GetGPUProjectionMatrix(cam.projectionMatrix, false) * cam.worldToCameraMatrix;
+				_cb.SetGlobalMatrix(s_GameVPId, pv);
+				_cb.SetGlobalMatrix(s_GameTVPId, pv);
+#endif
 			}
 			else
 			{
@@ -580,6 +560,13 @@ namespace Coffee.UIExtensions
 				var vm = Matrix4x4.TRS(new Vector3(-pos.x, -pos.y, -1000), Quaternion.identity, new Vector3(1, 1, -1f));
 				var pm = Matrix4x4.TRS(new Vector3(0, 0, -1), Quaternion.identity, new Vector3(1 / pos.x, 1 / pos.y, -2 / 10000f));
 				_cb.SetViewProjectionMatrices(vm, pm);
+
+#if UNITY_EDITOR
+				var scale = c.transform.localScale.x;
+				var size = (c.transform as RectTransform).sizeDelta;
+				_cb.SetGlobalMatrix(s_GameVPId, Matrix4x4.TRS(new Vector3(0, 0, 0.5f), Quaternion.identity, new Vector3(2 / size.x, 2 / size.y, 0.0005f * scale)));
+				_cb.SetGlobalMatrix(s_GameTVPId, Matrix4x4.TRS(new Vector3(0, 0, 0), Quaternion.identity, new Vector3(1 / pos.x, 1 / pos.y, -2 / 2000f)) * Matrix4x4.Translate(-pos));
+#endif
 			}
 
 			// Draw soft masks.
