@@ -1,10 +1,10 @@
-Shader "TextMeshPro/Sprite (SoftMaskable)"
+Shader "Hidden/TextMeshPro/Sprite (SoftMaskable)"
 {
 	Properties
 	{
 		_MainTex ("Sprite Texture", 2D) = "white" {}
 		_Color ("Tint", Color) = (1,1,1,1)
-		
+
 		_StencilComp ("Stencil Comparison", Float) = 8
 		_Stencil ("Stencil ID", Float) = 0
 		_StencilOp ("Stencil Operation", Float) = 0
@@ -20,19 +20,19 @@ Shader "TextMeshPro/Sprite (SoftMaskable)"
 	SubShader
 	{
 		Tags
-		{ 
-			"Queue"="Transparent" 
-			"IgnoreProjector"="True" 
-			"RenderType"="Transparent" 
+		{
+			"Queue"="Transparent"
+			"IgnoreProjector"="True"
+			"RenderType"="Transparent"
 			"PreviewType"="Plane"
 			"CanUseSpriteAtlas"="True"
 		}
-		
+
 		Stencil
 		{
 			Ref [_Stencil]
 			Comp [_StencilComp]
-			Pass [_StencilOp] 
+			Pass [_StencilOp]
 			ReadMask [_StencilReadMask]
 			WriteMask [_StencilWriteMask]
 		}
@@ -55,10 +55,10 @@ Shader "TextMeshPro/Sprite (SoftMaskable)"
 
 			#pragma multi_compile __ UNITY_UI_CLIP_RECT
 			#pragma multi_compile __ UNITY_UI_ALPHACLIP
-            
+
             #include "Packages/com.coffee.softmask-for-ugui/Shaders/SoftMask.cginc"
             #pragma shader_feature __ SOFTMASK_EDITOR
-			
+
 			struct appdata_t
 			{
 				float4 vertex   : POSITION;
@@ -73,7 +73,7 @@ Shader "TextMeshPro/Sprite (SoftMaskable)"
 				half2 texcoord  : TEXCOORD0;
 				float4 worldPosition : TEXCOORD1;
 			};
-			
+
 			fixed4 _Color;
 			fixed4 _TextureSampleAdd;
 			float4 _ClipRect;
@@ -85,11 +85,11 @@ Shader "TextMeshPro/Sprite (SoftMaskable)"
 				OUT.vertex = UnityObjectToClipPos(OUT.worldPosition);
 
 				OUT.texcoord = IN.texcoord;
-				
+
 				#ifdef UNITY_HALF_TEXEL_OFFSET
 				OUT.vertex.xy += (_ScreenParams.zw-1.0)*float2(-1,1);
 				#endif
-				
+
 				OUT.color = IN.color * _Color;
 				return OUT;
 			}
@@ -99,13 +99,13 @@ Shader "TextMeshPro/Sprite (SoftMaskable)"
 			fixed4 frag(v2f IN) : SV_Target
 			{
 				half4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd) * IN.color;
-				
+
 				#if UNITY_UI_CLIP_RECT
 					color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
 				#endif
-                
+
                 color.a *= SoftMask(IN.vertex, IN.worldPosition);
-                
+
 				#ifdef UNITY_UI_ALPHACLIP
 					clip (color.a - 0.001);
 				#endif

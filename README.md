@@ -155,8 +155,20 @@ Or, add a SoftMaskable components from the inspector of the SoftMask component.
 <br><br><br><br>
 ## Support soft masks with your custom shaders
 
-<b>With just three additional lines,</b> you can now support softmasks in your custom shaders!
+Only a few steps are needed to support soft mask in your custom shaders!
 
+1. Duplicate your shader file and add the ` (SoftMaskable)` suffix to the file name.
+```
+Your_Custom_Shader.shader
+-> Your_Custom_Shader (SoftMaskable).shader
+```
+1. Modify the shader name (defined at the beginning of the shader file) as follows:
+  - Add `Hidden/` prefix
+  - Add ` (SoftMaskable)` suffix
+```
+Shader "UI/Your_Custom_Shader"
+-> Shader "Hidden/UI/Your_Custom_Shader (SoftMaskable)"
+```
 1. Add `#pragma` and `#include` directives, where `SOFTMASK_EDITOR` is an editor-only keyword and is not included in the build.
 If you didn't use package manager to install, include `SoftMask.cginc` in the appropriate path instead.
 ```

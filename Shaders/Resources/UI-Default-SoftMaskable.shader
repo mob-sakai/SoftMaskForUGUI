@@ -1,4 +1,4 @@
-Shader "UI/Default-SoftMask"
+Shader "Hidden/UI/Default (SoftMaskable)"
 {
     Properties
     {
@@ -52,7 +52,7 @@ Shader "UI/Default-SoftMask"
 
             #include "UnityCG.cginc"
             #include "UnityUI.cginc"
-            
+
             #pragma multi_compile __ UNITY_UI_CLIP_RECT
             #pragma multi_compile __ UNITY_UI_ALPHACLIP
 

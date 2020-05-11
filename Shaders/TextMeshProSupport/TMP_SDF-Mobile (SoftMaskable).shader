@@ -3,7 +3,7 @@
 // - No Glow Option
 // - Softness is applied on both side of the outline
 
-Shader "TextMeshPro/Mobile/Distance Field (SoftMaskable)" {
+Shader "Hidden/TextMeshPro/Mobile/Distance Field (SoftMaskable)" {
 
 Properties {
 	_FaceColor			("Face Color", Color) = (1,1,1,1)
@@ -41,18 +41,18 @@ Properties {
 	_ClipRect			("Clip Rect", vector) = (-32767, -32767, 32767, 32767)
 	_MaskSoftnessX		("Mask SoftnessX", float) = 0
 	_MaskSoftnessY		("Mask SoftnessY", float) = 0
-	
+
 	_StencilComp		("Stencil Comparison", Float) = 8
 	_Stencil			("Stencil ID", Float) = 0
 	_StencilOp			("Stencil Operation", Float) = 0
 	_StencilWriteMask	("Stencil Write Mask", Float) = 255
 	_StencilReadMask	("Stencil Read Mask", Float) = 255
-	
+
 	_ColorMask			("Color Mask", Float) = 15
 }
 
 SubShader {
-	Tags 
+	Tags
 	{
 		"Queue"="Transparent"
 		"IgnoreProjector"="True"
@@ -64,7 +64,7 @@ SubShader {
 	{
 		Ref [_Stencil]
 		Comp [_StencilComp]
-		Pass [_StencilOp] 
+		Pass [_StencilOp]
 		ReadMask [_StencilReadMask]
 		WriteMask [_StencilWriteMask]
 	}
@@ -94,7 +94,7 @@ SubShader {
 		#include "UnityCG.cginc"
 		#include "UnityUI.cginc"
 		#include "Assets/TextMesh Pro/Resources/Shaders/TMPro_Properties.cginc"
-        
+
         #include "Packages/com.coffee.softmask-for-ugui/Shaders/SoftMask.cginc"
         #pragma shader_feature __ SOFTMASK_EDITOR
 
@@ -132,7 +132,7 @@ SubShader {
 
 			float2 pixelSize = vPosition.w;
 			pixelSize /= float2(_ScaleX, _ScaleY) * abs(mul((float2x2)UNITY_MATRIX_P, _ScreenParams.xy));
-			
+
 			float scale = rsqrt(dot(pixelSize, pixelSize));
 			scale *= abs(input.texcoord1.y) * _GradientScale * 1.5;
 			if(UNITY_MATRIX_P[3][3] == 0) scale = lerp(abs(scale) * (1 - _PerspectiveFilter), scale, abs(dot(UnityObjectToWorldNormal(input.normal.xyz), normalize(WorldSpaceViewDir(vert)))));
@@ -223,9 +223,9 @@ SubShader {
 		#if (UNDERLAY_ON | UNDERLAY_INNER)
 			c *= input.texcoord1.z;
 		#endif
-        
+
         c *= SoftMask(input.vertex, input.worldPosition);
-        
+
 		#if UNITY_UI_ALPHACLIP
 			clip(c.a - 0.001);
 		#endif

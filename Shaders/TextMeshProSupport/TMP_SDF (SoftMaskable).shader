@@ -1,4 +1,4 @@
-Shader "TextMeshPro/Distance Field (SoftMaskable)" {
+Shader "Hidden/TextMeshPro/Distance Field (SoftMaskable)" {
 
 Properties {
 	_FaceTex			("Face Texture", 2D) = "white" {}
@@ -35,7 +35,7 @@ Properties {
 	_ReflectOutlineColor("Reflection Color", Color) = (0,0,0,1)
 	_Cube 				("Reflection Cubemap", Cube) = "black" { /* TexGen CubeReflect */ }
 	_EnvMatrixRotation	("Texture Rotation", vector) = (0, 0, 0, 0)
-		
+
 
 	_UnderlayColor		("Border Color", Color) = (0,0,0, 0.5)
 	_UnderlayOffsetX	("Border OffsetX", Range(-1,1)) = 0
@@ -67,7 +67,7 @@ Properties {
 
 	_VertexOffsetX		("Vertex OffsetX", float) = 0
 	_VertexOffsetY		("Vertex OffsetY", float) = 0
-	
+
 	_MaskCoord			("Mask Coordinates", vector) = (0, 0, 32767, 32767)
 	_ClipRect			("Clip Rect", vector) = (-32767, -32767, 32767, 32767)
 	_MaskSoftnessX		("Mask SoftnessX", float) = 0
@@ -95,7 +95,7 @@ SubShader {
 	{
 		Ref [_Stencil]
 		Comp [_StencilComp]
-		Pass [_StencilOp] 
+		Pass [_StencilOp]
 		ReadMask [_StencilReadMask]
 		WriteMask [_StencilWriteMask]
 	}
@@ -126,7 +126,7 @@ SubShader {
 		#include "UnityUI.cginc"
 		#include "Assets/TextMesh Pro/Resources/Shaders/TMPro_Properties.cginc"
 		#include "Assets/TextMesh Pro/Resources/Shaders/TMPro.cginc"
-            
+
         #include "Packages/com.coffee.softmask-for-ugui/Shaders/SoftMask.cginc"
         #pragma shader_feature __ SOFTMASK_EDITOR
 
@@ -146,7 +146,7 @@ SubShader {
 			float4	param			: TEXCOORD1;		// alphaClip, scale, bias, weight
 			float4	mask			: TEXCOORD2;		// Position in object space(xy), pixel Size(zw)
 			float3	viewDir			: TEXCOORD3;
-			
+
 		#if (UNDERLAY_ON || UNDERLAY_INNER)
 			float4	texcoord2		: TEXCOORD4;		// u,v, scale, bias
 			fixed4	underlayColor	: COLOR1;
@@ -181,7 +181,7 @@ SubShader {
 			float bias =(.5 - weight) + (.5 / scale);
 
 			float alphaClip = (1.0 - _OutlineWidth*_ScaleRatioA - _OutlineSoftness*_ScaleRatioA);
-		
+
 		#if GLOW_ON
 			alphaClip = min(alphaClip, 1.0 - _GlowOffset * _ScaleRatioB - _GlowOuter * _ScaleRatioB);
 		#endif
@@ -232,7 +232,7 @@ SubShader {
 		fixed4 PixShader(pixel_t input) : SV_Target
 		{
 			float c = tex2D(_MainTex, input.atlas).a;
-		
+
 		#ifndef UNDERLAY_ON
 			clip(c - input.param.x);
 		#endif
@@ -249,7 +249,7 @@ SubShader {
 			half4 outlineColor = _OutlineColor;
 
 			faceColor.rgb *= input.color.rgb;
-			
+
 			faceColor *= tex2D(_FaceTex, input.textures.xy + float2(_FaceUVSpeedX, _FaceUVSpeedY) * _Time.y);
 			outlineColor *= tex2D(_OutlineTex, input.textures.zw + float2(_OutlineUVSpeedX, _OutlineUVSpeedY) * _Time.y);
 
@@ -294,9 +294,9 @@ SubShader {
 			half2 m = saturate((_ClipRect.zw - _ClipRect.xy - abs(input.mask.xy)) * input.mask.zw);
 			faceColor *= m.x * m.y;
 		#endif
-        
+
         faceColor *= SoftMask(input.position, input.worldPosition);
-        
+
 		#if UNITY_UI_ALPHACLIP
 			clip(faceColor.a - 0.001);
 		#endif

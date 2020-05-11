@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEditor;
 
-namespace Coffee.UIExtensions
+namespace Coffee.UISoftMask
 {
-    public static class ImportSampleMenu_UISoftMask
+    public static class ImportSampleMenu
     {
         [MenuItem("Assets/Samples/Import UISoftMask Sample")]
         private static void ImportSample()

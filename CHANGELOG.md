@@ -1,3 +1,26 @@
+# [1.0.0-preview.1](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v0.10.0-preview.3...v1.0.0-preview.1) (2020-05-11)
+
+
+### Bug Fixes
+
+* Unintentional material destruction ([bf17b19](https://github.com/mob-sakai/SoftMaskForUGUI/commit/bf17b19ef29ea35b54cbaf5473611ad58136540a))
+
+
+### change
+
+* change namespace ([0347b04](https://github.com/mob-sakai/SoftMaskForUGUI/commit/0347b04fb70d970b3558ebb454ecd2dbbd3dfce0))
+
+
+### Features
+
+* support graphic connector ([3451521](https://github.com/mob-sakai/SoftMaskForUGUI/commit/34515216a39d69601595dffbbac1803da3a27379)), closes [#75](https://github.com/mob-sakai/SoftMaskForUGUI/issues/75) [#76](https://github.com/mob-sakai/SoftMaskForUGUI/issues/76) [#80](https://github.com/mob-sakai/SoftMaskForUGUI/issues/80)
+
+
+### BREAKING CHANGES
+
+* If your code contained the SoftMask API, it would fail to compile. Please change the namespace from `Coffee.UIExtensions` to `Coffee.UISoftMask`.
+* The name of the custom SoftMaskable shader must be changed. For more information, see the ‘Support soft masks with your custom shaders’ section of the README.
+
 # [0.10.0-preview.3](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v0.10.0-preview.2...v0.10.0-preview.3) (2020-05-08)
 
 
