@@ -1,3 +1,10 @@
+# [1.0.0-preview.2](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v1.0.0-preview.1...v1.0.0-preview.2) (2020-05-13)
+
+
+### Bug Fixes
+
+* compile error ([56b1791](https://github.com/mob-sakai/SoftMaskForUGUI/commit/56b1791bd3995ba387b1dc866ea68325b56a8830)), closes [#87](https://github.com/mob-sakai/SoftMaskForUGUI/issues/87)
+
 # [1.0.0-preview.1](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v0.10.0-preview.3...v1.0.0-preview.1) (2020-05-11)
 
 

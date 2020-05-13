@@ -14,7 +14,7 @@ UI Soft Mask is a smooth masking component for Unity UI (uGUI) elements.
 [![](https://img.shields.io/github/watchers/mob-sakai/SoftMaskForUGUI.svg?style=social&label=Watch)](https://github.com/mob-sakai/SoftMaskForUGUI/subscription)
 [![](https://img.shields.io/twitter/follow/mob_sakai.svg?label=Follow&style=social)](https://twitter.com/intent/follow?screen_name=mob_sakai)
 
-<< [Description](#Description) | [WebGL Demo](#demo) | [Installation](#installation) | [Usage](#usage) | [For Your Custom Shader](#support-soft-masks-with-your-custom-shaders) >>
+<< [Description](#Description) | [WebGL Demo](#demo) | [Installation](#installation) | [Usage](#usage) | [For Your Custom Shader](#support-soft-masks-with-your-custom-shaders) | [Contributing](#contributing) >>
 
 
 
@@ -187,23 +187,39 @@ As an example of implementation, please see [UI-Default-SoftMask.shader](https:/
 
 
 
+
+<br><br><br><br>
+## Contributing
+
+### Issues
+
+Issues are very valuable to this project.
+
+- Ideas are a valuable source of contributions others can make
+- Problems show where this project is lacking
+- With a question you show where contributors can improve the user experience
+
+### Pull Requests
+
+Pull requests are, a great way to get your ideas into this repository.  
+See [CONTRIBUTING.md](/../../blob/upm/CONTRIBUTING.md).
+
+### Support
+
+This is an open source project that I am developing in my spare time.  
+If you like it, please support me.  
+With your support, I can spend more time on development. :)
+
+[![](https://user-images.githubusercontent.com/12690315/50731629-3b18b480-11ad-11e9-8fad-4b13f27969c1.png)](https://www.patreon.com/join/2343451?)  
+[![](https://user-images.githubusercontent.com/12690315/66942881-03686280-f085-11e9-9586-fc0b6011029f.png)](https://github.com/users/mob-sakai/sponsorship)
+
+
+
 <br><br><br><br>
 ## License
 
 * MIT
 * © UTJ/UCL
-
-
-
-<br><br><br><br>
-## Support
-
-This is an open-source project that I am developing in my free time. 
-If you like it, you can support me. 
-By supporting, you let me spend more time working on better tools that you can use for free. :)
-
-[![become_a_patron_on_patreon](https://user-images.githubusercontent.com/12690315/50731629-3b18b480-11ad-11e9-8fad-4b13f27969c1.png)](https://www.patreon.com/join/2343451?)  
-[![become_a_sponsor_on_github](https://user-images.githubusercontent.com/12690315/66942881-03686280-f085-11e9-9586-fc0b6011029f.png)](https://github.com/users/mob-sakai/sponsorship)
 
 
 
