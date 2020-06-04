@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
@@ -25,7 +24,7 @@ namespace Coffee.UISoftMask
             x8 = 8,
         }
 
-        static readonly List<SoftMask>[] s_TmpSoftMasks = new List<SoftMask>[]
+        private static readonly List<SoftMask>[] s_TmpSoftMasks = new List<SoftMask>[]
         {
             new List<SoftMask>(),
             new List<SoftMask>(),
@@ -33,7 +32,7 @@ namespace Coffee.UISoftMask
             new List<SoftMask>(),
         };
 
-        static readonly Color[] s_ClearColors = new Color[]
+        private static readonly Color[] s_ClearColors = new Color[]
         {
             new Color(0, 0, 0, 0),
             new Color(1, 0, 0, 0),
@@ -41,50 +40,49 @@ namespace Coffee.UISoftMask
             new Color(1, 1, 1, 0),
         };
 
-        static bool s_UVStartsAtTop;
+        private static bool s_UVStartsAtTop;
+        private static Shader s_SoftMaskShader;
+        private static Texture2D s_ReadTexture;
+        private static readonly List<SoftMask> s_ActiveSoftMasks = new List<SoftMask>();
+        private static readonly List<SoftMask> s_TempRelatables = new List<SoftMask>();
+        private static readonly Dictionary<int, Matrix4x4> s_PreviousViewProjectionMatrices = new Dictionary<int, Matrix4x4>();
+        private static readonly Dictionary<int, Matrix4x4> s_NowViewProjectionMatrices = new Dictionary<int, Matrix4x4>();
+        private static int s_StencilCompId;
+        private static int s_ColorMaskId;
+        private static int s_MainTexId;
+        private static int s_SoftnessId;
+        private static int s_GameVPId;
+        private static int s_GameTVPId;
+        private static int s_Alpha;
+        private MaterialPropertyBlock _mpb;
+        private CommandBuffer _cb;
+        private Material _material;
+        private RenderTexture _softMaskBuffer;
+        private int _stencilDepth;
+        private Mesh _mesh;
+        private SoftMask _parent;
+        internal readonly List<SoftMask> _children = new List<SoftMask>();
+        private bool _hasChanged = false;
+        private bool _hasStencilStateChanged = false;
 
-        static Shader s_SoftMaskShader;
-        static Texture2D s_ReadTexture;
-        static readonly List<SoftMask> s_ActiveSoftMasks = new List<SoftMask>();
-        static readonly List<SoftMask> s_TempRelatables = new List<SoftMask>();
-        static readonly Dictionary<int, Matrix4x4> s_previousViewProjectionMatrices = new Dictionary<int, Matrix4x4>();
-        static readonly Dictionary<int, Matrix4x4> s_nowViewProjectionMatrices = new Dictionary<int, Matrix4x4>();
-        static int s_StencilCompId;
-        static int s_ColorMaskId;
-        static int s_MainTexId;
-        static int s_SoftnessId;
-        static int s_GameVPId;
-        static int s_GameTVPId;
-        static int s_Alpha;
-        MaterialPropertyBlock _mpb;
-        CommandBuffer _cb;
-        Material _material;
-        RenderTexture _softMaskBuffer;
-        int _stencilDepth;
-        Mesh _mesh;
-        SoftMask _parent;
-        readonly List<SoftMask> _children = new List<SoftMask>();
-        bool _hasChanged = false;
-        bool _hasStencilStateChanged = false;
 
+        [SerializeField, Tooltip("The desampling rate for soft mask buffer.")]
+        private DesamplingRate m_DesamplingRate = DesamplingRate.None;
 
-        [Tooltip("The desampling rate for soft mask buffer.")] [SerializeField]
-        DesamplingRate m_DesamplingRate = DesamplingRate.None;
+        [SerializeField, Range(0.01f, 1), Tooltip("The value used by the soft mask to select the area of influence defined over the soft mask's graphic.")]
+        private float m_Softness = 1;
 
-        [Tooltip(
-            "The value used by the soft mask to select the area of influence defined over the soft mask's graphic.")]
-        [SerializeField]
-        [Range(0.01f, 1)]
-        float m_Softness = 1;
+        [SerializeField, Range(0f, 1f), Tooltip("The transparency of the whole masked graphic.")]
+        private float m_Alpha = 1;
 
-        [Tooltip("The transparency of the whole masked graphic.")] [SerializeField] [Range(0f, 1f)]
-        float m_Alpha = 1;
+        [SerializeField, Tooltip("Should the soft mask ignore parent soft masks?")]
+        private bool m_IgnoreParent = false;
 
-        [Tooltip("Should the soft mask ignore parent soft masks?")] [SerializeField]
-        bool m_IgnoreParent = false;
+        [SerializeField, Tooltip("Is the soft mask a part of parent soft mask?")]
+        private bool m_PartOfParent = false;
 
-        [Tooltip("Is the soft mask a part of parent soft mask?")] [SerializeField]
-        bool m_PartOfParent = false;
+        [SerializeField, Tooltip("Self Graphic will not be drawn to soft mask buffer.")]
+        private bool m_IgnoreSelfGraphic;
 
 
         /// <summary>
@@ -214,6 +212,19 @@ namespace Coffee.UISoftMask
             get { return _parent; }
         }
 
+        public bool ignoreSelfGraphic
+        {
+            get { return m_IgnoreSelfGraphic; }
+            set
+            {
+                if (m_IgnoreSelfGraphic == value) return;
+                m_IgnoreSelfGraphic = value;
+                hasChanged = true;
+                graphic.SetVerticesDirtyEx();
+            }
+        }
+
+
         Material material
         {
             get
@@ -267,7 +278,15 @@ namespace Coffee.UISoftMask
         void IMeshModifier.ModifyMesh(VertexHelper verts)
         {
             if (isActiveAndEnabled)
+            {
+                if (ignoreSelfGraphic)
+                {
+                    verts.Clear();
+                }
+
                 verts.FillMesh(mesh);
+            }
+
             hasChanged = true;
         }
 
@@ -336,7 +355,7 @@ namespace Coffee.UISoftMask
             _mpb = new MaterialPropertyBlock();
             _cb = new CommandBuffer();
 
-            graphic.SetVerticesDirty();
+            graphic.SetVerticesDirtyEx();
 
             base.OnEnable();
             _hasStencilStateChanged = false;
@@ -411,7 +430,8 @@ namespace Coffee.UISoftMask
         /// </summary>
         protected override void OnValidate()
         {
-            graphic.SetMaterialDirty();
+            graphic.SetVerticesDirtyEx();
+            graphic.SetMaterialDirtyEx();
             OnTransformParentChanged();
             base.OnValidate();
             _hasStencilStateChanged = false;
@@ -441,8 +461,8 @@ namespace Coffee.UISoftMask
                     var nowVP = cam.projectionMatrix * cam.worldToCameraMatrix;
                     var previousVP = default(Matrix4x4);
                     var id = cam.GetInstanceID();
-                    s_previousViewProjectionMatrices.TryGetValue(id, out previousVP);
-                    s_nowViewProjectionMatrices[id] = nowVP;
+                    s_PreviousViewProjectionMatrices.TryGetValue(id, out previousVP);
+                    s_NowViewProjectionMatrices[id] = nowVP;
 
                     if (previousVP != nowVP)
                     {
@@ -478,13 +498,13 @@ namespace Coffee.UISoftMask
                 MaskUtilities.NotifyStencilStateChanged(sm);
             }
 
-            s_previousViewProjectionMatrices.Clear();
-            foreach (var id in s_nowViewProjectionMatrices.Keys)
+            s_PreviousViewProjectionMatrices.Clear();
+            foreach (var id in s_NowViewProjectionMatrices.Keys)
             {
-                s_previousViewProjectionMatrices[id] = s_nowViewProjectionMatrices[id];
+                s_PreviousViewProjectionMatrices[id] = s_NowViewProjectionMatrices[id];
             }
 
-            s_nowViewProjectionMatrices.Clear();
+            s_NowViewProjectionMatrices.Clear();
         }
 
         /// <summary>

@@ -1,42 +1,44 @@
 ﻿using System.Collections.Generic;
 using System;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Coffee.UISoftMask
 {
-    internal class MaterialCache
+    internal class MaterialEntry
     {
-        public delegate void ModifyAction(Material material, Graphic graphic);
+        public Material material;
+        public int referenceCount;
 
-        static Dictionary<Hash128, MaterialEntry> materialMap = new Dictionary<Hash128, MaterialEntry>();
-
-        private class MaterialEntry
+        public void Release()
         {
-            public Material material;
-            public int referenceCount;
-
-            public void Release()
+            if (material)
             {
-                if (material)
-                {
+#if UNITY_EDITOR
+                if (!Application.isPlaying)
                     UnityEngine.Object.DestroyImmediate(material, false);
-                }
-
-                material = null;
+                else
+#endif
+                    UnityEngine.Object.Destroy(material);
             }
+
+            material = null;
         }
+    }
+
+    internal static class MaterialCache
+    {
+        static readonly Dictionary<Hash128, MaterialEntry> s_MaterialMap = new Dictionary<Hash128, MaterialEntry>();
 
 #if UNITY_EDITOR
         [UnityEditor.InitializeOnLoadMethod]
         private static void ClearCache()
         {
-            foreach (var entry in materialMap.Values)
+            foreach (var entry in s_MaterialMap.Values)
             {
                 entry.Release();
             }
 
-            materialMap.Clear();
+            s_MaterialMap.Clear();
         }
 #endif
 
@@ -45,7 +47,7 @@ namespace Coffee.UISoftMask
             if (!hash.isValid) return null;
 
             MaterialEntry entry;
-            if (!materialMap.TryGetValue(hash, out entry))
+            if (!s_MaterialMap.TryGetValue(hash, out entry))
             {
                 entry = new MaterialEntry()
                 {
@@ -56,7 +58,7 @@ namespace Coffee.UISoftMask
                 };
 
                 onModify(entry.material);
-                materialMap.Add(hash, entry);
+                s_MaterialMap.Add(hash, entry);
             }
 
             entry.referenceCount++;
@@ -67,13 +69,13 @@ namespace Coffee.UISoftMask
         public static void Unregister(Hash128 hash)
         {
             MaterialEntry entry;
-            if (!hash.isValid || !materialMap.TryGetValue(hash, out entry)) return;
+            if (!hash.isValid || !s_MaterialMap.TryGetValue(hash, out entry)) return;
             //Debug.LogFormat("Unregister: {0}, {1}", hash, entry.referenceCount -1);
 
             if (--entry.referenceCount > 0) return;
 
             entry.Release();
-            materialMap.Remove(hash);
+            s_MaterialMap.Remove(hash);
             //Debug.LogFormat("Unregister: Release Emtry: {0}, {1} (Total: {2})", hash, entry.referenceCount, materialMap.Count);
         }
     }

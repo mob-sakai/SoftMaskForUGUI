@@ -8,13 +8,18 @@ namespace Coffee.UISoftMask
 {
     public static class ImportSampleMenu
     {
-        [MenuItem("Assets/Samples/Import UISoftMask Sample")]
-        private static void ImportSample()
-        {
-            const string jsonGuid = "c43fd233e88b347cdabc530c23ffe30a";
-            const string dirName = "Demo";
+        private const string jsonGuid = "c43fd233e88b347cdabc530c23ffe30a";
 
-            ImportSample(jsonGuid, dirName);
+        [MenuItem("Assets/Samples/UISoftMask/Import Demo")]
+        private static void ImportDemo()
+        {
+            ImportSample(jsonGuid, "Demo");
+        }
+
+        [MenuItem("Assets/Samples/UISoftMask/Import TextMeshPro Support")]
+        private static void ImportTextMeshProSupport()
+        {
+            ImportSample(jsonGuid, "TextMeshProSupport");
         }
 
         private static void ImportSample(string jsonGuid, string sampleName)

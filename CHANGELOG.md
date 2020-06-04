@@ -1,3 +1,23 @@
+# [1.0.0-preview.3](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v1.0.0-preview.2...v1.0.0-preview.3) (2020-06-04)
+
+
+### Bug Fixes
+
+* outside interaction doesn't work when the RaycastFilter option is off ([1935650](https://github.com/mob-sakai/SoftMaskForUGUI/commit/19356500c5b777aa5857fa5176fc09f0fd7951cb))
+
+
+### Features
+
+* Add ignore self graphic option. ([91c0099](https://github.com/mob-sakai/SoftMaskForUGUI/commit/91c00993b9afbdda0386b8e426e181f8f31618b9))
+* TextMeshPro support ([5b0906b](https://github.com/mob-sakai/SoftMaskForUGUI/commit/5b0906b6086193bc8f62fa174955c9df901ef3f0))
+
+
+### BREAKING CHANGES
+
+* TextMeshPro support is now an option.
+If a shader or material has errors after a version upgrade, you will need to import the asset.
+Please see the README for more information.
+
 # [1.0.0-preview.2](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v1.0.0-preview.1...v1.0.0-preview.2) (2020-05-13)
 
 

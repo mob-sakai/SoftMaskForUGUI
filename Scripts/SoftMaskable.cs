@@ -15,40 +15,37 @@ namespace Coffee.UISoftMask
 #else
 	[ExecuteInEditMode]
 # endif
+    [RequireComponent(typeof(Graphic))]
     public class SoftMaskable : MonoBehaviour, IMaterialModifier, ICanvasRaycastFilter
 #if UNITY_EDITOR
         , ISerializationCallbackReceiver
 # endif
     {
-        const int kVisibleInside = (1 << 0) + (1 << 2) + (1 << 4) + (1 << 6);
-        const int kVisibleOutside = (2 << 0) + (2 << 2) + (2 << 4) + (2 << 6);
-        static readonly Hash128 k_InvalidHash = new Hash128();
+        private const int kVisibleInside = (1 << 0) + (1 << 2) + (1 << 4) + (1 << 6);
+        private const int kVisibleOutside = (2 << 0) + (2 << 2) + (2 << 4) + (2 << 6);
+        private static readonly Hash128 k_InvalidHash = new Hash128();
 
-        static int s_SoftMaskTexId;
-        static int s_StencilCompId;
-        static int s_MaskInteractionId;
-        static List<SoftMaskable> s_ActiveSoftMaskables;
-        static int[] s_Interactions = new int[4];
+        private static int s_SoftMaskTexId;
+        private static int s_StencilCompId;
+        private static int s_MaskInteractionId;
+        private static List<SoftMaskable> s_ActiveSoftMaskables;
+        private static int[] s_Interactions = new int[4];
 
-        [Tooltip("The graphic will be visible only in areas where no mask is present.")]
-        [System.Obsolete]
-        [HideInInspector]
-        [SerializeField]
-        bool m_Inverse = false;
+        [SerializeField, HideInInspector, System.Obsolete]
+        private bool m_Inverse;
 
-        [Tooltip("The interaction for each masks.")] [HideInInspector] [SerializeField]
-        int m_MaskInteraction = kVisibleInside;
+        [SerializeField, Tooltip("The interaction for each masks."), HideInInspector]
+        private int m_MaskInteraction = kVisibleInside;
 
-        [Tooltip("Use stencil to mask.")] [SerializeField]
-        bool m_UseStencil = false;
+        [SerializeField, Tooltip("Use stencil to mask.")]
+        private bool m_UseStencil;
 
-        [Tooltip("Use soft-masked raycast target.\n\nNote: This option is expensive.")] [SerializeField]
-        bool m_RaycastFilter = false;
+        [SerializeField, Tooltip("Use soft-masked raycast target.\n\nNote: This option is expensive.")]
+        private bool m_RaycastFilter;
 
-        Graphic _graphic = null;
-        SoftMask _softMask = null;
-        Material _maskMaterial = null;
-        Hash128 _effectMaterialHash;
+        private Graphic _graphic;
+        private SoftMask _softMask;
+        private Hash128 _effectMaterialHash;
 
         /// <summary>
         /// The graphic will be visible only in areas where no mask is present.
@@ -82,6 +79,11 @@ namespace Coffee.UISoftMask
             get { return _graphic ? _graphic : _graphic = GetComponent<Graphic>(); }
         }
 
+        public SoftMask softMask
+        {
+            get { return _softMask ? _softMask : _softMask = this.GetComponentInParentEx<SoftMask>(); }
+        }
+
         /// <summary>
         /// Perform material modification in this function.
         /// </summary>
@@ -98,27 +100,13 @@ namespace Coffee.UISoftMask
             // If this component is disabled, the material is returned as is.
             if (!isActiveAndEnabled) return baseMaterial;
 
-            // Find the nearest parent softmask.
-            var parentTransform = transform.parent;
-            while (parentTransform)
-            {
-                var sm = parentTransform.GetComponent<SoftMask>();
-                if (sm && sm.enabled)
-                {
-                    _softMask = sm;
-                    break;
-                }
-
-                parentTransform = parentTransform.parent;
-            }
-
             // If the parents do not have a soft mask component, the material is returned as is.
-            if (!_softMask) return baseMaterial;
+            if (!softMask) return baseMaterial;
 
             // Generate soft maskable material.
             _effectMaterialHash = new Hash128(
                 (uint) baseMaterial.GetInstanceID(),
-                (uint) _softMask.GetInstanceID(),
+                (uint) softMask.GetInstanceID(),
                 (uint) m_MaskInteraction,
                 (uint) (m_UseStencil ? 1 : 0)
             );
@@ -130,7 +118,7 @@ namespace Coffee.UISoftMask
 #if UNITY_EDITOR
                 mat.EnableKeyword("SOFTMASK_EDITOR");
 #endif
-                mat.SetTexture(s_SoftMaskTexId, _softMask.softMaskBuffer);
+                mat.SetTexture(s_SoftMaskTexId, softMask.softMaskBuffer);
                 mat.SetInt(s_StencilCompId,
                     m_UseStencil ? (int) CompareFunction.Equal : (int) CompareFunction.Always);
                 mat.SetVector(s_MaskInteractionId, new Vector4(
@@ -140,7 +128,6 @@ namespace Coffee.UISoftMask
                     ((m_MaskInteraction >> 6) & 0x3)
                 ));
             });
-            _maskMaterial = modifiedMaterial;
 
             return modifiedMaterial;
         }
@@ -153,21 +140,45 @@ namespace Coffee.UISoftMask
         /// <param name="eventCamera">Raycast camera.</param>
         bool ICanvasRaycastFilter.IsRaycastLocationValid(Vector2 sp, Camera eventCamera)
         {
-            if (!isActiveAndEnabled || !_softMask)
+            if (!isActiveAndEnabled || !softMask)
                 return true;
             if (!RectTransformUtility.RectangleContainsScreenPoint(transform as RectTransform, sp, eventCamera))
                 return false;
-            if (!m_RaycastFilter)
-                return true;
 
-            var sm = _softMask;
-            for (var i = 0; i < 4; i++)
+            if (m_RaycastFilter)
             {
-                s_Interactions[i] = sm ? ((m_MaskInteraction >> i * 2) & 0x3) : 0;
-                sm = sm ? sm.parent : null;
-            }
+                var sm = _softMask;
+                for (var i = 0; i < 4; i++)
+                {
+                    s_Interactions[i] = sm ? ((m_MaskInteraction >> i * 2) & 0x3) : 0;
+                    sm = sm ? sm.parent : null;
+                }
 
-            return _softMask.IsRaycastLocationValid(sp, eventCamera, graphic, s_Interactions);
+                return _softMask.IsRaycastLocationValid(sp, eventCamera, graphic, s_Interactions);
+            }
+            else
+            {
+                var sm = _softMask;
+                for (var i = 0; i < 4; i++)
+                {
+                    if (!sm) break;
+                    s_Interactions[i] = sm ? ((m_MaskInteraction >> i * 2) & 0x3) : 0;
+                    var interaction = s_Interactions[i] == 1;
+                    var inRect = RectTransformUtility.RectangleContainsScreenPoint(sm.transform as RectTransform, sp, eventCamera);
+                    if (!sm.ignoreSelfGraphic && interaction != inRect) return false;
+
+                    foreach (var child in sm._children)
+                    {
+                        if (!child) break;
+                        var inRectChild = RectTransformUtility.RectangleContainsScreenPoint(child.transform as RectTransform, sp, eventCamera);
+                        if (!child.ignoreSelfGraphic && interaction != inRectChild) return false;
+                    }
+
+                    sm = sm ? sm.parent : null;
+                }
+
+                return true;
+            }
         }
 
         /// <summary>
@@ -243,7 +254,7 @@ namespace Coffee.UISoftMask
             if (m_Inverse)
             {
                 m_Inverse = false;
-                m_MaskInteraction = (2 << 0) + (2 << 2) + (2 << 4) + (2 << 6);
+                m_MaskInteraction = kVisibleOutside;
             }
 #pragma warning restore 0612
 

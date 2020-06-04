@@ -5,7 +5,6 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 
-
 namespace Coffee.UISoftMask
 {
     internal static class EditorUtils
@@ -36,7 +35,7 @@ namespace Coffee.UISoftMask
             var so = new SerializedObject(target);
             so.Update();
 
-            bool oldEnable = target.enabled;
+            var oldEnable = target.enabled;
             target.enabled = false;
 
             // Find MonoScript of the specified component.

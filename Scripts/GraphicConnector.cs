@@ -17,9 +17,20 @@ namespace Coffee.UISoftMask
             GraphicConnector.FindConnector(graphic).SetMaterialDirty(graphic);
         }
 
-        public static Shader FindEffectShader(this Graphic graphic)
+        public static T GetComponentInParentEx<T>(this Component component, bool includeInactive = false) where T : MonoBehaviour
         {
-            return GraphicConnector.FindConnector(graphic).FindEffectShader(graphic);
+            if (!component) return null;
+            var trans = component.transform;
+
+            while (trans)
+            {
+                var c = trans.GetComponent<T>();
+                if (c && (includeInactive || c.isActiveAndEnabled)) return c;
+
+                trans = trans.parent;
+            }
+
+            return null;
         }
     }
 
@@ -27,10 +38,7 @@ namespace Coffee.UISoftMask
     public class GraphicConnector
     {
         private static readonly List<GraphicConnector> s_Connectors = new List<GraphicConnector>();
-
-        private static readonly Dictionary<Type, GraphicConnector> s_ConnectorMap =
-            new Dictionary<Type, GraphicConnector>();
-
+        private static readonly Dictionary<Type, GraphicConnector> s_ConnectorMap = new Dictionary<Type, GraphicConnector>();
         private static readonly GraphicConnector s_EmptyConnector = new GraphicConnector();
 
 #if UNITY_EDITOR
@@ -73,15 +81,6 @@ namespace Coffee.UISoftMask
         protected virtual int priority
         {
             get { return -1; }
-        }
-
-
-        /// <summary>
-        /// Find effect shader.
-        /// </summary>
-        public virtual Shader FindEffectShader(Graphic graphic)
-        {
-            return Shader.Find("Hidden/UI/SoftMaskable");
         }
 
         /// <summary>

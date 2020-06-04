@@ -66,10 +66,12 @@ By using SoftMask instead of the default Mask component, you can beautifully rep
 
 
 
+
 <br><br><br><br>
 ## Demo
 
 [WebGL Demo](http://mob-sakai.github.io/SoftMaskForUGUI)
+
 
 
 
@@ -117,23 +119,19 @@ Or, use [UpmGitExtension](https://github.com/mob-sakai/UpmGitExtension) to insta
 
 
 
+
 <br><br><br><br>
 ## How to play demo
 
-#### For Unity 2019.1 or later
+- For Unity 2019.1 or later
+  - Open `Package Manager` window and select `UI Soft Mask` package in package list and click `Demo > Import in project` button
+- For Unity 2018.4 or earlier
+  - Click `Assets/Samples/UISoftMask/Import Demo` from menu
 
-1. Open `Package Manager` window and select `UI Soft Mask` package in package list
-2. Click `Import in project` button  
-![](https://user-images.githubusercontent.com/12690315/79000480-a8bd4880-7b87-11ea-89c7-a17033a486ba.png)
-3. The demo will be imported into `Assets/Samples/UI Soft Mask/{version}/Demo`｡  
-Open `UISoftMask_Demo` scene and play it
+The assets will be imported into `Assets/Samples/UI Soft Mask/{version}/Demo`.  
+Open `UISoftMask_Demo` scene and play it.
 
-#### For Unity 2018.4 or earlier
 
-1. Select `Assets/Samples/UI Soft Mask Demo` from menu  
-![Assets_と_Menubar](https://user-images.githubusercontent.com/12690315/79001101-dd7dcf80-7b88-11ea-9cf2-b44c6c5c9b17.png)
-2. The demo will be imported into `Assets/Samples/UI Soft Mask/{version}/Demo`.  
-Open `UISoftMask_Demo` scene and play it
 
 
 <br><br><br><br>
@@ -150,6 +148,20 @@ Or, add a SoftMaskable components from the inspector of the SoftMask component.
 ![](https://user-images.githubusercontent.com/12690315/48661087-01ca9f00-eab0-11e8-8878-772a1ed1fb7b.gif)
 4. Enjoy!
 
+
+
+
+<br><br><br><br>
+## Support TextMeshPro
+
+To use SoftMask with TextMeshPro, import a sample asset. 
+
+- For Unity 2019.1 or later
+  - Open `Package Manager` window and select `UI Soft Mask` package in package list and click `TextMeshPro Support > Import in project` button
+- For Unity 2018.4 or earlier
+  - Click `Assets/Samples/UISoftMask/Import TextMeshPro Support` from menu
+
+The assets will be imported into `Assets/Samples/UI Soft Mask/{version}/TextMeshPro Support`.
 
 
 <br><br><br><br>
@@ -183,7 +195,7 @@ This operation determines the final alpha according to the soft mask buffer.
 color.a *= SoftMask(IN.vertex, IN.worldPosition);
 ```
 
-As an example of implementation, please see [UI-Default-SoftMask.shader](https://raw.githubusercontent.com/mob-sakai/SoftMaskForUGUI/upm/Shaders/Resources/UI-Default-SoftMask.shader).
+As an example of implementation, please see [UI-Default-SoftMask.shader](https://github.com/mob-sakai/SoftMaskForUGUI/blob/upm/Shaders/Resources/UI-Default-SoftMaskable.shader).
 
 
 

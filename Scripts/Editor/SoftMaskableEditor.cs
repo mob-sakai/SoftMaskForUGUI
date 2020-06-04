@@ -2,15 +2,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
-using System.Linq;
-using System;
-using System.Reflection;
-using Object = UnityEngine.Object;
 using MaskIntr = UnityEngine.SpriteMaskInteraction;
-using System.IO;
 
 namespace Coffee.UISoftMask
 {
+    internal enum MaskInteraction : int
+    {
+        VisibleInsideMask = (1 << 0) + (1 << 2) + (1 << 4) + (1 << 6),
+        VisibleOutsideMask = (2 << 0) + (2 << 2) + (2 << 4) + (2 << 6),
+        Custom = -1,
+    }
+
     /// <summary>
     /// SoftMaskable editor.
     /// </summary>
@@ -18,18 +20,16 @@ namespace Coffee.UISoftMask
     [CanEditMultipleObjects]
     public class SoftMaskableEditor : Editor
     {
-        public enum MaskInteraction : int
-        {
-            VisibleInsideMask = (1 << 0) + (1 << 2) + (1 << 4) + (1 << 6),
-            VisibleOutsideMask = (2 << 0) + (2 << 2) + (2 << 4) + (2 << 6),
-            Custom = -1,
-        }
+        private static readonly List<Mask> s_TmpMasks = new List<Mask>();
+        private static GUIContent s_MaskWarning;
+        private SerializedProperty _spMaskInteraction;
+        private bool _custom;
 
-        MaskInteraction maskInteraction
+        private MaskInteraction maskInteraction
         {
             get
             {
-                int value = _spMaskInteraction.intValue;
+                var value = _spMaskInteraction.intValue;
                 return _custom
                     ? MaskInteraction.Custom
                     : System.Enum.IsDefined(typeof(MaskInteraction), value)
@@ -46,31 +46,26 @@ namespace Coffee.UISoftMask
             }
         }
 
-        bool _custom = false;
-
-        static readonly List<Graphic> s_Graphics = new List<Graphic>();
-        SerializedProperty _spMaskInteraction;
-        List<Mask> tmpMasks = new List<Mask>();
-        static GUIContent s_MaskWarning;
-
 
         private void OnEnable()
         {
             _spMaskInteraction = serializedObject.FindProperty("m_MaskInteraction");
             _custom = (maskInteraction == MaskInteraction.Custom);
-            s_MaskWarning = new GUIContent(EditorGUIUtility.FindTexture("console.warnicon.sml"),
-                "This is not a SoftMask component.");
-        }
 
+            if (s_MaskWarning == null)
+            {
+                s_MaskWarning = new GUIContent(EditorGUIUtility.FindTexture("console.warnicon.sml"), "This is not a SoftMask component.");
+            }
+        }
 
         private void DrawMaskInteractions()
         {
             var softMaskable = target as SoftMaskable;
             if (softMaskable == null) return;
 
-            softMaskable.GetComponentsInParent<Mask>(true, tmpMasks);
-            tmpMasks.RemoveAll(x => !x.enabled);
-            tmpMasks.Reverse();
+            softMaskable.GetComponentsInParent<Mask>(true, s_TmpMasks);
+            s_TmpMasks.RemoveAll(x => !x.enabled);
+            s_TmpMasks.Reverse();
 
             maskInteraction = (MaskInteraction) EditorGUILayout.EnumPopup("Mask Interaction", maskInteraction);
             if (!_custom) return;
@@ -80,10 +75,10 @@ namespace Coffee.UISoftMask
 
             using (var ccs = new EditorGUI.ChangeCheckScope())
             {
-                int intr0 = DrawMaskInteraction(0);
-                int intr1 = DrawMaskInteraction(1);
-                int intr2 = DrawMaskInteraction(2);
-                int intr3 = DrawMaskInteraction(3);
+                var intr0 = DrawMaskInteraction(0);
+                var intr1 = DrawMaskInteraction(1);
+                var intr2 = DrawMaskInteraction(2);
+                var intr3 = DrawMaskInteraction(3);
 
                 if (ccs.changed)
                 {
@@ -94,24 +89,24 @@ namespace Coffee.UISoftMask
             EditorGUIUtility.labelWidth = l;
         }
 
-
         private int DrawMaskInteraction(int layer)
         {
-            Mask mask = layer < tmpMasks.Count ? tmpMasks[layer] : null;
-            MaskIntr intr = (MaskIntr) ((_spMaskInteraction.intValue >> layer * 2) & 0x3);
+            var mask = layer < s_TmpMasks.Count ? s_TmpMasks[layer] : null;
+            var intr = (MaskIntr) ((_spMaskInteraction.intValue >> layer * 2) & 0x3);
             if (!mask)
             {
                 return (int) intr;
             }
 
-            using (new EditorGUILayout.HorizontalScope())
-            {
-                EditorGUILayout.LabelField(mask is SoftMask ? GUIContent.none : s_MaskWarning, GUILayout.Width(16));
-                GUILayout.Space(-5);
-                EditorGUILayout.ObjectField("Mask " + layer, mask, typeof(Mask), false);
-                GUILayout.Space(-15);
-                return (int) (MaskIntr) EditorGUILayout.EnumPopup(intr);
-            }
+            GUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField(mask is SoftMask ? GUIContent.none : s_MaskWarning, GUILayout.Width(16));
+            GUILayout.Space(-5);
+            EditorGUILayout.ObjectField("Mask " + layer, mask, typeof(Mask), false);
+            GUILayout.Space(-15);
+            intr = (MaskIntr) EditorGUILayout.EnumPopup(intr);
+            GUILayout.EndHorizontal();
+
+            return (int) intr;
         }
 
         public override void OnInspectorGUI()
@@ -124,61 +119,20 @@ namespace Coffee.UISoftMask
             serializedObject.ApplyModifiedProperties();
 
             var current = target as SoftMaskable;
+            if (current == null) return;
 
-            current.GetComponentsInChildren<Graphic>(true, s_Graphics);
-            var fixTargets = s_Graphics.Where(x =>
-                x.gameObject != current.gameObject && !x.GetComponent<SoftMaskable>() &&
-                (!x.GetComponent<Mask>() || x.GetComponent<Mask>().showMaskGraphic)).ToList();
-            if (0 < fixTargets.Count)
+            var mask = current.softMask;
+            if (mask) return;
+
+            GUILayout.BeginHorizontal();
+            EditorGUILayout.HelpBox("This is unnecessary SoftMaskable.\nCan't find any SoftMask components above.", MessageType.Warning);
+            if (GUILayout.Button("Remove", GUILayout.Height(40)))
             {
-                GUILayout.BeginHorizontal();
-                EditorGUILayout.HelpBox(
-                    "There are child Graphics that does not have a SoftMaskable component.\nAdd SoftMaskable component to them.",
-                    MessageType.Warning);
-                GUILayout.BeginVertical();
-                if (GUILayout.Button("Fix"))
-                {
-                    foreach (var p in fixTargets)
-                    {
-                        p.gameObject.AddComponent<SoftMaskable>();
-                    }
-                }
-
-                if (GUILayout.Button("Ping"))
-                {
-                    EditorGUIUtility.PingObject(fixTargets[0]);
-                }
-
-                GUILayout.EndVertical();
-                GUILayout.EndHorizontal();
+                DestroyImmediate(current);
+                EditorUtils.MarkPrefabDirty();
             }
 
-            if (!DetectMask(current.transform.parent))
-            {
-                GUILayout.BeginHorizontal();
-                EditorGUILayout.HelpBox("This is unnecessary SoftMaskable.\nCan't find any SoftMask components above.",
-                    MessageType.Warning);
-                if (GUILayout.Button("Remove", GUILayout.Height(40)))
-                {
-                    DestroyImmediate(current);
-
-                    EditorUtils.MarkPrefabDirty();
-                }
-
-                GUILayout.EndHorizontal();
-            }
-        }
-
-        static bool DetectMask(Transform transform)
-        {
-            while (transform)
-            {
-                if (transform.GetComponent<SoftMask>()) return true;
-
-                transform = transform.parent;
-            }
-
-            return false;
+            GUILayout.EndHorizontal();
         }
     }
 }
