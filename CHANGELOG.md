@@ -1,3 +1,17 @@
+# [1.0.0-preview.4](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v1.0.0-preview.3...v1.0.0-preview.4) (2020-06-07)
+
+
+### Bug Fixes
+
+* fix the tooltip text ([f38f034](https://github.com/mob-sakai/SoftMaskForUGUI/commit/f38f0341480cfd8eda6bea3e488c7ae052b89924))
+
+
+### Features
+
+* add a new option to ignore stencil if it is not needed as a mask ([9edcb2d](https://github.com/mob-sakai/SoftMaskForUGUI/commit/9edcb2d22be25c285b0a7f853314884c3e9df499))
+* add a new public property 'useStencil' ([09dbaad](https://github.com/mob-sakai/SoftMaskForUGUI/commit/09dbaad203fa9eaaa16abf683add04267f82439d))
+* improve performance ([018ec78](https://github.com/mob-sakai/SoftMaskForUGUI/commit/018ec78c759745907c2e06d3ab09167939bdb05a))
+
 # [1.0.0-preview.3](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v1.0.0-preview.2...v1.0.0-preview.3) (2020-06-04)
 
 

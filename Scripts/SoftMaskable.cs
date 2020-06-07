@@ -72,6 +72,20 @@ namespace Coffee.UISoftMask
         }
 
         /// <summary>
+        /// Use stencil to mask.
+        /// </summary>
+        public bool useStencil
+        {
+            get { return m_UseStencil; }
+            set
+            {
+                if (m_UseStencil == value) return;
+                m_UseStencil = value;
+                graphic.SetMaterialDirtyEx();
+            }
+        }
+
+        /// <summary>
         /// The graphic associated with the soft mask.
         /// </summary>
         public Graphic graphic
@@ -121,11 +135,14 @@ namespace Coffee.UISoftMask
                 mat.SetTexture(s_SoftMaskTexId, softMask.softMaskBuffer);
                 mat.SetInt(s_StencilCompId,
                     m_UseStencil ? (int) CompareFunction.Equal : (int) CompareFunction.Always);
+
+                var root = MaskUtilities.FindRootSortOverrideCanvas(transform);
+                var stencil = MaskUtilities.GetStencilDepth(transform, root);
                 mat.SetVector(s_MaskInteractionId, new Vector4(
-                    (m_MaskInteraction & 0x3),
-                    ((m_MaskInteraction >> 2) & 0x3),
-                    ((m_MaskInteraction >> 4) & 0x3),
-                    ((m_MaskInteraction >> 6) & 0x3)
+                    1 <= stencil ? (m_MaskInteraction >> 0 & 0x3) : 0,
+                    2 <= stencil ? (m_MaskInteraction >> 2 & 0x3) : 0,
+                    3 <= stencil ? (m_MaskInteraction >> 4 & 0x3) : 0,
+                    4 <= stencil ? (m_MaskInteraction >> 6 & 0x3) : 0
                 ));
             });
 

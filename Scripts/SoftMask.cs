@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Profiling;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
@@ -67,7 +68,7 @@ namespace Coffee.UISoftMask
 
 
         [SerializeField, Tooltip("The desampling rate for soft mask buffer.")]
-        private DesamplingRate m_DesamplingRate = DesamplingRate.None;
+        private DesamplingRate m_DesamplingRate = DesamplingRate.x1;
 
         [SerializeField, Range(0.01f, 1), Tooltip("The value used by the soft mask to select the area of influence defined over the soft mask's graphic.")]
         private float m_Softness = 1;
@@ -81,9 +82,12 @@ namespace Coffee.UISoftMask
         [SerializeField, Tooltip("Is the soft mask a part of parent soft mask?")]
         private bool m_PartOfParent = false;
 
-        [SerializeField, Tooltip("Self Graphic will not be drawn to soft mask buffer.")]
+        [SerializeField, Tooltip("Self graphic will not be drawn to soft mask buffer.")]
         private bool m_IgnoreSelfGraphic;
 
+
+        [SerializeField, Tooltip("Self graphic will not be written to stencil buffer.")]
+        private bool m_IgnoreSelfStencil;
 
         /// <summary>
         /// The desampling rate for soft mask buffer.
@@ -224,6 +228,20 @@ namespace Coffee.UISoftMask
             }
         }
 
+        public bool ignoreSelfStencil
+        {
+            get { return m_IgnoreSelfStencil; }
+            set
+            {
+                if (m_IgnoreSelfStencil == value) return;
+                m_IgnoreSelfStencil = value;
+                hasChanged = true;
+                graphic.SetVerticesDirtyEx();
+                graphic.SetMaterialDirtyEx();
+            }
+        }
+
+
 
         Material material
         {
@@ -253,6 +271,8 @@ namespace Coffee.UISoftMask
         public override Material GetModifiedMaterial(Material baseMaterial)
         {
             hasChanged = true;
+            if (ignoreSelfStencil) return baseMaterial;
+
             var result = base.GetModifiedMaterial(baseMaterial);
             if (m_IgnoreParent && result != baseMaterial)
             {
@@ -282,9 +302,17 @@ namespace Coffee.UISoftMask
                 if (ignoreSelfGraphic)
                 {
                     verts.Clear();
+                    verts.FillMesh(mesh);
                 }
-
-                verts.FillMesh(mesh);
+                else if (ignoreSelfStencil)
+                {
+                    verts.FillMesh(mesh);
+                    verts.Clear();
+                }
+                else
+                {
+                    verts.FillMesh(mesh);
+                }
             }
 
             hasChanged = true;
@@ -443,6 +471,7 @@ namespace Coffee.UISoftMask
         /// </summary>
         static void UpdateMaskTextures()
         {
+            Profiler.BeginSample("UpdateMaskTextures");
             foreach (var sm in s_ActiveSoftMasks)
             {
                 if (!sm || sm._hasChanged)
@@ -458,6 +487,7 @@ namespace Coffee.UISoftMask
                     if (!cam)
                         continue;
 
+                    Profiler.BeginSample("Check view projection matrix changed (world space)");
                     var nowVP = cam.projectionMatrix * cam.worldToCameraMatrix;
                     var previousVP = default(Matrix4x4);
                     var id = cam.GetInstanceID();
@@ -468,6 +498,8 @@ namespace Coffee.UISoftMask
                     {
                         sm.hasChanged = true;
                     }
+
+                    Profiler.EndSample();
                 }
 
                 var rt = sm.rectTransform;
@@ -484,6 +516,7 @@ namespace Coffee.UISoftMask
 #endif
             }
 
+            Profiler.BeginSample("Update changed soft masks");
             foreach (var sm in s_ActiveSoftMasks)
             {
                 if (!sm || !sm._hasChanged)
@@ -495,16 +528,25 @@ namespace Coffee.UISoftMask
 
                 if (!sm._hasStencilStateChanged) continue;
                 sm._hasStencilStateChanged = false;
+
+                Profiler.BeginSample("Notify stencil state changed");
                 MaskUtilities.NotifyStencilStateChanged(sm);
+                Profiler.EndSample();
             }
 
+            Profiler.EndSample();
+
+            Profiler.BeginSample("Update previous view projection matrices");
             s_PreviousViewProjectionMatrices.Clear();
-            foreach (var id in s_NowViewProjectionMatrices.Keys)
+            foreach (var kv in s_NowViewProjectionMatrices)
             {
-                s_PreviousViewProjectionMatrices[id] = s_NowViewProjectionMatrices[id];
+                s_PreviousViewProjectionMatrices.Add(kv.Key, kv.Value);
             }
 
             s_NowViewProjectionMatrices.Clear();
+            Profiler.EndSample();
+
+            Profiler.EndSample();
         }
 
         /// <summary>
@@ -513,11 +555,14 @@ namespace Coffee.UISoftMask
         private void UpdateMaskTexture()
         {
             if (!graphic || !graphic.canvas) return;
+            Profiler.BeginSample("UpdateMaskTexture");
+
 
             _stencilDepth =
                 MaskUtilities.GetStencilDepth(transform, MaskUtilities.FindRootSortOverrideCanvas(transform));
 
             // Collect children soft masks.
+            Profiler.BeginSample("Collect children soft masks");
             var depth = 0;
             s_TmpSoftMasks[0].Add(this);
             while (_stencilDepth + depth < 3)
@@ -538,12 +583,17 @@ namespace Coffee.UISoftMask
                 depth++;
             }
 
-            // Clear.
+            Profiler.EndSample();
+
+            // CommandBuffer.
+            Profiler.BeginSample("Initialize CommandBuffer");
             _cb.Clear();
             _cb.SetRenderTarget(softMaskBuffer);
             _cb.ClearRenderTarget(false, true, s_ClearColors[_stencilDepth]);
+            Profiler.EndSample();
 
             // Set view and projection matrices.
+            Profiler.BeginSample("Set view and projection matrices");
             var c = graphic.canvas.rootCanvas;
             var cam = c.worldCamera ?? Camera.main;
             if (c && c.renderMode != RenderMode.ScreenSpaceOverlay && cam)
@@ -577,7 +627,10 @@ namespace Coffee.UISoftMask
 #endif
             }
 
+            Profiler.EndSample();
+
             // Draw soft masks.
+            Profiler.BeginSample("Draw Mesh");
             for (var i = 0; i < s_TmpSoftMasks.Length; i++)
             {
                 var count = s_TmpSoftMasks[i].Count;
@@ -604,7 +657,10 @@ namespace Coffee.UISoftMask
                 s_TmpSoftMasks[i].Clear();
             }
 
+            Profiler.EndSample();
+
             Graphics.ExecuteCommandBuffer(_cb);
+            Profiler.EndSample();
         }
 
         /// <summary>
