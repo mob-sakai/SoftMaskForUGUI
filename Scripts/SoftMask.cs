@@ -55,6 +55,8 @@ namespace Coffee.UISoftMask
         private static int s_GameVPId;
         private static int s_GameTVPId;
         private static int s_Alpha;
+        private static int s_PreviousWidth;
+        private static int s_PreviousHeight;
         private MaterialPropertyBlock _mpb;
         private CommandBuffer _cb;
         private Material _material;
@@ -76,7 +78,7 @@ namespace Coffee.UISoftMask
         [SerializeField, Range(0f, 1f), Tooltip("The transparency of the whole masked graphic.")]
         private float m_Alpha = 1;
 
-        [SerializeField, Tooltip("Should the soft mask ignore parent soft masks?")]
+        [Header("Advanced Options")] [SerializeField, Tooltip("Should the soft mask ignore parent soft masks?")]
         private bool m_IgnoreParent = false;
 
         [SerializeField, Tooltip("Is the soft mask a part of parent soft mask?")]
@@ -187,8 +189,7 @@ namespace Coffee.UISoftMask
 
                 if (!_softMaskBuffer)
                 {
-                    _softMaskBuffer = RenderTexture.GetTemporary(w, h, 0, RenderTextureFormat.ARGB32,
-                        RenderTextureReadWrite.Default);
+                    _softMaskBuffer = RenderTexture.GetTemporary(w, h, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Default);
                     hasChanged = true;
                     _hasStencilStateChanged = true;
                 }
@@ -242,7 +243,6 @@ namespace Coffee.UISoftMask
         }
 
 
-
         Material material
         {
             get
@@ -251,9 +251,8 @@ namespace Coffee.UISoftMask
                     ? _material
                     : _material =
                         new Material(s_SoftMaskShader
-                                ? s_SoftMaskShader
-                                : s_SoftMaskShader = Resources.Load<Shader>("SoftMask"))
-                            {hideFlags = HideFlags.HideAndDontSave};
+                            ? s_SoftMaskShader
+                            : s_SoftMaskShader = Resources.Load<Shader>("SoftMask")) {hideFlags = HideFlags.HideAndDontSave};
             }
         }
 
@@ -547,6 +546,16 @@ namespace Coffee.UISoftMask
             Profiler.EndSample();
 
             Profiler.EndSample();
+
+#if UNITY_EDITOR
+            var w = s_PreviousWidth;
+            var h = s_PreviousHeight;
+            GetDesamplingSize(DesamplingRate.None, out s_PreviousWidth, out  s_PreviousHeight);
+            if (w != s_PreviousWidth || h != s_PreviousHeight)
+            {
+                Canvas.ForceUpdateCanvases();
+            }
+#endif
         }
 
         /// <summary>
@@ -558,8 +567,7 @@ namespace Coffee.UISoftMask
             Profiler.BeginSample("UpdateMaskTexture");
 
 
-            _stencilDepth =
-                MaskUtilities.GetStencilDepth(transform, MaskUtilities.FindRootSortOverrideCanvas(transform));
+            _stencilDepth = MaskUtilities.GetStencilDepth(transform, MaskUtilities.FindRootSortOverrideCanvas(transform));
 
             // Collect children soft masks.
             Profiler.BeginSample("Collect children soft masks");
@@ -570,7 +578,7 @@ namespace Coffee.UISoftMask
                 var count = s_TmpSoftMasks[depth].Count;
                 for (var i = 0; i < count; i++)
                 {
-                    List<SoftMask> children = s_TmpSoftMasks[depth][i]._children;
+                    var children = s_TmpSoftMasks[depth][i]._children;
                     var childCount = children.Count;
                     for (var j = 0; j < childCount; j++)
                     {
@@ -598,11 +606,11 @@ namespace Coffee.UISoftMask
             var cam = c.worldCamera ?? Camera.main;
             if (c && c.renderMode != RenderMode.ScreenSpaceOverlay && cam)
             {
-                _cb.SetViewProjectionMatrices(cam.worldToCameraMatrix,
-                    GL.GetGPUProjectionMatrix(cam.projectionMatrix, false));
+                var p = GL.GetGPUProjectionMatrix(cam.projectionMatrix, false);
+                _cb.SetViewProjectionMatrices(cam.worldToCameraMatrix, p);
 
 #if UNITY_EDITOR
-                var pv = GL.GetGPUProjectionMatrix(cam.projectionMatrix, false) * cam.worldToCameraMatrix;
+                var pv = p * cam.worldToCameraMatrix;
                 _cb.SetGlobalMatrix(s_GameVPId, pv);
                 _cb.SetGlobalMatrix(s_GameTVPId, pv);
 #endif
@@ -611,19 +619,16 @@ namespace Coffee.UISoftMask
             {
                 var pos = c.transform.position;
                 var vm = Matrix4x4.TRS(new Vector3(-pos.x, -pos.y, -1000), Quaternion.identity, new Vector3(1, 1, -1f));
-                var pm = Matrix4x4.TRS(new Vector3(0, 0, -1), Quaternion.identity,
-                    new Vector3(1 / pos.x, 1 / pos.y, -2 / 10000f));
+                var pm = Matrix4x4.TRS(new Vector3(0, 0, -1), Quaternion.identity, new Vector3(1 / pos.x, 1 / pos.y, -2 / 10000f));
                 _cb.SetViewProjectionMatrices(vm, pm);
 
 #if UNITY_EDITOR
                 var scale = c.transform.localScale.x;
                 var size = (c.transform as RectTransform).sizeDelta;
-                _cb.SetGlobalMatrix(s_GameVPId,
-                    Matrix4x4.TRS(new Vector3(0, 0, 0.5f), Quaternion.identity,
-                        new Vector3(2 / size.x, 2 / size.y, 0.0005f * scale)));
-                _cb.SetGlobalMatrix(s_GameTVPId,
-                    Matrix4x4.TRS(new Vector3(0, 0, 0), Quaternion.identity,
-                        new Vector3(1 / pos.x, 1 / pos.y, -2 / 2000f)) * Matrix4x4.Translate(-pos));
+                var gameVp = Matrix4x4.TRS(new Vector3(0, 0, 0.5f), Quaternion.identity, new Vector3(2 / size.x, 2 / size.y, 0.0005f * scale));
+                var gameTvp = Matrix4x4.TRS(new Vector3(0, 0, 0), Quaternion.identity, new Vector3(1 / pos.x, 1 / pos.y, -2 / 2000f)) * Matrix4x4.Translate(-pos);
+                _cb.SetGlobalMatrix(s_GameVPId, gameVp);
+                _cb.SetGlobalMatrix(s_GameTVPId, gameTvp);
 #endif
             }
 
@@ -640,8 +645,7 @@ namespace Coffee.UISoftMask
 
                     if (i != 0)
                     {
-                        sm._stencilDepth = MaskUtilities.GetStencilDepth(sm.transform,
-                            MaskUtilities.FindRootSortOverrideCanvas(sm.transform));
+                        sm._stencilDepth = MaskUtilities.GetStencilDepth(sm.transform, MaskUtilities.FindRootSortOverrideCanvas(sm.transform));
                     }
 
                     // Set material property.
@@ -700,6 +704,7 @@ namespace Coffee.UISoftMask
         private static void ReleaseRt(ref RenderTexture tmpRT)
         {
             if (!tmpRT) return;
+
             tmpRT.Release();
             RenderTexture.ReleaseTemporary(tmpRT);
             tmpRT = null;
@@ -712,13 +717,13 @@ namespace Coffee.UISoftMask
         private static void ReleaseObject(Object obj)
         {
             if (!obj) return;
+
 #if UNITY_EDITOR
             if (!Application.isPlaying)
                 DestroyImmediate(obj);
             else
 #endif
                 Destroy(obj);
-            obj = null;
         }
 
 

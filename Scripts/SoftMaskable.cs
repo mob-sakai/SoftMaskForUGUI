@@ -133,8 +133,7 @@ namespace Coffee.UISoftMask
                 mat.EnableKeyword("SOFTMASK_EDITOR");
 #endif
                 mat.SetTexture(s_SoftMaskTexId, softMask.softMaskBuffer);
-                mat.SetInt(s_StencilCompId,
-                    m_UseStencil ? (int) CompareFunction.Equal : (int) CompareFunction.Always);
+                mat.SetInt(s_StencilCompId, m_UseStencil ? (int) CompareFunction.Equal : (int) CompareFunction.Always);
 
                 var root = MaskUtilities.FindRootSortOverrideCanvas(transform);
                 var stencil = MaskUtilities.GetStencilDepth(transform, root);
@@ -179,15 +178,19 @@ namespace Coffee.UISoftMask
                 for (var i = 0; i < 4; i++)
                 {
                     if (!sm) break;
+
                     s_Interactions[i] = sm ? ((m_MaskInteraction >> i * 2) & 0x3) : 0;
                     var interaction = s_Interactions[i] == 1;
-                    var inRect = RectTransformUtility.RectangleContainsScreenPoint(sm.transform as RectTransform, sp, eventCamera);
+                    var rt = sm.transform as RectTransform;
+                    var inRect = RectTransformUtility.RectangleContainsScreenPoint(rt, sp, eventCamera);
                     if (!sm.ignoreSelfGraphic && interaction != inRect) return false;
 
                     foreach (var child in sm._children)
                     {
-                        if (!child) break;
-                        var inRectChild = RectTransformUtility.RectangleContainsScreenPoint(child.transform as RectTransform, sp, eventCamera);
+                        if (!child) continue;
+
+                        var childRt = child.transform as RectTransform;
+                        var inRectChild = RectTransformUtility.RectangleContainsScreenPoint(childRt, sp, eventCamera);
                         if (!child.ignoreSelfGraphic && interaction != inRectChild) return false;
                     }
 
@@ -201,7 +204,7 @@ namespace Coffee.UISoftMask
         /// <summary>
         /// Set the interaction for each mask.
         /// </summary>
-        public void SetMaskInteraction(SpriteMaskInteraction intr)
+        public void SetMaskInteraction(MaskIntr intr)
         {
             SetMaskInteraction(intr, intr, intr, intr);
         }
@@ -209,8 +212,7 @@ namespace Coffee.UISoftMask
         /// <summary>
         /// Set the interaction for each mask.
         /// </summary>
-        public void SetMaskInteraction(SpriteMaskInteraction layer0, SpriteMaskInteraction layer1,
-            SpriteMaskInteraction layer2, SpriteMaskInteraction layer3)
+        public void SetMaskInteraction(MaskIntr layer0, MaskIntr layer1, MaskIntr layer2, MaskIntr layer3)
         {
             m_MaskInteraction = (int) layer0 + ((int) layer1 << 2) + ((int) layer2 << 4) + ((int) layer3 << 6);
             graphic.SetMaterialDirtyEx();
@@ -278,12 +280,14 @@ namespace Coffee.UISoftMask
             var current = this;
             UnityEditor.EditorApplication.delayCall += () =>
             {
-                if (current && graphic && graphic.material && graphic.material.shader &&
-                    graphic.material.shader.name == "Hidden/UI/Default (SoftMaskable)")
-                {
-                    graphic.material = null;
-                    graphic.SetMaterialDirtyEx();
-                }
+                if (!current) return;
+                if (!graphic) return;
+                if (!graphic.material) return;
+                if (!graphic.material.shader) return;
+                if (graphic.material.shader.name != "Hidden/UI/Default (SoftMaskable)") return;
+
+                graphic.material = null;
+                graphic.SetMaterialDirtyEx();
             };
         }
 #endif

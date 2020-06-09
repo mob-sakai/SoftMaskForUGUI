@@ -7,6 +7,17 @@ float4x4 _GameVP;
 float4x4 _GameTVP;
 half4 _MaskInteraction;
 
+fixed Approximately(float4x4 a, float4x4 b)
+{
+	float4x4 d = abs(a - b);
+	return step(
+		max(d._m00,max(d._m01,max(d._m02,max(d._m03,
+		max(d._m10,max(d._m11,max(d._m12,max(d._m13,
+		max(d._m20,max(d._m21,max(d._m22,max(d._m23,
+		max(d._m30,max(d._m31,max(d._m32,d._m33))))))))))))))),
+		0.5);
+}
+
 #if SOFTMASK_EDITOR
 float SoftMaskInternal(float4 clipPos, float4 wpos)
 #else
@@ -15,7 +26,7 @@ float SoftMaskInternal(float4 clipPos)
 {
 	half2 view = clipPos.xy/_ScreenParams.xy;
 	#if SOFTMASK_EDITOR
-		fixed isSceneView = any(UNITY_MATRIX_VP - _GameVP);
+		fixed isSceneView = 1 - Approximately(UNITY_MATRIX_VP, _GameVP);
 		float4 cpos = mul(_GameTVP, mul(UNITY_MATRIX_M, wpos));
 		view = lerp(view, cpos.xy / cpos.w * 0.5 + 0.5, isSceneView);
 		#if UNITY_UV_STARTS_AT_TOP

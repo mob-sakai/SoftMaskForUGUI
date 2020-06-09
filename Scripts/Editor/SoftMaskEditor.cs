@@ -14,6 +14,7 @@ namespace Coffee.UISoftMask
     [CanEditMultipleObjects]
     public class SoftMaskEditor : Editor
     {
+        private const int k_PreviewSize = 128;
         private const string k_PrefsPreview = "SoftMaskEditor_Preview";
         private static readonly List<Graphic> s_Graphics = new List<Graphic>();
         private static bool s_Preview;
@@ -29,9 +30,10 @@ namespace Coffee.UISoftMask
 
             var current = target as SoftMask;
             current.GetComponentsInChildren<Graphic>(true, s_Graphics);
-            var fixTargets = s_Graphics.Where(x =>
-                x.gameObject != current.gameObject && !x.GetComponent<SoftMaskable>() &&
-                (!x.GetComponent<Mask>() || x.GetComponent<Mask>().showMaskGraphic)).ToList();
+            var fixTargets = s_Graphics
+                .Where(x => x.gameObject != current.gameObject)
+                .Where(x => !x.GetComponent<SoftMaskable>() && (!x.GetComponent<Mask>() || x.GetComponent<Mask>().showMaskGraphic))
+                .ToList();
             if (0 < fixTargets.Count)
             {
                 GUILayout.BeginHorizontal();
@@ -58,7 +60,7 @@ namespace Coffee.UISoftMask
 
             // Preview buffer.
             GUILayout.BeginVertical(EditorStyles.helpBox);
-            if (s_Preview != (s_Preview = EditorGUILayout.ToggleLeft("Preview Buffer", s_Preview)))
+            if (s_Preview != (s_Preview = EditorGUILayout.ToggleLeft("Preview Soft Mask Buffer", s_Preview)))
             {
                 EditorPrefs.SetBool(k_PrefsPreview, s_Preview);
             }
@@ -66,10 +68,11 @@ namespace Coffee.UISoftMask
             if (s_Preview)
             {
                 var tex = current.softMaskBuffer;
-                var width = tex.width * 128 / tex.height;
-                EditorGUI.DrawPreviewTexture(GUILayoutUtility.GetRect(width, 128), tex, null, ScaleMode.ScaleToFit);
+                var width = tex.width * k_PreviewSize / tex.height;
+                EditorGUI.DrawPreviewTexture(GUILayoutUtility.GetRect(width, k_PreviewSize), tex, null, ScaleMode.ScaleToFit);
                 Repaint();
             }
+
             GUILayout.EndVertical();
         }
 

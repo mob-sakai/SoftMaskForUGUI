@@ -1,3 +1,10 @@
+# [1.0.0-preview.5](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v1.0.0-preview.4...v1.0.0-preview.5) (2020-06-09)
+
+
+### Bug Fixes
+
+* screen space overlay bug with game window resize ([91b7788](https://github.com/mob-sakai/SoftMaskForUGUI/commit/91b77885bc5f60cb59e8081009982a4635f9245c)), closes [#93](https://github.com/mob-sakai/SoftMaskForUGUI/issues/93)
+
 # [1.0.0-preview.4](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v1.0.0-preview.3...v1.0.0-preview.4) (2020-06-07)
 
 
