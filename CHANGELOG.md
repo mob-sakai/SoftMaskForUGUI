@@ -1,3 +1,10 @@
+# [1.0.0-preview.7](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v1.0.0-preview.6...v1.0.0-preview.7) (2020-08-17)
+
+
+### Features
+
+* memoryless mode (depth) ([8cf202f](https://github.com/mob-sakai/SoftMaskForUGUI/commit/8cf202f958be902d34994f3c07082f893f9b455b))
+
 # [1.0.0-preview.6](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v1.0.0-preview.5...v1.0.0-preview.6) (2020-08-17)
 
 

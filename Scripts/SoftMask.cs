@@ -189,7 +189,7 @@ namespace Coffee.UISoftMask
 
                 if (!_softMaskBuffer)
                 {
-                    _softMaskBuffer = RenderTexture.GetTemporary(w, h, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Default);
+                    _softMaskBuffer = RenderTexture.GetTemporary(w, h, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Default, 1, RenderTextureMemoryless.Depth);
                     hasChanged = true;
                     _hasStencilStateChanged = true;
                 }
