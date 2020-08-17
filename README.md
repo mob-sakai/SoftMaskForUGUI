@@ -54,20 +54,22 @@ By using SoftMask instead of the default Mask component, you can beautifully rep
 ![](https://user-images.githubusercontent.com/12690315/50284151-7459e080-049b-11e9-9cd3-24fb476766dc.png)
 * Make multiple holes on one background by 'Parts of parent' option.  
 ![](https://user-images.githubusercontent.com/12690315/54102470-f5c26e80-440b-11e9-89d1-899aa4dca00d.png)
-
+* [Support TextMeshPro](#support-textmeshpro)
 
 
 #### Components
 
-|Component|Description|Screenshot|
-|-|-|-|
-|SoftMask|Use instead of Mask for smooth masking.<br><br>**Show Mask Graphic:** Show the graphic that is associated with the Mask render area.<br>**Desampling Rate:** The desampling rate for soft mask buffer. The larger the value, the better the performance but the lower the quality.<br>**Softness:** The value used by the soft mask to select the area of influence defined over the soft mask's graphic.<br>**Ignore Parent:** Should the soft mask ignore parent soft masks?<br>**Part Of Parent:** Is the soft mask a part of parent soft mask?|<img src="https://user-images.githubusercontent.com/12690315/50319746-377a0200-050c-11e9-96ae-a3a0ec81765f.png" width="600px">|
-|SoftMaskable|Add this component to Graphic under SoftMask for smooth masking.<br><br>**Inverse:** The graphic will be visible only in areas where no mask is present.|<img src="https://user-images.githubusercontent.com/12690315/50319747-39dc5c00-050c-11e9-85fa-dd6ea9065daf.png" width="600px">|
+| Component    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | Screenshot        |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- |
+| SoftMask     | Use instead of Mask for smooth masking.<br><br>**Show Mask Graphic:** Show the graphic that is associated with the Mask render area.<br>**Desampling Rate:** The desampling rate for soft mask buffer. The larger the value, the better the performance but the lower the quality.<br>**Softness:** The value used by the soft mask to select the area of influence defined over the soft mask's graphic.<br>**Ignore Parent:** Should the soft mask ignore parent soft masks?<br>**Part Of Parent:** Is the soft mask a part of parent soft mask? | ![softmask][]     |
+| SoftMaskable | Add this component to Graphic under SoftMask for smooth masking.<br><br>**Use Stencil:** Use stencil buffer to mask. If disabled, the stencil buffer is ignored.<br>**RaycastFilter:** Use soft-masked raycast target. **This option is expensive.**<br>**Mask Interaction:** The interaction for each mask layers.                                                                                                                                                                                                                                | ![softmaskable][] |
 
-
+[softmask]:https://user-images.githubusercontent.com/12690315/90349065-44e5e780-e073-11ea-8ca2-c005bff90def.png
+[softmaskable]:https://user-images.githubusercontent.com/12690315/90349068-47e0d800-e073-11ea-9749-18df13b8cb87.png
 
 
 <br><br><br><br>
+
 ## Demo
 
 [WebGL Demo](http://mob-sakai.github.io/SoftMaskForUGUI)
@@ -76,11 +78,12 @@ By using SoftMask instead of the default Mask component, you can beautifully rep
 
 
 <br><br><br><br>
+
 ## Installation
 
 #### Requirement
 
-* Unity 2017.1 or later
+* Unity 2017.1 or later (2018.x, 2019.x and 2020.x are included)
 * No other SDK are required
 
 #### Using OpenUPM (for Unity 2018.3 or later)
@@ -121,6 +124,7 @@ Or, use [UpmGitExtension](https://github.com/mob-sakai/UpmGitExtension) to insta
 
 
 <br><br><br><br>
+
 ## How to play demo
 
 - For Unity 2019.1 or later
@@ -135,6 +139,7 @@ Open `UISoftMask_Demo` scene and play it.
 
 
 <br><br><br><br>
+
 ## Usage
 
 1. Add a SoftMask component instead of Mask component.  
@@ -152,6 +157,7 @@ Or, add a SoftMaskable components from the inspector of the SoftMask component.
 
 
 <br><br><br><br>
+
 ## Support TextMeshPro
 
 To use SoftMask with TextMeshPro, import a sample asset. 
@@ -165,6 +171,7 @@ The assets will be imported into `Assets/Samples/UI Soft Mask/{version}/TextMesh
 
 
 <br><br><br><br>
+
 ## Support soft masks with your custom shaders
 
 Only a few steps are needed to support soft mask in your custom shaders!
@@ -201,6 +208,7 @@ As an example of implementation, please see [UI-Default-SoftMask.shader](https:/
 
 
 <br><br><br><br>
+
 ## Contributing
 
 ### Issues
@@ -227,7 +235,9 @@ With your support, I can spend more time on development. :)
 
 
 
+
 <br><br><br><br>
+
 ## License
 
 * MIT

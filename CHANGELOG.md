@@ -1,3 +1,10 @@
+# [1.0.0-preview.6](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v1.0.0-preview.5...v1.0.0-preview.6) (2020-08-17)
+
+
+### Bug Fixes
+
+* Always Include TextMeshPro Shaders ([7f24280](https://github.com/mob-sakai/SoftMaskForUGUI/commit/7f24280b9586f5ccc50d233d0eb4241bb8cd9b10)), closes [#99](https://github.com/mob-sakai/SoftMaskForUGUI/issues/99)
+
 # [1.0.0-preview.5](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v1.0.0-preview.4...v1.0.0-preview.5) (2020-06-09)
 
 
