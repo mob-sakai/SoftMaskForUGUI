@@ -1,3 +1,12 @@
+# [1.0.0-preview.8](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v1.0.0-preview.7...v1.0.0-preview.8) (2020-09-08)
+
+
+### Features
+
+* if the 'UIMask' sprite is specified as the source image, it is suggested to use another image ([ea904db](https://github.com/mob-sakai/SoftMaskForUGUI/commit/ea904dbe3afd9f18eab0d449bd08bf78375fd53d)), closes [#82](https://github.com/mob-sakai/SoftMaskForUGUI/issues/82)
+* option to disable softening completely ([dedd847](https://github.com/mob-sakai/SoftMaskForUGUI/commit/dedd847fd0c5faa5094a08293600cbb8aa4b6456)), closes [#98](https://github.com/mob-sakai/SoftMaskForUGUI/issues/98)
+* use the stencil buffer outside the scene view canvas for editing ([dbab85c](https://github.com/mob-sakai/SoftMaskForUGUI/commit/dbab85c0f0bd8a58b8ab09306bed351ad1cf6375)), closes [#100](https://github.com/mob-sakai/SoftMaskForUGUI/issues/100)
+
 # [1.0.0-preview.7](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v1.0.0-preview.6...v1.0.0-preview.7) (2020-08-17)
 
 

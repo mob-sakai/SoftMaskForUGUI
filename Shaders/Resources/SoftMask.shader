@@ -23,7 +23,8 @@ Shader "Hidden/SoftMask" {
 
 			fixed4 frag (v2f_img i) : SV_Target
 			{
-				return saturate(tex2D(_MainTex, i.uv).a/_Softness) * _Alpha;
+			    half softness = max(_Softness, 0.0001f);
+				return saturate(tex2D(_MainTex, i.uv).a/softness) * _Alpha;
 			}
 			ENDCG
 		}

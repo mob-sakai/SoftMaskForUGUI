@@ -38,7 +38,7 @@ namespace Coffee.UISoftMask
         private int m_MaskInteraction = kVisibleInside;
 
         [SerializeField, Tooltip("Use stencil to mask.")]
-        private bool m_UseStencil;
+        private bool m_UseStencil = true;
 
         [SerializeField, Tooltip("Use soft-masked raycast target.\n\nNote: This option is expensive.")]
         private bool m_RaycastFilter;

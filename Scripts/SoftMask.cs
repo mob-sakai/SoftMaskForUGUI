@@ -72,7 +72,7 @@ namespace Coffee.UISoftMask
         [SerializeField, Tooltip("The desampling rate for soft mask buffer.")]
         private DesamplingRate m_DesamplingRate = DesamplingRate.x1;
 
-        [SerializeField, Range(0.01f, 1), Tooltip("The value used by the soft mask to select the area of influence defined over the soft mask's graphic.")]
+        [SerializeField, Range(0, 1), Tooltip("The value used by the soft mask to select the area of influence defined over the soft mask's graphic.")]
         private float m_Softness = 1;
 
         [SerializeField, Range(0f, 1f), Tooltip("The transparency of the whole masked graphic.")]

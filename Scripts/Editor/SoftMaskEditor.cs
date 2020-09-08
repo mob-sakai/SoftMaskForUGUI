@@ -58,6 +58,22 @@ namespace Coffee.UISoftMask
                 GUILayout.EndHorizontal();
             }
 
+            var currentImage = current.graphic as Image;
+            if (currentImage && IsMaskUI(currentImage.sprite))
+            {
+                GUILayout.BeginHorizontal();
+                EditorGUILayout.HelpBox("SoftMask does not recommend to use 'UIMask' sprite as a source image.\n(It contains only small alpha pixels.)\nDo you want to use 'UISprite' instead?", MessageType.Warning);
+                GUILayout.BeginVertical();
+
+                if (GUILayout.Button("Fix"))
+                {
+                    currentImage.sprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UISprite.psd");
+                }
+
+                GUILayout.EndVertical();
+                GUILayout.EndHorizontal();
+            }
+
             // Preview buffer.
             GUILayout.BeginVertical(EditorStyles.helpBox);
             if (s_Preview != (s_Preview = EditorGUILayout.ToggleLeft("Preview Soft Mask Buffer", s_Preview)))
@@ -74,6 +90,13 @@ namespace Coffee.UISoftMask
             }
 
             GUILayout.EndVertical();
+        }
+
+        private static bool IsMaskUI(Object obj)
+        {
+            return obj
+                   && obj.name == "UIMask"
+                   && AssetDatabase.GetAssetPath(obj) == "Resources/unity_builtin_extra";
         }
 
 
