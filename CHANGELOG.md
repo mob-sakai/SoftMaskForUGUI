@@ -1,3 +1,10 @@
+# [1.0.0-preview.9](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v1.0.0-preview.8...v1.0.0-preview.9) (2020-09-08)
+
+
+### Bug Fixes
+
+* TextMeshPro not work TMP_SubMeshUI ([56995e9](https://github.com/mob-sakai/SoftMaskForUGUI/commit/56995e9f81218a40cfd777f51b9f11a86775a131)), closes [#94](https://github.com/mob-sakai/SoftMaskForUGUI/issues/94)
+
 # [1.0.0-preview.8](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v1.0.0-preview.7...v1.0.0-preview.8) (2020-09-08)
 
 

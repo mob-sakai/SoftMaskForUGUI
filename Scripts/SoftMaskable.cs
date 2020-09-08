@@ -282,6 +282,7 @@ namespace Coffee.UISoftMask
             {
                 if (!current) return;
                 if (!graphic) return;
+                if (graphic.name.Contains("TMP SubMeshUI")) return;
                 if (!graphic.material) return;
                 if (!graphic.material.shader) return;
                 if (graphic.material.shader.name != "Hidden/UI/Default (SoftMaskable)") return;

@@ -158,7 +158,7 @@ Or, add a SoftMaskable components from the inspector of the SoftMask component.
 
 <br><br><br><br>
 
-## Support TextMeshPro
+## Usage with TextMeshPro
 
 To use SoftMask with TextMeshPro, import a sample asset. 
 
@@ -170,6 +170,8 @@ To use SoftMask with TextMeshPro, import a sample asset.
 The assets will be imported into `Assets/Samples/UI Soft Mask/{version}/TextMeshPro Support`.
 
 **NOTE:** You must import `TMP Essential Resources` before using. They include shaders, fonts, etc.
+
+![](https://user-images.githubusercontent.com/12690315/83823700-8bcc6e00-a70f-11ea-8177-942860b7d4f0.png)
 
 **NOTE:** If the shader error is not resolved, reimport the shader. Or, import the `TextMeshPro Support` again.
 
