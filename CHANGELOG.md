@@ -1,3 +1,10 @@
+# [1.0.0-preview.10](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v1.0.0-preview.9...v1.0.0-preview.10) (2020-09-14)
+
+
+### Bug Fixes
+
+* if the package was installed via openupm, an unintended directory 'Samples' was included ([d8fd47a](https://github.com/mob-sakai/SoftMaskForUGUI/commit/d8fd47aadbbb99fc6ebd830820abaee4ab1d9cf2)), closes [#102](https://github.com/mob-sakai/SoftMaskForUGUI/issues/102)
+
 # [1.0.0-preview.9](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v1.0.0-preview.8...v1.0.0-preview.9) (2020-09-08)
 
 
