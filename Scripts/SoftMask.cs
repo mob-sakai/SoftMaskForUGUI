@@ -674,8 +674,8 @@ namespace Coffee.UISoftMask
         {
 #if UNITY_EDITOR
             var res = UnityEditor.UnityStats.screenRes.Split('x');
-            w = int.Parse(res[0]);
-            h = int.Parse(res[1]);
+            w = Mathf.Max(64, int.Parse(res[0]));
+            h = Mathf.Max(64, int.Parse(res[1]));
 #else
 			w = Screen.width;
 			h = Screen.height;

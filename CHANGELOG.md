@@ -1,3 +1,11 @@
+# [1.0.0-preview.11](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v1.0.0-preview.10...v1.0.0-preview.11) (2020-09-27)
+
+
+### Bug Fixes
+
+* an exception is thrown when the game view is inactive ([97e5a21](https://github.com/mob-sakai/SoftMaskForUGUI/commit/97e5a21b784ae9081aec8f17603355eef7e8b2b9)), closes [#104](https://github.com/mob-sakai/SoftMaskForUGUI/issues/104)
+* graphic.materialForRendering always returns different material ([3f6acec](https://github.com/mob-sakai/SoftMaskForUGUI/commit/3f6acec67b3c0467670eb8f4b10928fa8724e082)), closes [#103](https://github.com/mob-sakai/SoftMaskForUGUI/issues/103)
+
 # [1.0.0-preview.10](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v1.0.0-preview.9...v1.0.0-preview.10) (2020-09-14)
 
 

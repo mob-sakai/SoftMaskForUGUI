@@ -107,17 +107,17 @@ namespace Coffee.UISoftMask
         {
             _softMask = null;
 
-            // Unregister the previous material
-            MaterialCache.Unregister(_effectMaterialHash);
-            _effectMaterialHash = k_InvalidHash;
-
             // If this component is disabled, the material is returned as is.
-            if (!isActiveAndEnabled) return baseMaterial;
-
             // If the parents do not have a soft mask component, the material is returned as is.
-            if (!softMask) return baseMaterial;
+            if (!isActiveAndEnabled || !softMask)
+            {
+                MaterialCache.Unregister(_effectMaterialHash);
+                _effectMaterialHash = k_InvalidHash;
+                return baseMaterial;
+            }
 
             // Generate soft maskable material.
+            var previousHash = _effectMaterialHash;
             _effectMaterialHash = new Hash128(
                 (uint) baseMaterial.GetInstanceID(),
                 (uint) softMask.GetInstanceID(),
@@ -144,6 +144,9 @@ namespace Coffee.UISoftMask
                     4 <= stencil ? (m_MaskInteraction >> 6 & 0x3) : 0
                 ));
             });
+
+            // Unregister the previous material.
+            MaterialCache.Unregister(previousHash);
 
             return modifiedMaterial;
         }
