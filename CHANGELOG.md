@@ -1,3 +1,11 @@
+# [1.0.0-preview.12](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v1.0.0-preview.11...v1.0.0-preview.12) (2020-09-28)
+
+
+### Bug Fixes
+
+* clickable area inverted on Metal ([3c189ff](https://github.com/mob-sakai/SoftMaskForUGUI/commit/3c189ffed61baa6806aadc6ff89c41b9102491b5))
+* in Unity 2018.x, sample import failed on Windows ([207ea9c](https://github.com/mob-sakai/SoftMaskForUGUI/commit/207ea9c1dc4117ab6c00e70290d5f7651fa906d8))
+
 # [1.0.0-preview.11](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v1.0.0-preview.10...v1.0.0-preview.11) (2020-09-27)
 
 

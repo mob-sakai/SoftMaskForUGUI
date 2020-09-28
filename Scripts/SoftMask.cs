@@ -42,6 +42,7 @@ namespace Coffee.UISoftMask
         };
 
         private static bool s_UVStartsAtTop;
+        private static bool s_IsMetal;
         private static Shader s_SoftMaskShader;
         private static Texture2D s_ReadTexture;
         private static readonly List<SoftMask> s_ActiveSoftMasks = new List<SoftMask>();
@@ -329,7 +330,7 @@ namespace Coffee.UISoftMask
             if (!isActiveAndEnabled || (g == graphic && !g.raycastTarget)) return true;
 
             int x = (int) ((softMaskBuffer.width - 1) * Mathf.Clamp01(sp.x / Screen.width));
-            int y = s_UVStartsAtTop
+            int y = s_UVStartsAtTop && !s_IsMetal
                 ? (int) ((softMaskBuffer.height - 1) * (1 - Mathf.Clamp01(sp.y / Screen.height)))
                 : (int) ((softMaskBuffer.height - 1) * Mathf.Clamp01(sp.y / Screen.height));
             return 0.5f < GetPixelValue(x, y, interactions);
@@ -355,6 +356,7 @@ namespace Coffee.UISoftMask
                 if (s_StencilCompId == 0)
                 {
                     s_UVStartsAtTop = SystemInfo.graphicsUVStartsAtTop;
+                    s_IsMetal = SystemInfo.graphicsDeviceType == GraphicsDeviceType.Metal;
                     s_StencilCompId = Shader.PropertyToID("_StencilComp");
                     s_ColorMaskId = Shader.PropertyToID("_ColorMask");
                     s_MainTexId = Shader.PropertyToID("_MainTex");

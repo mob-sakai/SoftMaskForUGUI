@@ -25,11 +25,12 @@ namespace Coffee.UISoftMask
         private static void ImportSample(string jsonGuid, string sampleName)
         {
             var jsonPath = AssetDatabase.GUIDToAssetPath(jsonGuid);
+            var packageRoot = Path.GetDirectoryName(jsonPath).Replace('\\', '/');
             var json = File.ReadAllText(jsonPath);
             var version = Regex.Match(json, "\"version\"\\s*:\\s*\"([^\"]+)\"").Groups[1].Value;
             var displayName = Regex.Match(json, "\"displayName\"\\s*:\\s*\"([^\"]+)\"").Groups[1].Value;
-            var src = string.Format("{0}/Samples~/{1}", Path.GetDirectoryName(jsonPath), sampleName);
-            var srcAlt = string.Format("{0}/Samples/{1}", Path.GetDirectoryName(jsonPath), sampleName);
+            var src = string.Format("{0}/Samples~/{1}", packageRoot, sampleName);
+            var srcAlt = string.Format("{0}/Samples/{1}", packageRoot, sampleName);
             var dst = string.Format("Assets/Samples/{0}/{1}/{2}", displayName, version, sampleName);
             var previousPath = GetPreviousSamplePath(displayName, sampleName);
 
