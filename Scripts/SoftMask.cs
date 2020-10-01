@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.Profiling;
 using UnityEngine.Rendering;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
@@ -14,9 +15,9 @@ namespace Coffee.UISoftMask
     public class SoftMask : Mask, IMeshModifier
     {
         /// <summary>
-        /// Desampling rate.
+        /// Down sampling rate.
         /// </summary>
-        public enum DesamplingRate
+        public enum DownSamplingRate
         {
             None = 0,
             x1 = 1,
@@ -70,8 +71,8 @@ namespace Coffee.UISoftMask
         private bool _hasStencilStateChanged = false;
 
 
-        [SerializeField, Tooltip("The desampling rate for soft mask buffer.")]
-        private DesamplingRate m_DesamplingRate = DesamplingRate.x1;
+        [FormerlySerializedAs("m_DesamplingRate")] [SerializeField, Tooltip("The down sampling rate for soft mask buffer.")]
+        private DownSamplingRate m_DownSamplingRate = DownSamplingRate.x1;
 
         [SerializeField, Range(0, 1), Tooltip("The value used by the soft mask to select the area of influence defined over the soft mask's graphic.")]
         private float m_Softness = 1;
@@ -93,15 +94,15 @@ namespace Coffee.UISoftMask
         private bool m_IgnoreSelfStencil;
 
         /// <summary>
-        /// The desampling rate for soft mask buffer.
+        /// The down sampling rate for soft mask buffer.
         /// </summary>
-        public DesamplingRate desamplingRate
+        public DownSamplingRate downSamplingRate
         {
-            get { return m_DesamplingRate; }
+            get { return m_DownSamplingRate; }
             set
             {
-                if (m_DesamplingRate == value) return;
-                m_DesamplingRate = value;
+                if (m_DownSamplingRate == value) return;
+                m_DownSamplingRate = value;
                 hasChanged = true;
             }
         }
@@ -182,7 +183,7 @@ namespace Coffee.UISoftMask
 
                 // Check the size of soft mask buffer.
                 int w, h;
-                GetDesamplingSize(m_DesamplingRate, out w, out h);
+                GetDownSamplingSize(m_DownSamplingRate, out w, out h);
                 if (_softMaskBuffer && (_softMaskBuffer.width != w || _softMaskBuffer.height != h))
                 {
                     ReleaseRt(ref _softMaskBuffer);
@@ -470,7 +471,7 @@ namespace Coffee.UISoftMask
         /// <summary>
         /// Update all soft mask textures.
         /// </summary>
-        static void UpdateMaskTextures()
+        private static void UpdateMaskTextures()
         {
             Profiler.BeginSample("UpdateMaskTextures");
             foreach (var sm in s_ActiveSoftMasks)
@@ -552,7 +553,7 @@ namespace Coffee.UISoftMask
 #if UNITY_EDITOR
             var w = s_PreviousWidth;
             var h = s_PreviousHeight;
-            GetDesamplingSize(DesamplingRate.None, out s_PreviousWidth, out  s_PreviousHeight);
+            GetDownSamplingSize(DownSamplingRate.None, out s_PreviousWidth, out  s_PreviousHeight);
             if (w != s_PreviousWidth || h != s_PreviousHeight)
             {
                 Canvas.ForceUpdateCanvases();
@@ -670,20 +671,31 @@ namespace Coffee.UISoftMask
         }
 
         /// <summary>
-        /// Gets the size of the desampling.
+        /// Gets the size of the down sampling.
         /// </summary>
-        private static void GetDesamplingSize(DesamplingRate rate, out int w, out int h)
+        private static void GetDownSamplingSize(DownSamplingRate rate, out int w, out int h)
         {
 #if UNITY_EDITOR
-            var res = UnityEditor.UnityStats.screenRes.Split('x');
-            w = Mathf.Max(64, int.Parse(res[0]));
-            h = Mathf.Max(64, int.Parse(res[1]));
-#else
-			w = Screen.width;
-			h = Screen.height;
+            if (!Application.isPlaying)
+            {
+                var res = UnityEditor.UnityStats.screenRes.Split('x');
+                w = Mathf.Max(64, int.Parse(res[0]));
+                h = Mathf.Max(64, int.Parse(res[1]));
+            }
+            else
 #endif
+            if (Screen.fullScreenMode == FullScreenMode.Windowed)
+            {
+                w = Screen.width;
+                h = Screen.height;
+            }
+            else
+            {
+                w = Screen.currentResolution.width;
+                h = Screen.currentResolution.height;
+            }
 
-            if (rate == DesamplingRate.None)
+            if (rate == DownSamplingRate.None)
                 return;
 
             var aspect = (float) w / h;
@@ -702,7 +714,7 @@ namespace Coffee.UISoftMask
         /// <summary>
         /// Release the specified obj.
         /// </summary>
-        /// <param name="obj">Object.</param>
+        /// <param name="tmpRT">Object.</param>
         private static void ReleaseRt(ref RenderTexture tmpRT)
         {
             if (!tmpRT) return;

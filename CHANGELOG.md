@@ -1,3 +1,10 @@
+# [1.0.0-preview.13](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v1.0.0-preview.12...v1.0.0-preview.13) (2020-10-01)
+
+
+### Bug Fixes
+
+* screen resolution in full screen mode is incorrect ([39e3084](https://github.com/mob-sakai/SoftMaskForUGUI/commit/39e3084ec840293f2ad461f50d51eeafe66cbebf))
+
 # [1.0.0-preview.12](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v1.0.0-preview.11...v1.0.0-preview.12) (2020-09-28)
 
 
