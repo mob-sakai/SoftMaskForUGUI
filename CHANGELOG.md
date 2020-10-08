@@ -1,3 +1,10 @@
+# [1.0.0-preview.14](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v1.0.0-preview.13...v1.0.0-preview.14) (2020-10-08)
+
+
+### Bug Fixes
+
+* incorrect behavior when a world space canvas and an overlay canvas are enabled together ([a6e82fa](https://github.com/mob-sakai/SoftMaskForUGUI/commit/a6e82fa2a7baa06aa4e1fb7e4a8099c5e1039d67)), closes [#107](https://github.com/mob-sakai/SoftMaskForUGUI/issues/107)
+
 # [1.0.0-preview.13](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v1.0.0-preview.12...v1.0.0-preview.13) (2020-10-01)
 
 

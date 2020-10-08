@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Profiling;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
 using MaskIntr = UnityEngine.SpriteMaskInteraction;
@@ -28,6 +30,8 @@ namespace Coffee.UISoftMask
         private static int s_SoftMaskTexId;
         private static int s_StencilCompId;
         private static int s_MaskInteractionId;
+        private static int s_GameVPId;
+        private static int s_GameTVPId;
         private static List<SoftMaskable> s_ActiveSoftMaskables;
         private static int[] s_Interactions = new int[4];
 
@@ -98,6 +102,8 @@ namespace Coffee.UISoftMask
             get { return _softMask ? _softMask : _softMask = this.GetComponentInParentEx<SoftMask>(); }
         }
 
+        public Material modifiedMaterial { get; private set; }
+
         /// <summary>
         /// Perform material modification in this function.
         /// </summary>
@@ -106,6 +112,7 @@ namespace Coffee.UISoftMask
         Material IMaterialModifier.GetModifiedMaterial(Material baseMaterial)
         {
             _softMask = null;
+            modifiedMaterial = null;
 
             // If this component is disabled, the material is returned as is.
             // If the parents do not have a soft mask component, the material is returned as is.
@@ -126,14 +133,16 @@ namespace Coffee.UISoftMask
             );
 
             // Generate soft maskable material.
-            var modifiedMaterial = MaterialCache.Register(baseMaterial, _effectMaterialHash, mat =>
+            modifiedMaterial = MaterialCache.Register(baseMaterial, _effectMaterialHash, mat =>
             {
                 mat.shader = Shader.Find(string.Format("Hidden/{0} (SoftMaskable)", mat.shader.name));
-#if UNITY_EDITOR
-                mat.EnableKeyword("SOFTMASK_EDITOR");
-#endif
                 mat.SetTexture(s_SoftMaskTexId, softMask.softMaskBuffer);
                 mat.SetInt(s_StencilCompId, m_UseStencil ? (int) CompareFunction.Equal : (int) CompareFunction.Always);
+
+#if UNITY_EDITOR
+                mat.EnableKeyword("SOFTMASK_EDITOR");
+                UpdateMaterialForSceneView(mat);
+#endif
 
                 var root = MaskUtilities.FindRootSortOverrideCanvas(transform);
                 var stencil = MaskUtilities.GetStencilDepth(transform, root);
@@ -235,6 +244,11 @@ namespace Coffee.UISoftMask
                 s_SoftMaskTexId = Shader.PropertyToID("_SoftMaskTex");
                 s_StencilCompId = Shader.PropertyToID("_StencilComp");
                 s_MaskInteractionId = Shader.PropertyToID("_MaskInteraction");
+
+#if UNITY_EDITOR
+                s_GameVPId = Shader.PropertyToID("_GameVP");
+                s_GameTVPId = Shader.PropertyToID("_GameTVP");
+#endif
             }
 
             s_ActiveSoftMaskables.Add(this);
@@ -258,6 +272,41 @@ namespace Coffee.UISoftMask
         }
 
 #if UNITY_EDITOR
+        private void UpdateMaterialForSceneView(Material mat)
+        {
+            if(!mat || !graphic || !graphic.canvas || !mat.shader || !mat.shader.name.EndsWith(" (SoftMaskable)")) return;
+
+            // Set view and projection matrices.
+            Profiler.BeginSample("Set view and projection matrices");
+            var c = graphic.canvas.rootCanvas;
+            var cam = c.worldCamera ?? Camera.main;
+            if (c && c.renderMode != RenderMode.ScreenSpaceOverlay && cam)
+            {
+                var p = GL.GetGPUProjectionMatrix(cam.projectionMatrix, false);
+                var pv = p * cam.worldToCameraMatrix;
+                mat.SetMatrix(s_GameVPId, pv);
+                mat.SetMatrix(s_GameTVPId, pv);
+            }
+            else
+            {
+                var pos = c.transform.position;
+                var scale = c.transform.localScale.x;
+                var size = (c.transform as RectTransform).sizeDelta;
+                var gameVp = Matrix4x4.TRS(new Vector3(0, 0, 0.5f), Quaternion.identity, new Vector3(2 / size.x, 2 / size.y, 0.0005f * scale));
+                var gameTvp = Matrix4x4.TRS(new Vector3(0, 0, 0), Quaternion.identity, new Vector3(1 / pos.x, 1 / pos.y, -2 / 2000f)) * Matrix4x4.Translate(-pos);
+
+                mat.SetMatrix(s_GameVPId, gameVp);
+                mat.SetMatrix(s_GameTVPId, gameTvp);
+            }
+            Profiler.EndSample();
+        }
+
+        private void LateUpdate()
+        {
+            UpdateMaterialForSceneView(modifiedMaterial);
+        }
+
+
         /// <summary>
         /// This function is called when the script is loaded or a value is changed in the inspector (Called in the editor only).
         /// </summary>

@@ -54,8 +54,6 @@ namespace Coffee.UISoftMask
         private static int s_ColorMaskId;
         private static int s_MainTexId;
         private static int s_SoftnessId;
-        private static int s_GameVPId;
-        private static int s_GameTVPId;
         private static int s_Alpha;
         private static int s_PreviousWidth;
         private static int s_PreviousHeight;
@@ -363,10 +361,6 @@ namespace Coffee.UISoftMask
                     s_MainTexId = Shader.PropertyToID("_MainTex");
                     s_SoftnessId = Shader.PropertyToID("_Softness");
                     s_Alpha = Shader.PropertyToID("_Alpha");
-#if UNITY_EDITOR
-                    s_GameVPId = Shader.PropertyToID("_GameVP");
-                    s_GameTVPId = Shader.PropertyToID("_GameTVP");
-#endif
                 }
             }
 
@@ -611,12 +605,6 @@ namespace Coffee.UISoftMask
             {
                 var p = GL.GetGPUProjectionMatrix(cam.projectionMatrix, false);
                 _cb.SetViewProjectionMatrices(cam.worldToCameraMatrix, p);
-
-#if UNITY_EDITOR
-                var pv = p * cam.worldToCameraMatrix;
-                _cb.SetGlobalMatrix(s_GameVPId, pv);
-                _cb.SetGlobalMatrix(s_GameTVPId, pv);
-#endif
             }
             else
             {
@@ -624,15 +612,6 @@ namespace Coffee.UISoftMask
                 var vm = Matrix4x4.TRS(new Vector3(-pos.x, -pos.y, -1000), Quaternion.identity, new Vector3(1, 1, -1f));
                 var pm = Matrix4x4.TRS(new Vector3(0, 0, -1), Quaternion.identity, new Vector3(1 / pos.x, 1 / pos.y, -2 / 10000f));
                 _cb.SetViewProjectionMatrices(vm, pm);
-
-#if UNITY_EDITOR
-                var scale = c.transform.localScale.x;
-                var size = (c.transform as RectTransform).sizeDelta;
-                var gameVp = Matrix4x4.TRS(new Vector3(0, 0, 0.5f), Quaternion.identity, new Vector3(2 / size.x, 2 / size.y, 0.0005f * scale));
-                var gameTvp = Matrix4x4.TRS(new Vector3(0, 0, 0), Quaternion.identity, new Vector3(1 / pos.x, 1 / pos.y, -2 / 2000f)) * Matrix4x4.Translate(-pos);
-                _cb.SetGlobalMatrix(s_GameVPId, gameVp);
-                _cb.SetGlobalMatrix(s_GameTVPId, gameTvp);
-#endif
             }
 
             Profiler.EndSample();

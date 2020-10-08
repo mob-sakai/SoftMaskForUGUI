@@ -39,7 +39,7 @@ float SoftMaskInternal(float4 clipPos)
 	fixed4 mask = tex2D(_SoftMaskTex, view);
 	half4 alpha = saturate(lerp(fixed4(1, 1, 1, 1), lerp(mask, 1 - mask, _MaskInteraction - 1), _MaskInteraction));
 	#if SOFTMASK_EDITOR
-	alpha = lerp(fixed4(1, 1, 1, 1), alpha, step(0, view.x) * step(view.x, 1) * step(0, view.y) * step(view.y, 1));
+	alpha *= step(0, view.x) * step(view.x, 1) * step(0, view.y) * step(view.y, 1);
 	#endif
 
 	return alpha.x * alpha.y * alpha.z * alpha.w;
