@@ -9,7 +9,7 @@ UI Soft Mask is a smooth masking component for Unity UI (uGUI) elements.
 [![](https://img.shields.io/github/v/release/mob-sakai/SoftMaskForUGUI?include_prereleases)](https://github.com/mob-sakai/SoftMaskForUGUI/releases)
 [![](https://img.shields.io/github/release-date/mob-sakai/SoftMaskForUGUI.svg)](https://github.com/mob-sakai/SoftMaskForUGUI/releases)  
 ![](https://img.shields.io/badge/unity-2017.1%20or%20later-green.svg)
-[![](https://img.shields.io/github/license/mob-sakai/SoftMaskForUGUI.svg)](https://github.com/mob-sakai/SoftMaskForUGUI/blob/upm/LICENSE.txt)
+[![](https://img.shields.io/github/license/mob-sakai/SoftMaskForUGUI.svg)](https://github.com/mob-sakai/SoftMaskForUGUI/blob/main/LICENSE.txt)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-orange.svg)](http://makeapullrequest.com)
 [![](https://img.shields.io/github/watchers/mob-sakai/SoftMaskForUGUI.svg?style=social&label=Watch)](https://github.com/mob-sakai/SoftMaskForUGUI/subscription)
 [![](https://img.shields.io/twitter/follow/mob_sakai.svg?label=Follow&style=social)](https://twitter.com/intent/follow?screen_name=mob_sakai)
@@ -210,7 +210,7 @@ This operation determines the final alpha according to the soft mask buffer.
 color.a *= SoftMask(IN.vertex, IN.worldPosition);
 ```
 
-As an example of implementation, please see [UI-Default-SoftMask.shader](https://github.com/mob-sakai/SoftMaskForUGUI/blob/upm/Shaders/Resources/UI-Default-SoftMaskable.shader).
+As an example of implementation, please see [UI-Default-SoftMask.shader](https://github.com/mob-sakai/SoftMaskForUGUI/blob/main/Shaders/Resources/UI-Default-SoftMaskable.shader).
 
 
 
@@ -230,7 +230,7 @@ Issues are very valuable to this project.
 ### Pull Requests
 
 Pull requests are, a great way to get your ideas into this repository.  
-See [CONTRIBUTING.md](/../../blob/upm/CONTRIBUTING.md).
+See [CONTRIBUTING.md](/../../blob/main/CONTRIBUTING.md).
 
 ### Support
 
@@ -255,8 +255,7 @@ With your support, I can spend more time on development. :)
 
 ## Author
 
-[mob-sakai](https://github.com/mob-sakai)
-[![](https://img.shields.io/twitter/follow/mob_sakai.svg?label=Follow&style=social)](https://twitter.com/intent/follow?screen_name=mob_sakai) 
+* ![](https://user-images.githubusercontent.com/12690315/96986908-434a0b80-155d-11eb-8275-85138ab90afa.png) [mob-sakai](https://github.com/mob-sakai) [![](https://img.shields.io/twitter/follow/mob_sakai.svg?label=Follow&style=social)](https://twitter.com/intent/follow?screen_name=mob_sakai) ![GitHub followers](https://img.shields.io/github/followers/mob-sakai?style=social)
 
 
 
@@ -265,4 +264,4 @@ With your support, I can spend more time on development. :)
 * GitHub page : https://github.com/mob-sakai/SoftMaskForUGUI
 * Releases : https://github.com/mob-sakai/SoftMaskForUGUI/releases
 * Issue tracker : https://github.com/mob-sakai/SoftMaskForUGUI/issues
-* Change log : https://github.com/mob-sakai/SoftMaskForUGUI/blob/upm/CHANGELOG.md
+* Change log : https://github.com/mob-sakai/SoftMaskForUGUI/blob/main/CHANGELOG.md
