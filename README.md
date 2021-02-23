@@ -1,6 +1,8 @@
 SoftMaskForUGUI
 ===
 
+**:warning: NOTE: Do not use [the obsolete tags and branches](https://github.com/mob-sakai/SoftMaskForUGUI/issues/112) to reference the package. They will be removed in near future. :warning:**
+
 UI Soft Mask is a smooth masking component for Unity UI (uGUI) elements.
 
 ![](https://user-images.githubusercontent.com/12690315/50282438-18408d80-0496-11e9-8f86-81e804edadd4.png)
