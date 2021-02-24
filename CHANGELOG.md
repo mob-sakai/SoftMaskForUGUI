@@ -1,3 +1,15 @@
+# [1.0.0](https://github.com/mob-sakai/SoftMaskForUGUI/compare/0.9.1...1.0.0) (2021-02-24)
+
+
+### Features
+
+* release 1.0.0 ([127b455](https://github.com/mob-sakai/SoftMaskForUGUI/commit/127b455f38889dfe9a1c6ae5449d2c537d2a4d78))
+
+
+### BREAKING CHANGES
+
+* release 1.0.0
+
 # [1.0.0-preview.14](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v1.0.0-preview.13...v1.0.0-preview.14) (2020-10-08)
 
 
