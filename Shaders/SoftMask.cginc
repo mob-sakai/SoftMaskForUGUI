@@ -14,7 +14,14 @@ float CustomStep(float a, float x)
 
 fixed Approximately(float4x4 a, float4x4 b)
 {
-	float4x4 d = abs(a - b);
+	float4x4 d = a - b;
+	d = float4x4(
+			abs(d[0]),
+			abs(d[1]),
+			abs(d[2]),
+			abs(d[3])
+		);
+		
 	return step(
 		max(d._m00,max(d._m01,max(d._m02,max(d._m03,
 		max(d._m10,max(d._m11,max(d._m12,max(d._m13,
