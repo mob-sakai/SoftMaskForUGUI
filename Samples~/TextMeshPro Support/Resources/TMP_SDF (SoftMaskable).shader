@@ -124,8 +124,13 @@ SubShader {
 
 		#include "UnityCG.cginc"
 		#include "UnityUI.cginc"
+#if UNITY_VERSION < 201910
 		#include "Assets/TextMesh Pro/Resources/Shaders/TMPro_Properties.cginc"
 		#include "Assets/TextMesh Pro/Resources/Shaders/TMPro.cginc"
+#else
+		#include "Assets/TextMesh Pro/Shaders/TMPro_Properties.cginc"
+		#include "Assets/TextMesh Pro/Shaders/TMPro.cginc"
+#endif
 
         #include "Packages/com.coffee.softmask-for-ugui/Shaders/SoftMask.cginc"
         #pragma shader_feature __ SOFTMASK_EDITOR
