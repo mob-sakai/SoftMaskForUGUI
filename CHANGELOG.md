@@ -1,3 +1,11 @@
+## [1.0.1](https://github.com/mob-sakai/SoftMaskForUGUI/compare/1.0.0...1.0.1) (2022-05-15)
+
+
+### Bug Fixes
+
+* applied a workaround to fix a Microsoft HLSL compiler issue ([50c41f2](https://github.com/mob-sakai/SoftMaskForUGUI/commit/50c41f29ccc9b70acdd7f15490debd8eacf5a102)), closes [#131](https://github.com/mob-sakai/SoftMaskForUGUI/issues/131)
+* fixed shader compilation in some platforms ([40b450b](https://github.com/mob-sakai/SoftMaskForUGUI/commit/40b450ba24e77c34c97fe8411f7b0b1dd103d487))
+
 # [1.0.0](https://github.com/mob-sakai/SoftMaskForUGUI/compare/0.9.1...1.0.0) (2021-02-24)
 
 
