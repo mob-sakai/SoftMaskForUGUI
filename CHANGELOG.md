@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/mob-sakai/SoftMaskForUGUI/compare/1.0.1...1.0.2) (2022-05-15)
+
+
+### Bug Fixes
+
+* support TextMeshPro v2 or later ([c85409e](https://github.com/mob-sakai/SoftMaskForUGUI/commit/c85409e56ff09607244061c59518f5d1f460a918))
+
 ## [1.0.1](https://github.com/mob-sakai/SoftMaskForUGUI/compare/1.0.0...1.0.1) (2022-05-15)
 
 
