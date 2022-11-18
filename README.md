@@ -45,7 +45,7 @@ By using SoftMask instead of the default Mask component, you can beautifully rep
 * (Option) Raycast is filtered only for the visible part.  
 ![](https://user-images.githubusercontent.com/12690315/48708330-a16d6600-ec45-11e8-94bf-afecd1bd9a39.png)
 * Contain soft maskable UI shader.
-* Support soft masks in your custom shaders by adding just 3 lines. For details, please see [Development Note](#support-soft-masks-in-your-custom-shaders). 
+* Support soft masks in your custom shaders by adding just 3 lines. For details, please see [Development Note](#support-soft-masks-with-your-custom-shaders). 
 * Adjust soft mask buffer size to improve performance.
 * Convert existing Mask to SoftMask from context menu.  
 ![](https://user-images.githubusercontent.com/12690315/48659018-902e2900-ea8e-11e8-9b6e-224365cdde7f.png)
