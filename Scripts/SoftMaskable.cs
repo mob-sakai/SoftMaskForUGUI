@@ -280,7 +280,7 @@ namespace Coffee.UISoftMask
         private void UpdateMaterialForSceneView(Material mat)
         {
             if(!mat || !graphic || !graphic.canvas || !mat.shader || !mat.shader.name.EndsWith(" (SoftMaskable)")) return;
-            Debug.Log("UpdateMaterialForSceneView");
+            
             // Set view and projection matrices.
             Profiler.BeginSample("Set view and projection matrices");
             var c = graphic.canvas.rootCanvas;
