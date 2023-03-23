@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/mob-sakai/SoftMaskForUGUI/compare/1.0.2...1.0.3) (2023-03-23)
+
+
+### Bug Fixes
+
+* Masked image disapear on resolution change ([65da106](https://github.com/mob-sakai/SoftMaskForUGUI/commit/65da10600ab2b6dad41f675a14457a611c9f8978))
+
 ## [1.0.2](https://github.com/mob-sakai/SoftMaskForUGUI/compare/1.0.1...1.0.2) (2022-05-15)
 
 
