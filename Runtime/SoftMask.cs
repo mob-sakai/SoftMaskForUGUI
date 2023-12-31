@@ -29,11 +29,29 @@ namespace Coffee.UISoftMask
             x8 = 8
         }
 
+        /// <summary>
+        /// Masking mode.<br />
+        /// <b>SoftMasking</b>: Use soft masking.<br />
+        /// <b>AntiAliasing</b>: Use anti-aliasing.
+        /// </summary>
+        public enum MaskingMode
+        {
+            SoftMasking,
+            AntiAliasing,
+            Normal
+        }
+
         public static Action<SoftMask> onRenderSoftMaskBuffer = null;
         private static readonly Camera.MonoOrStereoscopicEye[] s_MonoEyes = { Camera.MonoOrStereoscopicEye.Mono };
 
         private static readonly Camera.MonoOrStereoscopicEye[] s_StereoEyes =
             { Camera.MonoOrStereoscopicEye.Left, Camera.MonoOrStereoscopicEye.Right };
+
+        [Tooltip("Masking mode\n\n" +
+                 "SoftMasking: Use RenderTexture as a soft mask buffer. The alpha of the masking graphic can be used.\n" +
+                 "AntiAliasing: Suppress the jaggedness of the masking graphic. The masking graphic cannot be displayed.")]
+        [SerializeField]
+        private MaskingMode m_MaskingMode = MaskingMode.SoftMasking;
 
         [Tooltip("Enable alpha hit test.")]
         [SerializeField]
@@ -47,8 +65,14 @@ namespace Coffee.UISoftMask
         [SerializeField]
         private DownSamplingRate m_DownSamplingRate = DownSamplingRate.x1;
 
+        [Tooltip("The threshold for anti-alias masking.")] [SerializeField] [Range(0f, 1f)]
+        private float m_AntiAliasingThreshold;
+
         [SerializeField] [Obsolete]
         private float m_Softness = -1;
+
+        [SerializeField] [Obsolete]
+        private bool m_PartOfParent;
 
         private CommandBuffer _cb;
 
@@ -69,6 +93,25 @@ namespace Coffee.UISoftMask
         private UnityAction _updateParentSoftMask;
         private CanvasViewChangeTrigger _viewChangeTrigger;
 
+        /// <summary>
+        /// Masking mode<br />
+        /// <b>SoftMasking</b>: Use RenderTexture as a soft mask buffer. The alpha of the masking graphic can be used.<br />
+        /// <b>AntiAliasing</b>: Suppress the jaggedness of the masking graphic. The masking graphic cannot be displayed.
+        /// </summary>
+        public MaskingMode maskingMode
+        {
+            get => m_MaskingMode;
+            set
+            {
+                if (m_MaskingMode == value) return;
+
+                m_MaskingMode = value;
+                AddSoftMaskableOnChildren();
+                UpdateAntiAlias();
+                SetDirtyAndNotify();
+            }
+        }
+
         public DownSamplingRate downSamplingRate
         {
             get => m_DownSamplingRate;
@@ -78,6 +121,15 @@ namespace Coffee.UISoftMask
                 m_DownSamplingRate = value;
                 SetSoftMaskDirty();
             }
+        }
+
+        /// <summary>
+        /// Threshold for anti-alias masking.
+        /// </summary>
+        public float antiAliasingThreshold
+        {
+            get => m_AntiAliasingThreshold;
+            set => m_AntiAliasingThreshold = value;
         }
 
         /// <summary>
