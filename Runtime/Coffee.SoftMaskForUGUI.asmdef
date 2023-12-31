@@ -1,0 +1,13 @@
+{
+    "name": "Coffee.SoftMaskForUGUI",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.modules.vr",
+            "expression": "1.0.0",
+            "define": "UNITY_MODULE_VR"
+        }
+    ]
+}
