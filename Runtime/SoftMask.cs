@@ -162,6 +162,17 @@ namespace Coffee.UISoftMask
         }
 
         /// <summary>
+        /// Is the soft mask a part of parent soft mask?
+        /// </summary>
+        [Obsolete]
+        public bool partOfParent
+        {
+            get => m_PartOfParent;
+            set => m_PartOfParent = value;
+        }
+
+
+        /// <summary>
         /// The value used by the soft mask to select the area of influence defined over the soft mask's graphic.
         /// </summary>
         [Obsolete]
