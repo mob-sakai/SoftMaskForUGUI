@@ -1,7 +1,7 @@
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Coffee.UISoftMask.Internal.AssetModification
+namespace Coffee.UISoftMaskInternal.AssetModification
 {
     internal class TextReplaceModifier : ITextModifier
     {

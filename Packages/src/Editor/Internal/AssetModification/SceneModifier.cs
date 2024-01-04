@@ -2,7 +2,7 @@ using System;
 using UnityEditor.SceneManagement;
 using UnityEngine.SceneManagement;
 
-namespace Coffee.UISoftMask.Internal.AssetModification
+namespace Coffee.UISoftMaskInternal.AssetModification
 {
     internal class SceneModifier : GameObjectModifier
     {

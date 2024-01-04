@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Profiling;
 using Object = UnityEngine.Object;
 
-namespace Coffee.UISoftMask.Internal
+namespace Coffee.UISoftMaskInternal
 {
     /// <summary>
     /// Extension methods for Component class.
@@ -91,7 +91,7 @@ namespace Coffee.UISoftMask.Internal
             Profiler.EndSample();
         }
 
-#if !UNITY_2021_2_OR_NEWER || UNITY_2020_3_45 || UNITY_2020_3_46 || UNITY_2020_3_47 || UNITY_2020_3_48
+#if !UNITY_2021_2_OR_NEWER && !UNITY_2020_3_45 && !UNITY_2020_3_46 && !UNITY_2020_3_47 && !UNITY_2020_3_48
         public static T GetComponentInParent<T>(this Component self, bool includeInactive) where T : Component
         {
             if (!self) return null;

@@ -1,10 +1,43 @@
+#if UNITY_2021_3_0 || UNITY_2021_3_1 || UNITY_2021_3_2 || UNITY_2021_3_3 || UNITY_2021_3_4 || UNITY_2021_3_5 || UNITY_2021_3_6 || UNITY_2021_3_7 || UNITY_2021_3_8 || UNITY_2021_3_9
+#elif UNITY_2021_3_10 || UNITY_2021_3_11 || UNITY_2021_3_12 || UNITY_2021_3_13 || UNITY_2021_3_14 || UNITY_2021_3_15 || UNITY_2021_3_16 || UNITY_2021_3_17 || UNITY_2021_3_18 || UNITY_2021_3_19
+#elif UNITY_2021_3_20 || UNITY_2021_3_21 || UNITY_2021_3_22 || UNITY_2021_3_23 || UNITY_2021_3_24 || UNITY_2021_3_25 || UNITY_2021_3_26 || UNITY_2021_3_27 || UNITY_2021_3_28 || UNITY_2021_3_29
+#elif UNITY_2021_3_30 || UNITY_2021_3_31 || UNITY_2021_3_32 || UNITY_2021_3_33
+#elif UNITY_2022_2_0 || UNITY_2022_2_1 || UNITY_2022_2_2 || UNITY_2022_2_3 || UNITY_2022_2_4 || UNITY_2022_2_5 || UNITY_2022_2_6 || UNITY_2022_2_7 || UNITY_2022_2_8 || UNITY_2022_2_9
+#elif UNITY_2022_2_10 || UNITY_2022_2_11 || UNITY_2022_2_12 || UNITY_2022_2_13 || UNITY_2022_2_14
+#elif UNITY_2021_3 || UNITY_2022_2 || UNITY_2022_3 || UNITY_2023_2_OR_NEWER
+#define CANVAS_SUPPORT_ALWAYS_GAMMA
+#endif
+
 using UnityEngine;
 using UnityEngine.Profiling;
+#if UNITY_MODULE_VR
+using UnityEngine.XR;
+#endif
 
-namespace Coffee.UISoftMask.Internal
+namespace Coffee.UISoftMaskInternal
 {
     internal static class CanvasExtensions
     {
+        public static bool ShouldGammaToLinearInShader(this Canvas canvas)
+        {
+            return QualitySettings.activeColorSpace == ColorSpace.Linear &&
+#if CANVAS_SUPPORT_ALWAYS_GAMMA
+                   canvas.vertexColorAlwaysGammaSpace;
+#else
+                   false;
+#endif
+        }
+
+        public static bool ShouldGammaToLinearInMesh(this Canvas canvas)
+        {
+            return QualitySettings.activeColorSpace == ColorSpace.Linear &&
+#if CANVAS_SUPPORT_ALWAYS_GAMMA
+                   !canvas.vertexColorAlwaysGammaSpace;
+#else
+                   true;
+#endif
+        }
+
         public static bool IsStereoCanvas(this Canvas canvas)
         {
 #if UNITY_MODULE_VR

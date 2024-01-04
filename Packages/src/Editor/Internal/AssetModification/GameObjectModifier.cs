@@ -2,7 +2,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace Coffee.UISoftMask.Internal.AssetModification
+namespace Coffee.UISoftMaskInternal.AssetModification
 {
     internal abstract class GameObjectModifier : Modifier
     {

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Coffee.UISoftMask.Internal
+namespace Coffee.UISoftMaskInternal
 {
     internal static class Misc
     {

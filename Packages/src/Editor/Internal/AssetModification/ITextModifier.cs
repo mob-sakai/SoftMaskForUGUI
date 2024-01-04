@@ -1,9 +1,9 @@
 using System.Text;
 
-namespace Coffee.UISoftMask.Internal.AssetModification
+namespace Coffee.UISoftMaskInternal.AssetModification
 {
     internal interface ITextModifier
     {
-        public bool ModifyText(StringBuilder sb, string text);
+        bool ModifyText(StringBuilder sb, string text);
     }
 }

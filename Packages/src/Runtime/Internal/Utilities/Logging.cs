@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 using UnityEngine;
 using Conditional = System.Diagnostics.ConditionalAttribute;
@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Collections.Generic;
 #endif
 
-namespace Coffee.UISoftMask.Internal
+namespace Coffee.UISoftMaskInternal
 {
     internal static class Logging
     {

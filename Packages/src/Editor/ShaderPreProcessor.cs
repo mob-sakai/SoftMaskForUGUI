@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Coffee.UISoftMask.Internal;
+using Coffee.UISoftMaskInternal;
 using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.Rendering;

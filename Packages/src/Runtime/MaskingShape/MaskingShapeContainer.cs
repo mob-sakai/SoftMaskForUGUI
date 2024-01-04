@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Coffee.UISoftMask.Internal;
+using Coffee.UISoftMaskInternal;
 using UnityEngine;
 using UnityEngine.Profiling;
 using UnityEngine.Rendering;

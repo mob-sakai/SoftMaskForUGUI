@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Coffee.UISoftMask.Internal
+namespace Coffee.UISoftMaskInternal
 {
     /// <summary>
     /// Extension methods for Component class.
