@@ -1,4 +1,4 @@
-# <img alt="logo" height="26" src="https://github.com/mob-sakai/mob-sakai/assets/12690315/05eae124-58aa-414d-9e9f-cc65022e9854"/> SoftMaskForUGUI
+# <img alt="logo" height="26" src="https://github.com/mob-sakai/mob-sakai/assets/12690315/05eae124-58aa-414d-9e9f-cc65022e9854"/> SoftMaskForUGUI v2
 
 [![](https://img.shields.io/npm/v/com.coffee.softmask-for-ugui?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.coffee.softmask-for-ugui/)
 [![](https://img.shields.io/github/v/release/mob-sakai/SoftMaskForUGUI?include_prereleases)](https://github.com/mob-sakai/SoftMaskForUGUI/releases)
@@ -16,7 +16,7 @@
 
 <img src="https://github.com/mob-sakai/mob-sakai/assets/12690315/3cca20d0-8565-49d1-9f5c-0a6dbc2cb2eb" width="500"/>
 
-This package provides a soft mask for Unity UI (uGUI).
+This package provides a soft masking for Unity UI (uGUI).
 
 #### Features
 
@@ -79,7 +79,7 @@ Navigate to your project's Packages folder and open the `manifest.json` file. Th
 ```json
 {
   "dependencies": {
-    "com.coffee.softmask-for-ugui": "https://github.com/mob-sakai/SoftMaskForUGUI.git?path=Packages/src",
+    "com.coffee.softmask-for-ugui": "https://github.com/mob-sakai/SoftMaskForUGUI.git",
     ...
   },
 }
@@ -87,16 +87,16 @@ Navigate to your project's Packages folder and open the `manifest.json` file. Th
 
 To update the package, change suffix `#{version}` to the target version.
 
-* e.g. `"com.coffee.softmask-for-ugui": "https://github.com/mob-sakai/SoftMaskForUGUI.git?path=Packages/src#2.0.0",`
+* e.g. `"com.coffee.softmask-for-ugui": "https://github.com/mob-sakai/SoftMaskForUGUI.git#2.0.0",`
 
 <br><br>
 
 ## 🚀 Usage
 
 1. Add a `SoftMask` component instead of `Mask` component.
-   Or, convert an existing `Mask` component to `SoftMask` component from the context menu.
+   Or, convert an existing `Mask` component to `SoftMask` component from the context menu (`Convert To SoftMask`).  
    ![](https://user-images.githubusercontent.com/12690315/48659018-902e2900-ea8e-11e8-9b6e-224365cdde7f.png)
-2. (Optional) By placing the `MaskingShape` component under `SoftMask`, you can add or remove the mask range.
+2. (Optional) By placing the `MaskingShape` component under `SoftMask`, you can add or remove the mask range.  
    ![](https://user-images.githubusercontent.com/12690315/48661087-01ca9f00-eab0-11e8-8878-772a1ed1fb7b.gif)
 3. Enjoy!
 
