@@ -239,14 +239,19 @@ namespace Coffee.UISoftMask
         /// </summary>
         protected override void OnEnable()
         {
-            UIExtraCallbacks.onBeforeCanvasRebuild += _onBeforeCanvasRebuild ??= OnBeforeCanvasRebuild;
-            UIExtraCallbacks.onAfterCanvasRebuild += _renderSoftMaskBuffer ??= RenderSoftMaskBuffer;
-            SoftMaskUtils.onChangeBufferSize += _setDirtyAndNotify ??= SetDirtyAndNotify;
+            UIExtraCallbacks.onBeforeCanvasRebuild +=
+                _onBeforeCanvasRebuild ?? (_onBeforeCanvasRebuild = OnBeforeCanvasRebuild);
+            UIExtraCallbacks.onAfterCanvasRebuild +=
+                _renderSoftMaskBuffer ?? (_renderSoftMaskBuffer = RenderSoftMaskBuffer);
+            SoftMaskUtils.onChangeBufferSize +=
+                _setDirtyAndNotify ?? (_setDirtyAndNotify = SetDirtyAndNotify);
 
             if (graphic)
             {
-                graphic.RegisterDirtyMaterialCallback(_updateParentSoftMask ??= UpdateParentSoftMask);
-                graphic.RegisterDirtyVerticesCallback(_setSoftMaskDirty2 ??= SetSoftMaskDirty);
+                graphic.RegisterDirtyMaterialCallback(
+                    _updateParentSoftMask ?? (_updateParentSoftMask = UpdateParentSoftMask));
+                graphic.RegisterDirtyVerticesCallback(
+                    _setSoftMaskDirty2 ?? (_setSoftMaskDirty2 = SetSoftMaskDirty));
                 graphic.SetVerticesDirty();
             }
 
@@ -262,14 +267,19 @@ namespace Coffee.UISoftMask
         /// </summary>
         protected override void OnDisable()
         {
-            UIExtraCallbacks.onBeforeCanvasRebuild -= _onBeforeCanvasRebuild ??= OnBeforeCanvasRebuild;
-            UIExtraCallbacks.onAfterCanvasRebuild -= _renderSoftMaskBuffer ??= RenderSoftMaskBuffer;
-            SoftMaskUtils.onChangeBufferSize -= _setDirtyAndNotify ??= SetDirtyAndNotify;
+            UIExtraCallbacks.onBeforeCanvasRebuild -=
+                _onBeforeCanvasRebuild ?? (_onBeforeCanvasRebuild = OnBeforeCanvasRebuild);
+            UIExtraCallbacks.onAfterCanvasRebuild -=
+                _renderSoftMaskBuffer ?? (_renderSoftMaskBuffer = RenderSoftMaskBuffer);
+            SoftMaskUtils.onChangeBufferSize -=
+                _setDirtyAndNotify ?? (_setDirtyAndNotify = SetDirtyAndNotify);
 
             if (graphic)
             {
-                graphic.UnregisterDirtyMaterialCallback(_updateParentSoftMask ??= UpdateParentSoftMask);
-                graphic.UnregisterDirtyVerticesCallback(_setSoftMaskDirty2 ??= SetSoftMaskDirty);
+                graphic.UnregisterDirtyMaterialCallback(
+                    _updateParentSoftMask ?? (_updateParentSoftMask = UpdateParentSoftMask));
+                graphic.UnregisterDirtyVerticesCallback(
+                    _setSoftMaskDirty2 ?? (_setSoftMaskDirty2 = SetSoftMaskDirty));
                 graphic.SetVerticesDirty();
             }
 
@@ -440,12 +450,14 @@ namespace Coffee.UISoftMask
 
                 if (_viewChangeTrigger)
                 {
-                    _viewChangeTrigger.onViewChange -= _setSoftMaskDirty ??= SetSoftMaskDirty;
+                    _viewChangeTrigger.onViewChange -=
+                        _setSoftMaskDirty ?? (_setSoftMaskDirty = SetSoftMaskDirty);
                 }
 
                 if (trigger)
                 {
-                    trigger.onViewChange += _setSoftMaskDirty ??= SetSoftMaskDirty;
+                    trigger.onViewChange +=
+                        _setSoftMaskDirty ?? (_setSoftMaskDirty = SetSoftMaskDirty);
                 }
             }
 

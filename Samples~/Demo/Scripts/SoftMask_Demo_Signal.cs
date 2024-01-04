@@ -22,13 +22,13 @@ namespace Coffee.UISoftMask.Demos
             base.OnEnable();
             if (!Application.isPlaying) return;
 
-            UIExtraCallbacks.onBeforeCanvasRebuild += _checkDirty ??= CheckDirty;
+            UIExtraCallbacks.onBeforeCanvasRebuild += _checkDirty ?? (_checkDirty = CheckDirty);
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
-            UIExtraCallbacks.onBeforeCanvasRebuild -= _checkDirty ??= CheckDirty;
+            UIExtraCallbacks.onBeforeCanvasRebuild -= _checkDirty ?? (_checkDirty = CheckDirty);
             canvasRenderer.SetAlpha(1);
         }
 

@@ -23,7 +23,8 @@ namespace Coffee.UISoftMask
         {
             hideFlags = HideFlags.DontSave | HideFlags.NotEditable;
             TryGetComponent(out _canvas);
-            UIExtraCallbacks.onBeforeCanvasRebuild += _checkViewProjectionMatrix ??= CheckViewProjectionMatrix;
+            UIExtraCallbacks.onBeforeCanvasRebuild +=
+                _checkViewProjectionMatrix ?? (_checkViewProjectionMatrix = CheckViewProjectionMatrix);
         }
 
         /// <summary>
@@ -31,7 +32,8 @@ namespace Coffee.UISoftMask
         /// </summary>
         private void OnDisable()
         {
-            UIExtraCallbacks.onBeforeCanvasRebuild -= _checkViewProjectionMatrix ??= CheckViewProjectionMatrix;
+            UIExtraCallbacks.onBeforeCanvasRebuild -=
+                _checkViewProjectionMatrix ?? (_checkViewProjectionMatrix = CheckViewProjectionMatrix);
         }
 
         /// <summary>

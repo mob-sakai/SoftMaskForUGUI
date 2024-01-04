@@ -118,9 +118,9 @@ namespace Coffee.UISoftMask
 
             if (graphic)
             {
-                graphic.RegisterDirtyMaterialCallback(_updateContainer ??= UpdateContainer);
-                graphic.RegisterDirtyVerticesCallback(_setContainerDirty ??= SetContainerDirty);
-                graphic.RegisterDirtyLayoutCallback(_setContainerDirty ??= SetContainerDirty);
+                graphic.RegisterDirtyMaterialCallback(_updateContainer ?? (_updateContainer = UpdateContainer));
+                graphic.RegisterDirtyVerticesCallback(_setContainerDirty ?? (_setContainerDirty = SetContainerDirty));
+                graphic.RegisterDirtyLayoutCallback(_setContainerDirty ?? (_setContainerDirty = SetContainerDirty));
 
                 graphic.SetMaterialDirty();
                 graphic.SetVerticesDirty();
@@ -145,9 +145,9 @@ namespace Coffee.UISoftMask
 
             if (graphic)
             {
-                graphic.UnregisterDirtyMaterialCallback(_updateContainer ??= UpdateContainer);
-                graphic.UnregisterDirtyVerticesCallback(_setContainerDirty ??= SetContainerDirty);
-                graphic.UnregisterDirtyLayoutCallback(_setContainerDirty ??= SetContainerDirty);
+                graphic.UnregisterDirtyMaterialCallback(_updateContainer ?? (_updateContainer = UpdateContainer));
+                graphic.UnregisterDirtyVerticesCallback(_setContainerDirty ?? (_setContainerDirty = SetContainerDirty));
+                graphic.UnregisterDirtyLayoutCallback(_setContainerDirty ?? (_setContainerDirty = SetContainerDirty));
 
                 graphic.SetMaterialDirty();
                 graphic.SetVerticesDirty();
@@ -395,13 +395,15 @@ namespace Coffee.UISoftMask
             if (!_antiAliasingRegistered)
             {
                 _antiAliasingRegistered = true;
-                UIExtraCallbacks.onBeforeCanvasRebuild += _updateAntiAliasing ??= UpdateAntiAliasing;
+                UIExtraCallbacks.onBeforeCanvasRebuild +=
+                    _updateAntiAliasing ?? (_updateAntiAliasing = UpdateAntiAliasing);
                 UpdateAntiAliasing();
             }
             else
             {
                 _antiAliasingRegistered = false;
-                UIExtraCallbacks.onBeforeCanvasRebuild -= _updateAntiAliasing ??= UpdateAntiAliasing;
+                UIExtraCallbacks.onBeforeCanvasRebuild -=
+                    _updateAntiAliasing ?? (_updateAntiAliasing = UpdateAntiAliasing);
                 UpdateAntiAliasing();
             }
         }

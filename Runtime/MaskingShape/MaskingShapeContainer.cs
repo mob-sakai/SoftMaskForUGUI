@@ -29,7 +29,8 @@ namespace Coffee.UISoftMask
 
         private void OnEnable()
         {
-            UIExtraCallbacks.onBeforeCanvasRebuild += _checkTransformChanged ??= CheckTransformChanged;
+            UIExtraCallbacks.onBeforeCanvasRebuild +=
+                _checkTransformChanged ?? (_checkTransformChanged = CheckTransformChanged);
             hideFlags = HideFlags.DontSave | HideFlags.NotEditable;
             SetContainerDirty();
 
@@ -45,7 +46,8 @@ namespace Coffee.UISoftMask
 
         private void OnDisable()
         {
-            UIExtraCallbacks.onBeforeCanvasRebuild -= _checkTransformChanged ??= CheckTransformChanged;
+            UIExtraCallbacks.onBeforeCanvasRebuild -=
+                _checkTransformChanged ?? (_checkTransformChanged = CheckTransformChanged);
             _dirty = false;
             _needTerminal = false;
         }

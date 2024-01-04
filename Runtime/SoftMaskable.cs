@@ -28,25 +28,30 @@ namespace Coffee.UISoftMask
             this.AddComponentOnChildren<SoftMaskable>(HideFlags.DontSave | HideFlags.NotEditable, false);
 
             hideFlags = HideFlags.DontSave | HideFlags.NotEditable;
-            SoftMaskUtils.onChangeBufferSize += _setMaterialDirtyIfNeeded ??= SetMaterialDirtyIfNeeded;
+            SoftMaskUtils.onChangeBufferSize +=
+                _setMaterialDirtyIfNeeded ?? (_setMaterialDirtyIfNeeded = SetMaterialDirtyIfNeeded);
             if (TryGetComponent(out _graphic))
             {
                 _graphic.SetMaterialDirty();
             }
             else
             {
-                UIExtraCallbacks.onBeforeCanvasRebuild += _checkGraphic ??= CheckGraphic;
+                UIExtraCallbacks.onBeforeCanvasRebuild +=
+                    _checkGraphic ?? (_checkGraphic = CheckGraphic);
             }
 
 #if UNITY_EDITOR
-            UIExtraCallbacks.onAfterCanvasRebuild += _updateSceneViewMatrix ??= UpdateSceneViewMatrix;
+            UIExtraCallbacks.onAfterCanvasRebuild +=
+                _updateSceneViewMatrix ?? (_updateSceneViewMatrix = UpdateSceneViewMatrix);
 #endif
         }
 
         private void OnDisable()
         {
-            SoftMaskUtils.onChangeBufferSize -= _setMaterialDirtyIfNeeded ??= SetMaterialDirtyIfNeeded;
-            UIExtraCallbacks.onBeforeCanvasRebuild -= _checkGraphic ??= CheckGraphic;
+            SoftMaskUtils.onChangeBufferSize -=
+                _setMaterialDirtyIfNeeded ?? (_setMaterialDirtyIfNeeded = SetMaterialDirtyIfNeeded);
+            UIExtraCallbacks.onBeforeCanvasRebuild -=
+                _checkGraphic ?? (_checkGraphic = CheckGraphic);
             if (_graphic)
             {
                 _graphic.SetMaterialDirty();
@@ -57,7 +62,8 @@ namespace Coffee.UISoftMask
             MaterialRepository.Release(ref _maskableMaterial);
 
 #if UNITY_EDITOR
-            UIExtraCallbacks.onAfterCanvasRebuild -= _updateSceneViewMatrix ??= UpdateSceneViewMatrix;
+            UIExtraCallbacks.onAfterCanvasRebuild -=
+                _updateSceneViewMatrix ?? (_updateSceneViewMatrix = UpdateSceneViewMatrix);
 #endif
         }
 
@@ -125,7 +131,8 @@ namespace Coffee.UISoftMask
         {
             if (_graphic || !TryGetComponent(out _graphic)) return;
 
-            UIExtraCallbacks.onBeforeCanvasRebuild -= _checkGraphic ??= CheckGraphic;
+            UIExtraCallbacks.onBeforeCanvasRebuild -=
+                _checkGraphic ?? (_checkGraphic = CheckGraphic);
 
             gameObject.AddComponent<SoftMaskable>();
             Utils.DestroySafety(this);

@@ -77,7 +77,7 @@ namespace Coffee.UISoftMask
         private void OnEnable()
         {
             _rectTransform = GetComponent<RectTransform>();
-            UIExtraCallbacks.onBeforeCanvasRebuild += _fit ??= Fit;
+            UIExtraCallbacks.onBeforeCanvasRebuild += _fit ?? (_fit = Fit);
             OnValidate();
         }
 
@@ -86,7 +86,7 @@ namespace Coffee.UISoftMask
         /// </summary>
         private void OnDisable()
         {
-            UIExtraCallbacks.onBeforeCanvasRebuild -= _fit ??= Fit;
+            UIExtraCallbacks.onBeforeCanvasRebuild -= _fit ?? (_fit = Fit);
             OnValidate();
         }
 
