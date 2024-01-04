@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: SimpleSceneNavigator
   m_EditorClassIdentifier: 
   m_NavigatorEnabled: 1
-  m_DontDestroyOnLoad: 1
   m_EnabledInEditor: 1
-  m_Prefab: {fileID: 7211429669315726685, guid: 6f0b6bea013794ed6aa04b543da369dd,
+  m_AlwaysIncludeAssembly: 1
+  m_InstantiateOnLoad: 1
+  m_Prefab: {fileID: 7211429669315726685, guid: 86b75e7a71c334e6b8c24f7ffd1bedcb,
     type: 3}

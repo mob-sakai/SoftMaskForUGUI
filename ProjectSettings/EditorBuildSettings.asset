@@ -8,4 +8,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Samples/Demo/SoftMask_Demo.unity
     guid: aa372e7b286d0416eb942adfc3e442ec
+  - enabled: 1
+    path: Assets/TextMeshPro Support/SoftMask_Demo_TextMeshProSupport.unity
+    guid: b29fc66cd80684c2d903f2d65255b59b
   m_configObjects: {}
