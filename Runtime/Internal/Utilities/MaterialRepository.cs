@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using UnityEngine;
 using UnityEngine.Profiling;
 
-namespace Coffee.UISoftMask.Internal
+namespace Coffee.UISoftMaskInternal
 {
     /// <summary>
     /// Provides functionality to manage materials.

@@ -1,4 +1,4 @@
-using Coffee.UISoftMask.Internal.AssetModification;
+using Coffee.UISoftMaskInternal.AssetModification;
 using UnityEditor;
 using UnityEngine;
 

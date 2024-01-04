@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace Coffee.UISoftMask.Internal.AssetModification
+namespace Coffee.UISoftMaskInternal.AssetModification
 {
     internal abstract class ComponentModifier<T> : IComponentModifier where T : Component
     {

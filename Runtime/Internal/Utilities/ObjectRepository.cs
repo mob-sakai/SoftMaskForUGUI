@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Profiling;
 using Object = UnityEngine.Object;
 
-namespace Coffee.UISoftMask.Internal
+namespace Coffee.UISoftMaskInternal
 {
     internal class ObjectRepository<T> where T : Object
     {

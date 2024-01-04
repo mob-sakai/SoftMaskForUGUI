@@ -1,9 +1,9 @@
-﻿using UnityEditor;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
 using UnityEngine.Profiling;
 
-namespace Coffee.UISoftMask.Internal
+namespace Coffee.UISoftMaskInternal
 {
     /// <summary>
     /// Utility class for managing temporary render textures.
@@ -65,12 +65,11 @@ namespace Coffee.UISoftMask.Internal
                 preferSize.x,
                 preferSize.y,
                 s_GraphicsFormat,
-                0);
+                useStencil ? 24 : 0);
+            rtd.sRGB = QualitySettings.activeColorSpace == ColorSpace.Linear;
             rtd.mipCount = -1;
 #if UNITY_2021_3_OR_NEWER
             rtd.depthStencilFormat = useStencil ? s_StencilFormat : GraphicsFormat.None;
-#else
-            rtd.depthBufferBits = useStencil ? 24 : 0;
 #endif
             s_Repository.Get(hash, ref buffer, x => RenderTexture.GetTemporary(x), rtd);
             Profiler.EndSample();

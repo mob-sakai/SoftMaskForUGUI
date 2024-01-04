@@ -1,11 +1,11 @@
-﻿#if UNITY_EDITOR
+#if UNITY_EDITOR
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace Coffee.UISoftMask.Internal
+namespace Coffee.UISoftMaskInternal
 {
     internal static class AlwaysIncludedShadersProxy
     {

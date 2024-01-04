@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
-namespace Coffee.UISoftMask.Internal
+namespace Coffee.UISoftMaskInternal
 {
     /// <summary>
     /// Object pool.

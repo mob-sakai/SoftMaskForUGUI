@@ -1,4 +1,4 @@
-using Coffee.UISoftMask.Internal.AssetModification;
+using Coffee.UISoftMaskInternal.AssetModification;
 using UnityEditor;
 
 #pragma warning disable CS0612 // Type or member is obsolete

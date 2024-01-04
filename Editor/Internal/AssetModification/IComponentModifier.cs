@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Coffee.UISoftMask.Internal.AssetModification
+namespace Coffee.UISoftMaskInternal.AssetModification
 {
     internal interface IComponentModifier
     {

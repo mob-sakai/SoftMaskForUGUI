@@ -1,1 +1,1 @@
-s/Coffee.Internal/Coffee.UISoftMask.Internal/g
+s/Coffee.Internal/Coffee.UISoftMaskInternal/g

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Coffee.UISoftMask.Internal.AssetModification;
+using Coffee.UISoftMaskInternal.AssetModification;
 
 namespace Coffee.UISoftMask
 {

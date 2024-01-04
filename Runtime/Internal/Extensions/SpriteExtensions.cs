@@ -5,7 +5,7 @@ using UnityEngine.U2D;
 using System.Reflection;
 #endif
 
-namespace Coffee.UISoftMask.Internal
+namespace Coffee.UISoftMaskInternal
 {
     /// <summary>
     /// Extension methods for Sprite class.
