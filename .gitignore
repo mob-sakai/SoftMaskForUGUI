@@ -1,0 +1,26 @@
+# Windows
+Thumbs.db
+Desktop.ini
+/*.csproj
+/*.sln
+
+# macOS
+.DS_Store
+
+# Vim
+*.swp
+
+# Unity
+/Logs
+/Library
+/Temp
+Assets/Plugins.meta
+Assets/Plugins/
+
+# VS
+.vs/
+.vscode/
+.idea/
+obj/
+bin/
+UserSettings/

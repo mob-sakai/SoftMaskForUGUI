@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "com.unity.ide.rider": "3.0.27",
+    "com.unity.test-framework": "1.1.33"
+  }
+}
