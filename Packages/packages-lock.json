@@ -1,12 +1,11 @@
 {
   "dependencies": {
-    "com.coffee.ui-particle": {
+    "com.coffee.softmask-for-ugui": {
       "version": "file:src",
       "depth": 0,
       "source": "embedded",
       "dependencies": {
-        "com.unity.ugui": "1.0.0",
-        "com.unity.modules.particlesystem": "1.0.0"
+        "com.unity.ugui": "1.0.0"
       }
     },
     "com.unity.ext.nunit": {
@@ -45,12 +44,6 @@
         "com.unity.modules.imgui": "1.0.0"
       }
     },
-    "com.unity.modules.animation": {
-      "version": "1.0.0",
-      "depth": 0,
-      "source": "builtin",
-      "dependencies": {}
-    },
     "com.unity.modules.imgui": {
       "version": "1.0.0",
       "depth": 1,
@@ -60,18 +53,6 @@
     "com.unity.modules.jsonserialize": {
       "version": "1.0.0",
       "depth": 1,
-      "source": "builtin",
-      "dependencies": {}
-    },
-    "com.unity.modules.particlesystem": {
-      "version": "1.0.0",
-      "depth": 1,
-      "source": "builtin",
-      "dependencies": {}
-    },
-    "com.unity.modules.physics": {
-      "version": "1.0.0",
-      "depth": 0,
       "source": "builtin",
       "dependencies": {}
     },
