@@ -31,6 +31,11 @@
       "displayName": "TextMeshPro Support",
       "description": "TextMeshPro Support",
       "path": "Samples~/TextMeshPro Support~"
+    },
+    {
+      "displayName": "TextMeshPro Support v3.2 or v4.0",
+      "description": "TextMeshPro Support v3.2 or v4.0",
+      "path": "Samples~/TextMeshPro Support v3.2 or v4.0~"
     }
   ]
 }
