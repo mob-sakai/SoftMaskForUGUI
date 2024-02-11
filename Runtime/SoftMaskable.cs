@@ -162,6 +162,7 @@ namespace Coffee.UISoftMask
                         nearestMask = mask;
                         if (FrameCache.TryGet(nearestMask, nameof(GetStencilBitsAndSoftMask), out stencilBits))
                         {
+                            FrameCache.TryGet(nearestMask, nameof(GetStencilBitsAndSoftMask), out nearestSoftMask);
                             Profiler.EndSample();
                             return stencilBits;
                         }
@@ -189,6 +190,7 @@ namespace Coffee.UISoftMask
             if (nearestMask)
             {
                 FrameCache.Set(nearestMask, nameof(GetStencilBitsAndSoftMask), stencilBits);
+                FrameCache.Set(nearestMask, nameof(GetStencilBitsAndSoftMask), nearestSoftMask);
             }
 
             return stencilBits;

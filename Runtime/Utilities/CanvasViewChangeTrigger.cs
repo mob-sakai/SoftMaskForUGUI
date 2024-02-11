@@ -15,6 +15,7 @@ namespace Coffee.UISoftMask
         private Canvas _canvas;
         private Action _checkViewProjectionMatrix;
         private int _lastCameraVpHash;
+        private int _lastResHash;
 
         /// <summary>
         /// Called when the component is enabled.
@@ -53,15 +54,18 @@ namespace Coffee.UISoftMask
 
         private void CheckViewProjectionMatrix()
         {
-            if (!_canvas || _canvas.renderMode != RenderMode.WorldSpace) return;
+            if (!_canvas) return;
 
             // Get the view and projection matrix of the Canvas.
             var prevHash = _lastCameraVpHash;
             _canvas.GetViewProjectionMatrix(out var vpMatrix);
             _lastCameraVpHash = vpMatrix.GetHashCode();
 
+            var prevResHash = _lastResHash;
+            _lastResHash = Screen.currentResolution.GetHashCode();
+
             // The matrix has changed.
-            if (prevHash != _lastCameraVpHash)
+            if (prevHash != _lastCameraVpHash || prevResHash != _lastResHash)
             {
                 Logging.Log(this, "ViewProjection changed.");
                 onViewChange?.Invoke();
