@@ -33,8 +33,8 @@ MonoBehaviour:
       m_Path: 
   - m_Format: Materials:{0} RT:{1} BufferRendering:{2}
     m_Arg0:
-      m_Path: Coffee.UISoftMask.Internal.MaterialRepository, Coffee.SoftMaskForUGUI;count
+      m_Path: Coffee.UISoftMaskInternal.MaterialRepository, Coffee.SoftMaskForUGUI;count
     m_Arg1:
-      m_Path: Coffee.UISoftMask.Internal.RenderTextureRepository, Coffee.SoftMaskForUGUI;count
+      m_Path: Coffee.UISoftMaskInternal.RenderTextureRepository, Coffee.SoftMaskForUGUI;count
     m_Arg2:
       m_Path: Coffee.UISoftMask.Demos.SoftMask_Demo_Signal, Coffee.SoftMaskForUGUI.Demo;bakedCount
