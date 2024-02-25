@@ -16,6 +16,6 @@ MonoBehaviour:
   m_StereoEnabled: 0
   m_FallbackBehavior: 0
   m_TransformSensitivity: 0
-  m_EnabledInEditMode: 1
+  m_UseStencilOutsideScreen: 1
   m_AutoIncludeShaders: 1
   m_StripShaderVariants: 1

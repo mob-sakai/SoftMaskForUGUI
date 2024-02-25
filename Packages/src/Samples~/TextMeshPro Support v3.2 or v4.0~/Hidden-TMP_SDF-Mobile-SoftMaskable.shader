@@ -244,7 +244,7 @@ SubShader {
 			c *= SoftMask(input.vertex, mul(unity_ObjectToWorld, input.worldPosition));
 
 			#if UNITY_UI_ALPHACLIP
-			clip(c.a - 0.001);
+			SoftMaskClip(c.a - 0.001);
 			#endif
 
 			return c;

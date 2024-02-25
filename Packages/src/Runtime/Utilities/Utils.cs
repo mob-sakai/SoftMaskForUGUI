@@ -9,6 +9,27 @@ using UnityEditor.U2D;
 
 namespace Coffee.UISoftMask
 {
+    internal static class ShaderPropertyIds
+    {
+        public static readonly int mainTex = Shader.PropertyToID("_MainTex");
+        public static readonly int colorMask = Shader.PropertyToID("_ColorMask");
+        public static readonly int thresholdMinId = Shader.PropertyToID("_ThresholdMin");
+        public static readonly int thresholdMaxId = Shader.PropertyToID("_ThresholdMax");
+        public static readonly int softMaskTexId = Shader.PropertyToID("_SoftMaskTex");
+        public static readonly int softMaskColorId = Shader.PropertyToID("_SoftMaskColor");
+        public static readonly int stencilReadMaskId = Shader.PropertyToID("_StencilReadMask");
+        public static readonly int blendOp = Shader.PropertyToID("_BlendOp");
+        public static readonly int alphaClipThreshold = Shader.PropertyToID("_AlphaClipThreshold");
+        public static readonly int alphaAdd = Shader.PropertyToID("_AlphaAdd");
+#if UNITY_EDITOR
+        public static readonly int gameVpId = Shader.PropertyToID("_GameVP");
+        public static readonly int gameTvpId = Shader.PropertyToID("_GameTVP");
+        public static readonly int gameVp2Id = Shader.PropertyToID("_GameVP_2");
+        public static readonly int gameTvp2Id = Shader.PropertyToID("_GameTVP_2");
+        public static readonly int softMaskOutsideColor = Shader.PropertyToID("_SoftMaskOutsideColor");
+#endif
+    }
+
     internal static class Utils
     {
         /// <summary>
@@ -40,70 +61,70 @@ namespace Coffee.UISoftMask
             }
         }
 
-        /// <summary>
-        /// Find the nearest mask and stencil depth.
-        /// </summary>
-        public static int GetStencilDepthAndMask(Transform transform, bool includeSelf, out Mask nearestMask)
+        public static int GetStencilBits(Transform transform, bool includeSelf, bool useStencil,
+            out Mask nearestMask, out SoftMask nearestSoftMask)
         {
-            Profiler.BeginSample("(SM4UI)[Utils] GetStencilDepthAndMask");
+            Profiler.BeginSample("(SM4UI)[SoftMaskable] GetStencilBits");
             nearestMask = null;
+            nearestSoftMask = null;
             var stopAfter = MaskUtilities.FindRootSortOverrideCanvas(transform);
-            var depth = 0;
             if (transform == stopAfter)
             {
                 Profiler.EndSample();
-                return depth;
+                return 0;
             }
 
+            var depth = 0;
+            var stencilBits = 0;
             var tr = includeSelf ? transform : transform.parent;
             while (tr)
             {
-                if (tr.TryGetComponent<Mask>(out var mask) && mask.MaskEnabled() && mask.graphic &&
-                    mask.graphic.IsActive())
+                if (tr.TryGetComponent<Mask>(out var mask) && mask.MaskEnabled())
                 {
                     if (!nearestMask)
                     {
                         nearestMask = mask;
-                        if (FrameCache.TryGet(nearestMask, nameof(GetStencilDepthAndMask), out depth))
+                        if (FrameCache.TryGet(nearestMask, nameof(GetStencilBits), out stencilBits))
                         {
+                            FrameCache.TryGet(nearestMask, nameof(GetStencilBits), out nearestSoftMask);
+
                             Profiler.EndSample();
-                            return depth;
+                            return stencilBits;
                         }
                     }
 
-                    ++depth;
-
-                    if (tr == stopAfter)
+                    stencilBits = 0 < depth++ ? stencilBits << 1 : 0;
+                    if (mask is SoftMask softMask && softMask.SoftMaskingEnabled())
                     {
-                        break;
+                        if (!nearestSoftMask)
+                        {
+                            nearestSoftMask = softMask;
+                        }
+
+                        if (useStencil)
+                        {
+                            stencilBits++;
+                        }
+                    }
+                    else
+                    {
+                        stencilBits++;
                     }
                 }
 
+                if (tr == stopAfter) break;
                 tr = tr.parent;
             }
 
+            stencilBits = Mathf.Min(stencilBits, 255);
             Profiler.EndSample();
-
             if (nearestMask)
             {
-                FrameCache.Set(nearestMask, nameof(GetStencilDepthAndMask), depth);
+                FrameCache.Set(nearestMask, nameof(GetStencilBits), stencilBits);
+                FrameCache.Set(nearestMask, nameof(GetStencilBits), nearestSoftMask);
             }
 
-            return depth;
-        }
-
-        public static void DestroySafety<T>(T obj) where T : Object
-        {
-            if (!obj) return;
-
-#if UNITY_EDITOR
-            if (!Application.isPlaying)
-            {
-                Object.DestroyImmediate(obj, false);
-                return;
-            }
-#endif
-            Object.Destroy(obj);
+            return stencilBits;
         }
 
         public static bool AlphaHitTestValid(Graphic src, Vector2 sp, Camera eventCamera, float threshold)

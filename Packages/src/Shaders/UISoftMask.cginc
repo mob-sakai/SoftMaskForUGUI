@@ -3,6 +3,18 @@
 
 sampler2D _SoftMaskTex;
 half4 _SoftMaskColor;
+float _AlphaClipThreshold;
+fixed _SoftMaskInside;
+fixed4 _SoftMaskOutsideColor;
+
+void SoftMaskClip(float alpha)
+{
+    #if UI_SOFT_MASKABLE_EDITOR
+    clip (alpha - _AlphaClipThreshold * _SoftMaskInside);
+    #else
+    clip(alpha);
+    #endif
+}
 
 float SoftMaskSample(float2 uv)
 {
@@ -14,7 +26,8 @@ float SoftMaskSample(float2 uv)
                                 lerp(mask, half4(1, 1, 1, 1) - mask, _SoftMaskColor - half4(1, 1, 1, 1)),
                                 _SoftMaskColor));
     #if UI_SOFT_MASKABLE_EDITOR
-        alpha *= step(0, uv.x) * step(uv.x, 1) * step(0, uv.y) * step(uv.y, 1);
+        _SoftMaskInside = step(0, uv.x) * step(uv.x, 1) * step(0, uv.y) * step(uv.y, 1);
+        alpha = lerp(_SoftMaskOutsideColor, alpha, _SoftMaskInside);
     #endif
 
     return alpha.x * alpha.y * alpha.z * alpha.w;
@@ -76,7 +89,7 @@ float2 WorldToUv(float4 worldPos)
 
 #endif
 
-#if UNITY_VERSION < 202220
+#ifndef UIGammaToLinear
 half3 UIGammaToLinear(half3 value)
 {
     half3 low = 0.0849710 * value - 0.000163029;

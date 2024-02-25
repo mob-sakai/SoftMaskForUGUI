@@ -11,10 +11,13 @@ namespace Coffee.UISoftMask
     [RequireComponent(typeof(CanvasRenderer))]
     [DisallowMultipleComponent]
     [AddComponentMenu("")]
-    public class TerminalMaskingShape : MaskableGraphic, ILayoutElement, ILayoutIgnorer
+    public class TerminalMaskingShape : MaskableGraphic, ILayoutElement, ILayoutIgnorer, IMaskable
     {
         private static Material s_SharedTerminalMaterial;
         private Mask _mask;
+        private Mask _parentMask;
+        private bool _shouldRecalculateStencil;
+        private int _stencilBits;
 
         public override bool raycastTarget
         {
@@ -33,7 +36,8 @@ namespace Coffee.UISoftMask
             }
 
             material = s_SharedTerminalMaterial;
-            transform.parent.TryGetComponent(out _mask);
+            transform.parent.TryGetComponent(out _parentMask);
+            _shouldRecalculateStencil = true;
 
             base.OnEnable();
         }
@@ -41,9 +45,9 @@ namespace Coffee.UISoftMask
         protected override void OnDisable()
         {
             base.OnDisable();
-            if (_mask && _mask.MaskEnabled())
+            if (_parentMask && _parentMask.MaskEnabled())
             {
-                _mask.graphic.SetMaterialDirty();
+                _parentMask.graphic.SetMaterialDirty();
             }
         }
 
@@ -71,6 +75,11 @@ namespace Coffee.UISoftMask
 
         bool ILayoutIgnorer.ignoreLayout => true;
 
+        void IMaskable.RecalculateMasking()
+        {
+            _shouldRecalculateStencil = true;
+        }
+
         public override Material GetModifiedMaterial(Material baseMaterial)
         {
             if (!IsActive())
@@ -80,17 +89,16 @@ namespace Coffee.UISoftMask
                 return null;
             }
 
-            var stencilDepth = Utils.GetStencilDepthAndMask(transform, false, out var mask);
-            if (stencilDepth <= 0 || _mask != mask)
+            RecalculateStencilIfNeeded();
+            if ((_stencilBits == 0 && !_mask) || _parentMask != _mask)
             {
                 StencilMaterial.Remove(m_MaskMaterial);
                 m_MaskMaterial = null;
                 return null;
             }
 
-            var desiredStencilBit = 1 << (stencilDepth - 1);
-            var maskMat = StencilMaterial.Add(baseMaterial, desiredStencilBit, StencilOp.Zero,
-                CompareFunction.Equal, 0, desiredStencilBit, desiredStencilBit);
+            var maskMat = StencilMaterial.Add(baseMaterial, _stencilBits, StencilOp.Zero, CompareFunction.Equal, 0,
+                _stencilBits, _stencilBits);
 
             StencilMaterial.Remove(m_MaskMaterial);
             m_MaskMaterial = maskMat;
@@ -113,6 +121,21 @@ namespace Coffee.UISoftMask
             vh.AddTriangle(0, 1, 2);
             vh.AddTriangle(2, 3, 0);
             Profiler.EndSample();
+        }
+
+        private void RecalculateStencilIfNeeded()
+        {
+            if (!isActiveAndEnabled)
+            {
+                _mask = null;
+                _stencilBits = 0;
+                return;
+            }
+
+            if (!_shouldRecalculateStencil) return;
+            _shouldRecalculateStencil = false;
+            var useStencil = UISoftMaskProjectSettings.useStencilOutsideScreen;
+            _stencilBits = Utils.GetStencilBits(transform, false, useStencil, out _mask, out var _);
         }
     }
 

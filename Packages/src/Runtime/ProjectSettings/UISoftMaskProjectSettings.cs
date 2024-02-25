@@ -42,7 +42,7 @@ namespace Coffee.UISoftMask
 
         [Header("Editor")]
         [SerializeField]
-        private bool m_EnabledInEditMode = true;
+        private bool m_UseStencilOutsideScreen = true;
 
         [Header("Shader")]
         [SerializeField]
@@ -51,19 +51,17 @@ namespace Coffee.UISoftMask
         [SerializeField]
         internal bool m_StripShaderVariants = true;
 
-        public static bool softMaskEnabled
-        {
-            get
-            {
+        public static bool softMaskEnabled => instance.m_SoftMaskEnabled;
+
+        public static bool useStencilOutsideScreen =>
 #if UNITY_EDITOR
-                if (!Application.isPlaying && !instance.m_EnabledInEditMode) return false;
+            instance.m_UseStencilOutsideScreen;
+#else
+            false;
 #endif
-                return instance.m_SoftMaskEnabled;
-            }
-        }
 
 #if UNITY_MODULE_VR
-        public static bool stereoEnabled => softMaskEnabled && instance.m_StereoEnabled && XRSettings.enabled;
+        public static bool stereoEnabled => softMaskEnabled && XRSettings.enabled;
 #else
         public static bool stereoEnabled => false;
 #endif
@@ -119,6 +117,11 @@ namespace Coffee.UISoftMask
         }
 
 #if UNITY_EDITOR
+        private void OnValidate()
+        {
+            ResetAllSoftMasks();
+        }
+
         private void Reset()
         {
             ReloadShaders(false);

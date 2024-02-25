@@ -121,7 +121,7 @@ Shader "Hidden/TextMeshPro/Sprite (SoftMaskable)"
                 color.a *= SoftMask(IN.vertex, mul(unity_ObjectToWorld, IN.worldPosition));
 
 				#ifdef UNITY_UI_ALPHACLIP
-					clip (color.a - 0.001);
+					SoftMaskClip (color.a - 0.001);
 				#endif
 
 				return color;

@@ -32,6 +32,7 @@ Shader "Hidden/UI/SoftMask"
             sampler2D _MainTex;
             float _ThresholdMin;
             float _ThresholdMax;
+            float _AlphaAdd;
             float4 _ColorMask;
 
             float invLerp(const float from, const float to, const float value)
@@ -43,7 +44,7 @@ Shader "Hidden/UI/SoftMask"
             {
                 const half maxValue = max(_ThresholdMin, _ThresholdMax);
                 const half minValue = min(_ThresholdMin, _ThresholdMax);
-                const half alpha = invLerp(minValue, maxValue, tex2D(_MainTex, i.uv).a);
+                const half alpha = invLerp(minValue, maxValue, tex2D(_MainTex, i.uv).a + _AlphaAdd);
                 return alpha * _ColorMask;
             }
             ENDCG

@@ -11,7 +11,7 @@ namespace Coffee.UISoftMask
         private SerializedProperty _antiAliasingThreshold;
         private SerializedProperty _maskingMethod;
         private SerializedProperty _showMaskGraphic;
-        private SerializedProperty _softnessRange;
+        private SerializedProperty _softMaskingRange;
 
         protected void OnEnable()
         {
@@ -19,7 +19,7 @@ namespace Coffee.UISoftMask
             _showMaskGraphic = serializedObject.FindProperty("m_ShowMaskGraphic");
             _alphaHitTest = serializedObject.FindProperty("m_AlphaHitTest");
             _antiAliasingThreshold = serializedObject.FindProperty("m_AntiAliasingThreshold");
-            _softnessRange = serializedObject.FindProperty("m_SoftnessRange");
+            _softMaskingRange = serializedObject.FindProperty("m_SoftMaskingRange");
         }
 
         public override void OnInspectorGUI()
@@ -27,7 +27,8 @@ namespace Coffee.UISoftMask
             var current = target as MaskingShape;
             if (!current) return;
 
-            Utils.GetStencilDepthAndMask(current.transform, false, out var mask);
+            var useStencil = UISoftMaskProjectSettings.useStencilOutsideScreen;
+            Utils.GetStencilBits(current.transform, false, useStencil, out var mask, out var _);
             var maskingMode = mask is SoftMask softMask ? softMask.GetActualMaskingMode() : SoftMask.MaskingMode.Normal;
             EditorGUI.BeginDisabledGroup(true);
             EditorGUILayout.EnumPopup(new GUIContent("Masking Mode"), maskingMode);
@@ -43,7 +44,7 @@ namespace Coffee.UISoftMask
                 case SoftMask.MaskingMode.SoftMasking:
                     EditorGUILayout.PropertyField(_showMaskGraphic);
                     EditorGUILayout.PropertyField(_alphaHitTest);
-                    EditorGUILayout.PropertyField(_softnessRange);
+                    EditorGUILayout.PropertyField(_softMaskingRange);
                     break;
                 case SoftMask.MaskingMode.AntiAliasing:
                     EditorGUILayout.PropertyField(_alphaHitTest);

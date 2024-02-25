@@ -88,6 +88,16 @@ Shader "Hidden/UI/Default (SoftMaskable)"
             float _UIMaskSoftnessY;
             int _UIVertexColorAlwaysGammaSpace;
 
+            half3 GammaToLinear(half3 value)
+            {
+                half3 low = 0.0849710 * value - 0.000163029;
+                half3 high = value * (value * (value * 0.265885 + 0.736584) - 0.00980184) + 0.00319697;
+
+                // We should be 0.5 away from any actual gamma value stored in an 8 bit channel
+                const half3 split = (half3)0.0725490; // Equals 18.5 / 255
+                return (value < split) ? low : high;
+            }
+            
             v2f vert(appdata_t v)
             {
                 v2f OUT;
@@ -105,15 +115,13 @@ Shader "Hidden/UI/Default (SoftMaskable)"
                 OUT.texcoord = TRANSFORM_TEX(v.texcoord.xy, _MainTex);
                 OUT.mask = float4(v.vertex.xy * 2 - clampedRect.xy - clampedRect.zw, 0.25 / (0.25 * half2(_UIMaskSoftnessX, _UIMaskSoftnessY) + abs(pixelSize.xy)));
 
-                #if 202220 <= UNITY_VERSION
                 if (_UIVertexColorAlwaysGammaSpace)
                 {
                     if(!IsGammaSpace())
                     {
-                        v.color.rgb = UIGammaToLinear(v.color.rgb);
+                        v.color.rgb = GammaToLinear(v.color.rgb);
                     }
                 }
-                #endif
 
                 OUT.color = v.color * _Color;
                 return OUT;
@@ -138,7 +146,7 @@ Shader "Hidden/UI/Default (SoftMaskable)"
                 color.a *= SoftMask(IN.vertex, mul(unity_ObjectToWorld, IN.worldPosition));	// Add for soft mask
 
                 #ifdef UNITY_UI_ALPHACLIP
-                clip (color.a - 0.001);
+                SoftMaskClip (color.a - 0.001); 	// Add for soft mask
                 #endif
 
                 color.rgb *= color.a;

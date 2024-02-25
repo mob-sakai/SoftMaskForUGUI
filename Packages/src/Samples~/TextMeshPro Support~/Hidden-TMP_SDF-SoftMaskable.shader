@@ -315,7 +315,7 @@ SubShader {
             faceColor *= SoftMask(input.position, mul(unity_ObjectToWorld, input.worldPosition));
 
 		    #if UNITY_UI_ALPHACLIP
-			clip(faceColor.a - 0.001);
+			SoftMaskClip(faceColor.a - 0.001);
 		    #endif
 
   		    return faceColor * input.color.a;
