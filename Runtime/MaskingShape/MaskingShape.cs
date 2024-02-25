@@ -27,17 +27,16 @@ namespace Coffee.UISoftMask
         private bool m_ShowMaskGraphic;
 
         [Tooltip("Enable alpha hit test.")] [SerializeField]
-        public bool m_AlphaHitTest;
+        private bool m_AlphaHitTest;
 
         [Tooltip("Enable anti-alias masking.")] [SerializeField] [Range(0f, 1f)]
-        public float m_AntiAliasingThreshold = 0.5f;
+        private float m_AntiAliasingThreshold;
 
         [Tooltip("The range for soft masking.")]
         [SerializeField]
-        public MinMax01 m_SoftnessRange = new MinMax01(0, 1f);
+        private MinMax01 m_SoftMaskingRange = new MinMax01(0, 1f);
 
         private bool _antiAliasingRegistered;
-
         private MaskingShapeContainer _container;
         private Graphic _graphic;
         private Mask _mask;
@@ -47,7 +46,7 @@ namespace Coffee.UISoftMask
         private Matrix4x4 _prevTransformMatrix;
         private UnityAction _setContainerDirty;
         private bool _shouldRecalculateStencil;
-        private int _stencilDepth;
+        private int _stencilBits;
         private Action _updateAntiAliasing;
         private UnityAction _updateContainer;
 
@@ -100,14 +99,14 @@ namespace Coffee.UISoftMask
         /// <summary>
         /// The range for soft masking.
         /// </summary>
-        public MinMax01 softnessRange
+        public MinMax01 softMaskingRange
         {
-            get => m_SoftnessRange;
+            get => m_SoftMaskingRange;
             set
             {
-                if (m_SoftnessRange.Approximately(value)) return;
+                if (m_SoftMaskingRange.Approximately(value)) return;
 
-                m_SoftnessRange = value;
+                m_SoftMaskingRange = value;
                 SetContainerDirty();
             }
         }
@@ -136,7 +135,7 @@ namespace Coffee.UISoftMask
             StencilMaterial.Remove(_maskMaterial);
             _maskMaterial = null;
 
-            SoftMaskUtils.meshPool.Return(ref _mesh);
+            MeshExtensions.Return(ref _mesh);
             SoftMaskUtils.materialPropertyBlockPool.Return(ref _mpb);
 
             SetContainerDirty();
@@ -220,26 +219,24 @@ namespace Coffee.UISoftMask
 
             // Not in mask.
             RecalculateStencilIfNeeded();
-            if (_stencilDepth <= 0)
+            if (_stencilBits == 0 && !_mask)
             {
                 StencilMaterial.Remove(_maskMaterial);
                 _maskMaterial = null;
                 return null;
             }
 
-            var colorMask = m_ShowMaskGraphic ? ColorWriteMask.All : 0;
-            var stencilBit = 1 << (_stencilDepth - 1);
-
             // Mask material
             Material maskMat = null;
-            if (SoftMaskingEnabled())
+            var colorMask = m_ShowMaskGraphic ? ColorWriteMask.All : 0;
+            if (SoftMaskingEnabled() && !UISoftMaskProjectSettings.useStencilOutsideScreen)
             {
                 if (m_ShowMaskGraphic)
                 {
                     Profiler.BeginSample(
                         "(SM4UI)[MaskingShape)] GetModifiedMaterial > StencilMaterial.Add for SoftMask");
-                    maskMat = StencilMaterial.Add(baseMaterial, stencilBit, StencilOp.Keep, CompareFunction.Equal,
-                        colorMask, stencilBit, stencilBit);
+                    maskMat = StencilMaterial.Add(baseMaterial, _stencilBits, StencilOp.Keep, CompareFunction.Equal,
+                        colorMask, _stencilBits, _stencilBits);
                     Profiler.EndSample();
                 }
             }
@@ -249,12 +246,12 @@ namespace Coffee.UISoftMask
                 switch (maskingMethod)
                 {
                     case MaskingMethod.Additive:
-                        maskMat = StencilMaterial.Add(baseMaterial, stencilBit, StencilOp.Replace,
-                            CompareFunction.NotEqual, colorMask, stencilBit, stencilBit);
+                        maskMat = StencilMaterial.Add(baseMaterial, _stencilBits, StencilOp.Replace,
+                            CompareFunction.NotEqual, colorMask, _stencilBits, _stencilBits);
                         break;
                     case MaskingMethod.Subtract:
-                        maskMat = StencilMaterial.Add(baseMaterial, stencilBit, StencilOp.Invert,
-                            CompareFunction.Equal, colorMask, stencilBit, stencilBit);
+                        maskMat = StencilMaterial.Add(baseMaterial, _stencilBits, StencilOp.Invert,
+                            CompareFunction.Equal, colorMask, _stencilBits, _stencilBits);
                         break;
                 }
 
@@ -278,7 +275,7 @@ namespace Coffee.UISoftMask
             Profiler.BeginSample("(SM4UI)[MaskingShape)] ModifyMesh");
             if (!_mesh)
             {
-                _mesh = SoftMaskUtils.meshPool.Rent();
+                _mesh = MeshExtensions.Rent();
             }
 
             _mesh.Clear(false);
@@ -306,13 +303,14 @@ namespace Coffee.UISoftMask
             if (!isActiveAndEnabled)
             {
                 _mask = null;
-                _stencilDepth = -1;
+                _stencilBits = 0;
                 return;
             }
 
             if (!_shouldRecalculateStencil) return;
             _shouldRecalculateStencil = false;
-            _stencilDepth = Utils.GetStencilDepthAndMask(transform, true, out _mask);
+            var useStencil = UISoftMaskProjectSettings.useStencilOutsideScreen;
+            _stencilBits = Utils.GetStencilBits(transform, true, useStencil, out _mask, out var _);
         }
 
         private void SetContainerDirty()
@@ -328,7 +326,8 @@ namespace Coffee.UISoftMask
             Mask mask = null;
             if (isActiveAndEnabled)
             {
-                Utils.GetStencilDepthAndMask(transform, false, out mask);
+                var useStencil = UISoftMaskProjectSettings.useStencilOutsideScreen;
+                Utils.GetStencilBits(transform, false, useStencil, out mask, out var _);
             }
 
             var newContainer = mask.GetOrAddComponent<MaskingShapeContainer>();
@@ -373,7 +372,9 @@ namespace Coffee.UISoftMask
 
         internal void DrawSoftMaskBuffer(CommandBuffer cb, int depth)
         {
-            if (!_mesh) return;
+            var texture = graphic.mainTexture;
+            var mesh = _mesh;
+            if (!mesh) return;
             if (!graphic.IsInScreen()) return;
 
             Profiler.BeginSample("(SM4UI)[MaskingShape)] DrawSoftMaskBuffer");
@@ -382,10 +383,10 @@ namespace Coffee.UISoftMask
                 _mpb = SoftMaskUtils.materialPropertyBlockPool.Rent();
             }
 
-            SoftMaskUtils.ApplyMaterialPropertyBlock(_mpb, depth, graphic.mainTexture, softnessRange);
+            SoftMaskUtils.ApplyMaterialPropertyBlock(_mpb, depth, texture, softMaskingRange);
             var softMaterial = SoftMaskUtils.GetSoftMaskingMaterial(maskingMethod);
 
-            cb.DrawMesh(_mesh, transform.localToWorldMatrix, softMaterial, 0, 0, _mpb);
+            cb.DrawMesh(mesh, transform.localToWorldMatrix, softMaterial, 0, 0, _mpb);
             Profiler.EndSample();
         }
 

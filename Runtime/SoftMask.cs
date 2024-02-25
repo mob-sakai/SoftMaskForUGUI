@@ -291,7 +291,7 @@ namespace Coffee.UISoftMask
             UpdateParentSoftMask(null);
             _children.Clear();
 
-            SoftMaskUtils.meshPool.Return(ref _mesh);
+            MeshExtensions.Return(ref _mesh);
             SoftMaskUtils.materialPropertyBlockPool.Return(ref _mpb);
             SoftMaskUtils.commandBufferPool.Return(ref _cb);
             RenderTextureRepository.Release(ref _softMaskBuffer);
@@ -391,14 +391,14 @@ namespace Coffee.UISoftMask
         {
             if (!SoftMaskingEnabled())
             {
-                SoftMaskUtils.meshPool.Return(ref _mesh);
+                MeshExtensions.Return(ref _mesh);
                 return;
             }
 
             Profiler.BeginSample("(SM4UI)[SoftMask] ModifyMesh");
             if (!_mesh)
             {
-                _mesh = SoftMaskUtils.meshPool.Rent();
+                _mesh = MeshExtensions.Rent();
             }
 
             _mesh.Clear(false);
@@ -519,8 +519,12 @@ namespace Coffee.UISoftMask
 
         public override Material GetModifiedMaterial(Material baseMaterial)
         {
-            if (SoftMaskingEnabled())
+            if (!isActiveAndEnabled) return baseMaterial;
+
+            if (SoftMaskingEnabled() && !UISoftMaskProjectSettings.useStencilOutsideScreen)
             {
+                graphic.canvasRenderer.hasPopInstruction = false;
+                graphic.canvasRenderer.popMaterialCount = 0;
                 return showMaskGraphic ? baseMaterial : null;
             }
 
@@ -732,7 +736,9 @@ namespace Coffee.UISoftMask
                 Profiler.EndSample();
 
                 Profiler.BeginSample("(SM4UI)[SoftMask] RenderSoftMaskBuffer > ApplyMaterialPropertyBlock");
-                SoftMaskUtils.ApplyMaterialPropertyBlock(_mpb, softMaskDepth, graphic.mainTexture, softMaskingRange);
+                var mat = graphic.canvasRenderer.GetMaterial(0);
+                var texture = graphic.mainTexture;
+                SoftMaskUtils.ApplyMaterialPropertyBlock(_mpb, softMaskDepth, texture, softMaskingRange);
                 Profiler.EndSample();
             }
 
@@ -756,11 +762,12 @@ namespace Coffee.UISoftMask
                 Profiler.EndSample();
             }
 
-            if (_mesh)
+            var mesh = _mesh;
+            if (mesh)
             {
                 Profiler.BeginSample("(SM4UI)[SoftMask] RenderSoftMaskBuffer > Draw mesh");
                 var softMaterial = SoftMaskUtils.GetSoftMaskingMaterial(MaskingShape.MaskingMethod.Additive);
-                cb.DrawMesh(_mesh, transform.localToWorldMatrix, softMaterial, 0, 0, _mpb);
+                cb.DrawMesh(mesh, transform.localToWorldMatrix, softMaterial, 0, 0, _mpb);
                 Profiler.EndSample();
             }
 

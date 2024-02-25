@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Coffee.UISoftMaskInternal
 {
@@ -12,6 +13,14 @@ namespace Coffee.UISoftMaskInternal
             s_Caches.Clear();
             UIExtraCallbacks.onLateAfterCanvasRebuild += ClearAllCache;
         }
+
+#if UNITY_EDITOR
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void Clear()
+        {
+            s_Caches.Clear();
+        }
+#endif
 
         /// <summary>
         /// Tries to retrieve a value from the frame cache with a specified key.

@@ -7,12 +7,13 @@ using UnityEngine.UI;
 namespace Coffee.UISoftMask
 {
     [ExecuteAlways]
-    public class SoftMaskable : MonoBehaviour, IMaterialModifier
+    public class SoftMaskable : MonoBehaviour, IMaterialModifier, IMaskable
     {
         private Action _checkGraphic;
         private MaskableGraphic _graphic;
         private Material _maskableMaterial;
         private Action _setMaterialDirtyIfNeeded;
+        private bool _shouldRecalculateStencil;
         private SoftMask _softMask;
         private int _softMaskDepth;
         private int _stencilBits;
@@ -28,6 +29,7 @@ namespace Coffee.UISoftMask
             this.AddComponentOnChildren<SoftMaskable>(HideFlags.DontSave | HideFlags.NotEditable, false);
 
             hideFlags = HideFlags.DontSave | HideFlags.NotEditable;
+            _shouldRecalculateStencil = true;
             SoftMaskUtils.onChangeBufferSize +=
                 _setMaterialDirtyIfNeeded ?? (_setMaterialDirtyIfNeeded = SetMaterialDirtyIfNeeded);
             if (TryGetComponent(out _graphic))
@@ -85,6 +87,11 @@ namespace Coffee.UISoftMask
             this.AddComponentOnChildren<SoftMaskable>(HideFlags.DontSave | HideFlags.NotEditable, false);
         }
 
+        void IMaskable.RecalculateMasking()
+        {
+            _shouldRecalculateStencil = true;
+        }
+
         Material IMaterialModifier.GetModifiedMaterial(Material baseMaterial)
         {
 #if UNITY_EDITOR
@@ -101,10 +108,13 @@ namespace Coffee.UISoftMask
                 return baseMaterial;
             }
 
-            _stencilBits = GetStencilBitsAndSoftMask(transform, out _softMask);
-            _softMaskDepth = _softMask ? _softMask.softMaskDepth : -1;
+            RecalculateStencilIfNeeded();
+            var softMask = _softMask;
+            _softMaskDepth = softMask ? softMask.softMaskDepth : -1;
 
-            if (!_softMask || _softMaskDepth < 0 || 4 <= _softMaskDepth)
+            var useStencil = UISoftMaskProjectSettings.useStencilOutsideScreen;
+            var localId = 0u;
+            if (!softMask || _softMaskDepth < 0 || 4 <= _softMaskDepth)
             {
                 MaterialRepository.Release(ref _maskableMaterial);
                 return baseMaterial;
@@ -115,85 +125,67 @@ namespace Coffee.UISoftMask
             var isStereo = Application.isPlaying && _graphic.canvas.IsStereoCanvas();
             var hash = new Hash128(
                 (uint)baseMaterial.GetInstanceID(),
-                (uint)_softMask.softMaskBuffer.GetInstanceID(),
-                (uint)_stencilBits + (isStereo ? 1 << 8 : 0u),
-                (uint)_softMaskDepth);
+                (uint)softMask.softMaskBuffer.GetInstanceID(),
+                (uint)_stencilBits + (isStereo ? 1 << 8 : 0u) + ((uint)_softMaskDepth << 9),
+                localId);
             MaterialRepository.Get(hash, ref _maskableMaterial,
                 x => SoftMaskUtils.CreateSoftMaskable(x.baseMaterial, x.softMaskBuffer, x._softMaskDepth,
                     x._stencilBits, x.isStereo, UISoftMaskProjectSettings.fallbackBehavior),
-                (baseMaterial, _softMask.softMaskBuffer, _softMaskDepth, _stencilBits, isStereo));
+                (baseMaterial, softMask.softMaskBuffer, _softMaskDepth, _stencilBits, isStereo));
             Profiler.EndSample();
 
+
+#if UNITY_EDITOR
+            if (useStencil)
+            {
+                var threshold = _softMask ? _softMask.softMaskingRange.min : 0;
+                if (TryGetComponent(out MaskingShape shape))
+                {
+                    threshold = shape.maskingMethod == MaskingShape.MaskingMethod.Additive
+                        ? 0
+                        : (shape.softMaskingRange.max + shape.softMaskingRange.min) / 2;
+                }
+#if TMP_ENABLE
+                if (_graphic is TextMeshProUGUI)
+                {
+                    threshold -= 0.25f;
+                }
+#endif
+
+                _maskableMaterial.SetFloat(ShaderPropertyIds.alphaClipThreshold, threshold);
+            }
+            else
+            {
+                _maskableMaterial.SetFloat(ShaderPropertyIds.alphaClipThreshold, 0);
+            }
+#endif
+
             return _maskableMaterial;
+        }
+
+        private void RecalculateStencilIfNeeded()
+        {
+            if (!isActiveAndEnabled)
+            {
+                _softMask = null;
+                _stencilBits = 0;
+                return;
+            }
+
+            if (!_shouldRecalculateStencil) return;
+            _shouldRecalculateStencil = false;
+            var useStencil = UISoftMaskProjectSettings.useStencilOutsideScreen;
+            _stencilBits = Utils.GetStencilBits(transform, false, useStencil, out var _, out _softMask);
         }
 
         private void CheckGraphic()
         {
             if (_graphic || !TryGetComponent(out _graphic)) return;
 
-            UIExtraCallbacks.onBeforeCanvasRebuild -=
-                _checkGraphic ?? (_checkGraphic = CheckGraphic);
+            UIExtraCallbacks.onBeforeCanvasRebuild -= _checkGraphic ?? (_checkGraphic = CheckGraphic);
 
             gameObject.AddComponent<SoftMaskable>();
-            Utils.DestroySafety(this);
-        }
-
-        private static int GetStencilBitsAndSoftMask(Transform transform, out SoftMask nearestSoftMask)
-        {
-            Profiler.BeginSample("(SM4UI)[SoftMaskable] GetStencilBitsAndSoftMask");
-            nearestSoftMask = null;
-            var stopAfter = MaskUtilities.FindRootSortOverrideCanvas(transform);
-            if (transform == stopAfter)
-            {
-                Profiler.EndSample();
-                return 0;
-            }
-
-            Mask nearestMask = null;
-            var depth = 0;
-            var stencilBits = 0;
-            var tr = transform.parent;
-            while (tr)
-            {
-                if (tr.TryGetComponent<Mask>(out var mask) && mask.MaskEnabled())
-                {
-                    if (!nearestMask)
-                    {
-                        nearestMask = mask;
-                        if (FrameCache.TryGet(nearestMask, nameof(GetStencilBitsAndSoftMask), out stencilBits))
-                        {
-                            FrameCache.TryGet(nearestMask, nameof(GetStencilBitsAndSoftMask), out nearestSoftMask);
-                            Profiler.EndSample();
-                            return stencilBits;
-                        }
-                    }
-
-                    stencilBits = 0 < depth++ ? stencilBits << 1 : 0;
-                    if (mask is SoftMask softMask && softMask.SoftMaskingEnabled())
-                    {
-                        if (!nearestSoftMask)
-                        {
-                            nearestSoftMask = softMask;
-                        }
-                    }
-                    else
-                    {
-                        stencilBits++;
-                    }
-                }
-
-                if (tr == stopAfter) break;
-                tr = tr.parent;
-            }
-
-            Profiler.EndSample();
-            if (nearestMask)
-            {
-                FrameCache.Set(nearestMask, nameof(GetStencilBitsAndSoftMask), stencilBits);
-                FrameCache.Set(nearestMask, nameof(GetStencilBitsAndSoftMask), nearestSoftMask);
-            }
-
-            return stencilBits;
+            Misc.Destroy(this);
         }
 
         private void SetMaterialDirtyIfNeeded()
@@ -250,8 +242,8 @@ namespace Coffee.UISoftMask
 
             // Set view and projection matrices.
             Profiler.BeginSample("(SM4UI)[SoftMaskable] (Editor) UpdateSceneViewMatrix > Set matrices");
-            _maskableMaterial.SetMatrix(SoftMaskUtils.s_GameVpId, gameVp);
-            _maskableMaterial.SetMatrix(SoftMaskUtils.s_GameTvpId, gameTvp);
+            _maskableMaterial.SetMatrix(ShaderPropertyIds.gameVpId, gameVp);
+            _maskableMaterial.SetMatrix(ShaderPropertyIds.gameTvpId, gameTvp);
             Profiler.EndSample();
 
             // Calc Right eye matrices.
@@ -268,8 +260,8 @@ namespace Coffee.UISoftMask
                     Profiler.EndSample();
                 }
 
-                _maskableMaterial.SetMatrix(SoftMaskUtils.s_GameVp2Id, gameVp);
-                _maskableMaterial.SetMatrix(SoftMaskUtils.s_GameTvp2Id, gameVp);
+                _maskableMaterial.SetMatrix(ShaderPropertyIds.gameVp2Id, gameVp);
+                _maskableMaterial.SetMatrix(ShaderPropertyIds.gameTvp2Id, gameVp);
             }
 
             FrameCache.Set(_maskableMaterial, nameof(UpdateSceneViewMatrix), true);

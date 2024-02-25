@@ -35,38 +35,8 @@ namespace Coffee.UISoftMask
                 x => x != null,
                 x => x.Clear());
 
-        /// <summary>
-        /// Object pool for Mesh instances.
-        /// </summary>
-        public static readonly ObjectPool<Mesh> meshPool = new ObjectPool<Mesh>(
-            () =>
-            {
-                var mesh = new Mesh
-                {
-                    hideFlags = HideFlags.DontSave
-                };
-                mesh.MarkDynamic();
-                return mesh;
-            },
-            mesh => mesh,
-            mesh =>
-            {
-                if (mesh)
-                {
-                    mesh.Clear();
-                }
-            });
-
         private static Material s_SoftMaskingMaterial;
         private static Material s_SoftMaskingMaterialSub;
-        private static readonly int s_ColorMaskId = Shader.PropertyToID("_ColorMask");
-        private static readonly int s_MainTexId = Shader.PropertyToID("_MainTex");
-        private static readonly int s_ThresholdMinId = Shader.PropertyToID("_ThresholdMin");
-        private static readonly int s_ThresholdMaxId = Shader.PropertyToID("_ThresholdMax");
-        private static readonly int s_SoftMaskTexId = Shader.PropertyToID("_SoftMaskTex");
-        private static readonly int s_SoftMaskColorId = Shader.PropertyToID("_SoftMaskColor");
-        private static readonly int s_StencilReadMaskId = Shader.PropertyToID("_StencilReadMask");
-        private static readonly int s_BlendOp = Shader.PropertyToID("_BlendOp");
         private static Vector2Int s_BufferSize;
         private static int s_Count;
         private static readonly FastAction s_OnChangeBufferSize = new FastAction();
@@ -114,10 +84,14 @@ namespace Coffee.UISoftMask
             Profiler.BeginSample("(SM4UI)[SoftMaskUtils] ApplyMaterialPropertyBlock");
             var colorMask = Vector4.zero;
             colorMask[depth] = 1;
-            mpb.SetVector(s_ColorMaskId, colorMask);
-            mpb.SetTexture(s_MainTexId, texture);
-            mpb.SetFloat(s_ThresholdMinId, threshold.min);
-            mpb.SetFloat(s_ThresholdMaxId, threshold.max);
+            mpb.SetVector(ShaderPropertyIds.colorMask, colorMask);
+            if (texture)
+            {
+                mpb.SetTexture(ShaderPropertyIds.mainTex, texture);
+            }
+
+            mpb.SetFloat(ShaderPropertyIds.thresholdMinId, threshold.min);
+            mpb.SetFloat(ShaderPropertyIds.thresholdMaxId, threshold.max);
             Profiler.EndSample();
         }
 
@@ -142,7 +116,7 @@ namespace Coffee.UISoftMask
             {
                 hideFlags = HideFlags.DontSave
             };
-            mat.SetInt(s_BlendOp, (int)op);
+            mat.SetInt(ShaderPropertyIds.blendOp, (int)op);
             return mat;
         }
 
@@ -164,9 +138,9 @@ namespace Coffee.UISoftMask
             Profiler.EndSample();
 
             Profiler.BeginSample("(SM4UI)[SoftMaskableMaterial] Create > Set Properties");
-            mat.SetTexture(s_SoftMaskTexId, softMaskBuffer);
-            mat.SetInt(s_StencilReadMaskId, stencilBits);
-            mat.SetVector(s_SoftMaskColorId, new Vector4(
+            mat.SetTexture(ShaderPropertyIds.softMaskTexId, softMaskBuffer);
+            mat.SetInt(ShaderPropertyIds.stencilReadMaskId, stencilBits);
+            mat.SetVector(ShaderPropertyIds.softMaskColorId, new Vector4(
                 0 <= softMaskDepth ? 1 : 0,
                 1 <= softMaskDepth ? 1 : 0,
                 2 <= softMaskDepth ? 1 : 0,
@@ -183,6 +157,8 @@ namespace Coffee.UISoftMask
 
 #if UNITY_EDITOR
             mat.EnableKeyword("UI_SOFT_MASKABLE_EDITOR");
+            mat.SetVector(ShaderPropertyIds.softMaskOutsideColor,
+                UISoftMaskProjectSettings.useStencilOutsideScreen ? Vector4.one : Vector4.zero);
 #else
             mat.EnableKeyword("UI_SOFT_MASKABLE");
 #endif
@@ -243,12 +219,5 @@ namespace Coffee.UISoftMask
                     throw new ArgumentOutOfRangeException(nameof(fallback), fallback, null);
             }
         }
-
-#if UNITY_EDITOR
-        internal static readonly int s_GameVpId = Shader.PropertyToID("_GameVP");
-        internal static readonly int s_GameTvpId = Shader.PropertyToID("_GameTVP");
-        internal static readonly int s_GameVp2Id = Shader.PropertyToID("_GameVP_2");
-        internal static readonly int s_GameTvp2Id = Shader.PropertyToID("_GameTVP_2");
-#endif
     }
 }
