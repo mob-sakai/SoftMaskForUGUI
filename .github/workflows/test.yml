@@ -7,6 +7,7 @@ name: 🧪 Test
 env:
   # MINIMUM_VERSION: The minimum version of Unity.
   MINIMUM_VERSION: 2019.4
+  # EXCLUDE_FILTER: The excluded versions of Unity.
   EXCLUDE_FILTER: '(2020.2.0)'
 
 on:
@@ -14,6 +15,8 @@ on:
   push:
     branches:
       - develop
+      - develop-preview
+      - develop-1.x
     tags:
       - "!*"
     paths-ignore:
@@ -55,6 +58,7 @@ jobs:
     needs: setup
     strategy:
       fail-fast: false
+      max-parallel: 4
       matrix:
         unityVersion: ${{ fromJson(needs.setup.outputs.unityVersions) }}
     steps:
