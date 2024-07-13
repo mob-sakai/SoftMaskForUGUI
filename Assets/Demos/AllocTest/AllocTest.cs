@@ -1,4 +1,4 @@
-﻿using Coffee.UISoftMask;
+using Coffee.UISoftMask;
 using UnityEngine;
 
 public class AllocTest : MonoBehaviour

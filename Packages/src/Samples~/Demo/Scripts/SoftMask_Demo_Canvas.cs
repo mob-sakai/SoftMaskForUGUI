@@ -1,12 +1,9 @@
-using System;
 using UnityEngine;
 
 namespace Coffee.UISoftMask.Demos
 {
-    public class SoftMask_Demo : MonoBehaviour
+    public class SoftMask_Demo_Canvas : MonoBehaviour
     {
-        [SerializeField] private SoftMask m_SoftMask;
-
         public void EnableCameraPan(bool flag)
         {
             var canvas = GetComponentInParent<Canvas>().rootCanvas;
@@ -31,21 +28,7 @@ namespace Coffee.UISoftMask.Demos
             canvas.worldCamera.transform.rotation = Quaternion.Euler(angles);
         }
 
-        public void SetBufferDownSamplingRate(int index)
-        {
-            var values = (SoftMask.DownSamplingRate[])Enum.GetValues(typeof(SoftMask.DownSamplingRate));
-            m_SoftMask.downSamplingRate = values[index];
-        }
-
-        public void SetTransformSensitivityLow(int index)
-        {
-            var values =
-                (UISoftMaskProjectSettings.TransformSensitivity[])Enum.GetValues(
-                    typeof(UISoftMaskProjectSettings.TransformSensitivity));
-            UISoftMaskProjectSettings.transformSensitivity = values[index];
-        }
-
-        public void SetCanvasRenderMode(int mode)
+        public void SetRenderMode(int mode)
         {
             var canvas = GetComponentInParent<Canvas>().rootCanvas;
             if (canvas.renderMode == (RenderMode)mode)

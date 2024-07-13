@@ -1717,7 +1717,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 200}
+  m_SizeDelta: {x: 192.27586, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1500803456
 MonoBehaviour:
@@ -1732,7 +1732,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AspectMode: 2
-  m_AspectRatio: 1.6
+  m_AspectRatio: 0.9613793
 --- !u!114 &1500803457
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2136,7 +2136,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 250}
+  m_SizeDelta: {x: 290.9091, y: 250}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1635856347
 MonoBehaviour:
@@ -2576,10 +2576,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ShowMaskGraphic: 0
+  m_MaskingMode: 0
   m_AlphaHitTest: 0
-  m_Threshold:
+  m_SoftnessRange:
     m_Min: 0
-    m_Max: 0.5
+    m_Max: 1
+  m_DownSamplingRate: 1
+  m_AntiAliasingThreshold: 0
+  m_Softness: -1
+  m_PartOfParent: 0
 --- !u!114 &2125341904
 MonoBehaviour:
   m_ObjectHideFlags: 0
