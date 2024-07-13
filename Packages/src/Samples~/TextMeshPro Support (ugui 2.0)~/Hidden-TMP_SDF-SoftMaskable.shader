@@ -127,9 +127,8 @@ SubShader {
 		#include "Assets/TextMesh Pro/Shaders/TMPro_Properties.cginc"
 		#include "Assets/TextMesh Pro/Shaders/TMPro.cginc"
 
-        #include "Packages/com.coffee.softmask-for-ugui/Shaders/UISoftMask.cginc"	// Add for soft mask
-	    #pragma multi_compile_local UI_SOFT_MASKABLE UI_SOFT_MASKABLE_EDITOR	// Add for soft mask
-        #pragma multi_compile_local __ UI_SOFT_MASKABLE_STEREO	// Add for soft mask (stereo)
+        #include "Packages/com.coffee.softmask-for-ugui/Shaders/SoftMask.cginc" // Add for soft mask
+		#pragma shader_feature_local _ SOFTMASK_EDITOR // Add for soft mask
 
 		struct vertex_t
 		{
@@ -158,7 +157,7 @@ SubShader {
 		    #endif
 
 		    float4 textures			: TEXCOORD5;
-			UI_SOFT_MASKABLE_EDITOR_ONLY(float4 worldPosition : TEXCOORD6;)
+			EDITOR_ONLY(float4 worldPosition : TEXCOORD6;)
 		};
 
 		// Used by Unity internally to handle Texture Tiling and Offset.
@@ -243,7 +242,7 @@ SubShader {
 			output.underlayColor =	underlayColor;
 			#endif
 			output.textures = float4(faceUV, outlineUV);
-			UI_SOFT_MASKABLE_EDITOR_ONLY(output.worldPosition = input.position);
+			EDITOR_ONLY(output.worldPosition = input.position);
 
 			return output;
 		}
@@ -317,10 +316,10 @@ SubShader {
 			faceColor *= m.x * m.y;
 		    #endif
 
-            faceColor *= SoftMask(input.position, mul(unity_ObjectToWorld, input.worldPosition));
+			faceColor *= SoftMask(input.position, input.worldPosition, faceColor.a); // Add for soft mask
 
 		    #if UNITY_UI_ALPHACLIP
-			SoftMaskClip(faceColor.a - 0.001);
+			clip(faceColor.a - 0.001);
 		    #endif
 
   		    return faceColor * input.color.a;
