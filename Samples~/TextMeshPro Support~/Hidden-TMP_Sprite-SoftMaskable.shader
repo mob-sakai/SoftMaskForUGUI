@@ -56,9 +56,8 @@ Shader "Hidden/TextMeshPro/Sprite (SoftMaskable)"
 			#include "UnityCG.cginc"
 			#include "UnityUI.cginc"
 
-            #include "Packages/com.coffee.softmask-for-ugui/Shaders/UISoftMask.cginc"	// Add for soft mask
-		    #pragma multi_compile_local UI_SOFT_MASKABLE UI_SOFT_MASKABLE_EDITOR	// Add for soft mask
-            #pragma multi_compile_local __ UI_SOFT_MASKABLE_STEREO	// Add for soft mask (stereo)
+            #include "Packages/com.coffee.softmask-for-ugui/Shaders/SoftMask.cginc" // Add for soft mask
+			#pragma shader_feature_local _ SOFTMASK_EDITOR // Add for soft mask
 
             #pragma multi_compile __ UNITY_UI_CLIP_RECT
             #pragma multi_compile __ UNITY_UI_ALPHACLIP
@@ -118,10 +117,10 @@ Shader "Hidden/TextMeshPro/Sprite (SoftMaskable)"
 				color.a *= m.x * m.y;
 				#endif
 
-                color.a *= SoftMask(IN.vertex, mul(unity_ObjectToWorld, IN.worldPosition));
+                color.a *= SoftMask(IN.vertex, IN.worldPosition, color.a); // Add for soft mask
 
 				#ifdef UNITY_UI_ALPHACLIP
-					SoftMaskClip (color.a - 0.001);
+					clip (color.a - 0.001);
 				#endif
 
 				return color;

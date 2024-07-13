@@ -15,6 +15,11 @@
             "name": "com.unity.textmeshpro",
             "expression": "1.0.0",
             "define": "TMP_ENABLE"
+        },
+        {
+            "name": "com.unity.ugui",
+            "expression": "2.0.0",
+            "define": "TMP_ENABLE"
         }
     ]
 }

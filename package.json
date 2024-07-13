@@ -33,9 +33,9 @@
       "path": "Samples~/TextMeshPro Support~"
     },
     {
-      "displayName": "TextMeshPro Support v3.2 or v4.0",
-      "description": "TextMeshPro Support v3.2 or v4.0",
-      "path": "Samples~/TextMeshPro Support v3.2 or v4.0~"
+      "displayName": "TextMeshPro Support (ugui 2.0)",
+      "description": "TextMeshPro Support (ugui 2.0)",
+      "path": "Samples~/TextMeshPro Support (ugui 2.0)~"
     }
   ]
 }
