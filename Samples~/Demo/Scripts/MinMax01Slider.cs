@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using Coffee.UISoftMaskInternal;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -196,6 +197,7 @@ namespace Coffee.UISoftMask
             if (m_MaxSlider) m_MaxSlider.interactable = interactable;
         }
 
+        [CanEditMultipleObjects]
         [CustomEditor(typeof(MinMax01Slider))]
         private class MinMaxSliderEditor : SelectableEditor
         {
