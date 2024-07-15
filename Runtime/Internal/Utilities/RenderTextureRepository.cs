@@ -1,3 +1,4 @@
+using System;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
@@ -10,8 +11,7 @@ namespace Coffee.UISoftMaskInternal
     /// </summary>
     internal static class RenderTextureRepository
     {
-        private static readonly ObjectRepository<RenderTexture> s_Repository =
-            new ObjectRepository<RenderTexture>(RenderTexture.ReleaseTemporary);
+        private static readonly ObjectRepository<RenderTexture> s_Repository = new ObjectRepository<RenderTexture>();
 
         private static readonly GraphicsFormat s_GraphicsFormat = GraphicsFormatUtility.GetGraphicsFormat(
             RenderTextureFormat.ARGB32,
@@ -23,70 +23,69 @@ namespace Coffee.UISoftMaskInternal
 
         public static int count => s_Repository.count;
 
-        private static bool ShouldToRelease(RenderTexture buffer, Vector2Int size, bool useStencil)
+#if UNITY_EDITOR
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void Clear()
         {
-            if (!buffer) return false;
-            if (buffer.width != size.x || buffer.height != size.y) return true;
-#if UNITY_2021_3_OR_NEWER
-            if (useStencil != (buffer.depthStencilFormat != GraphicsFormat.None)) return true;
-#else
-            if (useStencil != 0 < buffer.depth) return true;
+            s_Repository.Clear();
+        }
 #endif
-            return false;
+
+        /// <summary>
+        /// Retrieves a cached RenderTexture based on the hash.
+        /// </summary>
+        public static bool Valid(Hash128 hash, RenderTexture rt)
+        {
+            Profiler.BeginSample("(COF)[RTRepository] Valid");
+            var ret = s_Repository.Valid(hash, rt);
+            Profiler.EndSample();
+            return ret;
         }
 
-        public static RenderTexture Get(int id, Vector2 size, int rate, ref RenderTexture buffer, bool useStencil)
+        /// <summary>
+        /// Adds or retrieves a cached RenderTexture based on the hash.
+        /// </summary>
+        public static void Get<T>(Hash128 hash, ref RenderTexture rt, Func<T, RenderTexture> onCreate, T source)
         {
-            var preferSize = GetPreferSize(new Vector2Int(
-                Mathf.Max(8, Mathf.RoundToInt(size.x)),
-                Mathf.Max(8, Mathf.RoundToInt(size.y))), rate);
-
-            Profiler.BeginSample("(COF)[RTRepository] Get > ShouldToRelease");
-
-            if (ShouldToRelease(buffer, preferSize, useStencil))
-            {
-                s_Repository.Release(ref buffer);
-            }
-
+            Profiler.BeginSample("(COF)[RTRepository] Get");
+            s_Repository.Get(hash, ref rt, onCreate, source);
             Profiler.EndSample();
+        }
 
-            Profiler.BeginSample("(COF)[RTRepository] Get > Valid");
-            var hash = new Hash128((uint)id, 0, 0, 0);
-            if (s_Repository.Valid(hash, buffer))
-            {
-                Profiler.EndSample();
-                return buffer;
-            }
-
-            Profiler.EndSample();
-
-            Profiler.BeginSample("(COF)[RTRepository] Get > Create 0");
+        /// <summary>
+        /// Adds or retrieves a cached RenderTexture based on the hash.
+        /// </summary>
+        public static RenderTextureDescriptor GetDescriptor(Vector2Int size, bool useStencil)
+        {
+            Profiler.BeginSample("(COF)[RTRepository] GetDescriptor");
             var rtd = new RenderTextureDescriptor(
-                preferSize.x,
-                preferSize.y,
+                size.x,
+                size.y,
                 s_GraphicsFormat,
-                useStencil ? 24 : 0);
-            rtd.sRGB = QualitySettings.activeColorSpace == ColorSpace.Linear;
-            rtd.mipCount = -1;
+                useStencil ? 24 : 0)
+            {
+                sRGB = QualitySettings.activeColorSpace == ColorSpace.Linear,
+                mipCount = -1,
 #if UNITY_2021_3_OR_NEWER
-            rtd.depthStencilFormat = useStencil ? s_StencilFormat : GraphicsFormat.None;
+                depthStencilFormat = useStencil ? s_StencilFormat : GraphicsFormat.None
 #endif
-            s_Repository.Get(hash, ref buffer, x => RenderTexture.GetTemporary(x), rtd);
+            };
+
             Profiler.EndSample();
-            return buffer;
+            return rtd;
         }
 
         /// <summary>
         /// Releases the RenderTexture buffer.
         /// </summary>
-        public static void Release(ref RenderTexture buffer)
+        public static void Release(ref RenderTexture rt)
         {
             Profiler.BeginSample("(COF)[RTRepository] Release");
-            s_Repository.Release(ref buffer);
+            s_Repository.Release(ref rt);
             Profiler.EndSample();
         }
 
-        private static Vector2Int GetPreferSize(Vector2Int size, int downSamplingRate)
+        public static Vector2Int GetPreferSize(Vector2Int size, int downSamplingRate)
         {
             var aspect = (float)size.x / size.y;
             var screenSize = GetScreenSize();
@@ -121,6 +120,11 @@ namespace Coffee.UISoftMaskInternal
             }
 
             return size;
+        }
+
+        public static Vector2Int GetScreenSize(int downSamplingRate)
+        {
+            return GetPreferSize(GetScreenSize(), downSamplingRate);
         }
 
         public static Vector2Int GetScreenSize()

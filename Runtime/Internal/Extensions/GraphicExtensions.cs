@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
@@ -12,6 +13,34 @@ namespace Coffee.UISoftMaskInternal
     {
         private static readonly Vector3[] s_WorldCorners = new Vector3[4];
         private static readonly Bounds s_ScreenBounds = new Bounds(new Vector3(0.5f, 0.5f, 0.5f), new Vector3(1, 1, 1));
+
+        /// <summary>
+        /// Check if a Graphic component is currently in the screen view.
+        /// </summary>
+        public static void GetMaterialsForRendering(this Graphic self, List<Material> result)
+        {
+            result.Clear();
+            if (!self) return;
+
+            var cr = self.canvasRenderer;
+            var count = cr.materialCount;
+            var popCount = cr.popMaterialCount;
+
+            if (result.Capacity < count + popCount)
+            {
+                result.Capacity = count + popCount;
+            }
+
+            for (var i = 0; i < count; i++)
+            {
+                result.Add(cr.GetMaterial(i));
+            }
+
+            for (var i = 0; i < popCount; i++)
+            {
+                result.Add(cr.GetPopMaterial(i));
+            }
+        }
 
         /// <summary>
         /// Check if a Graphic component is currently in the screen view.
