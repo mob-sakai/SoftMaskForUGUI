@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using Coffee.UISoftMaskInternal;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.Profiling;
 using UnityEngine.Rendering;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Coffee.UISoftMask
@@ -20,21 +21,30 @@ namespace Coffee.UISoftMask
             Subtract
         }
 
-        [Tooltip("Masking method.")] [SerializeField]
+        [Tooltip("Masking method.")]
+        [SerializeField]
         private MaskingMethod m_MaskingMethod = MaskingMethod.Additive;
 
-        [Tooltip("Show the masking shape graphic.")] [SerializeField]
+        [Tooltip("Show the graphic that is associated with the Mask render area.")]
+        [SerializeField]
         private bool m_ShowMaskGraphic;
 
-        [Tooltip("Enable alpha hit test.")] [SerializeField]
+        [Tooltip("The transparent part of the mask cannot be clicked.\n" +
+                 "This can be achieved by enabling Read/Write enabled in the Texture Import Settings for the texture.\n\n" +
+                 "NOTE: Enable this only if necessary, as it will require more graphics memory and processing time.")]
+        [SerializeField]
         private bool m_AlphaHitTest;
 
-        [Tooltip("Enable anti-alias masking.")] [SerializeField] [Range(0f, 1f)]
+        [Tooltip("The threshold for anti-alias masking.\n" +
+                 "The smaller this value, the less jagged it is.")]
+        [SerializeField]
+        [Range(0f, 1f)]
         private float m_AntiAliasingThreshold;
 
-        [Tooltip("The range for soft masking.")]
+        [Tooltip("The minimum and maximum alpha values used for soft masking.\n" +
+                 "The larger the gap between these values, the stronger the softness effect.")]
         [SerializeField]
-        private MinMax01 m_SoftMaskingRange = new MinMax01(0, 1f);
+        private MinMax01 m_SoftnessRange = new MinMax01(0, 1f);
 
         private bool _antiAliasingRegistered;
         private MaskingShapeContainer _container;
@@ -71,11 +81,15 @@ namespace Coffee.UISoftMask
             }
         }
 
+        /// <summary>
+        /// Show the graphic that is associated with the Mask render area.
+        /// </summary>
         public bool showMaskGraphic
         {
             get => m_ShowMaskGraphic;
             set
             {
+                if (m_ShowMaskGraphic == value) return;
                 m_ShowMaskGraphic = value;
                 if (graphic)
                 {
@@ -84,12 +98,22 @@ namespace Coffee.UISoftMask
             }
         }
 
+        /// <summary>
+        /// The transparent part of the mask cannot be clicked.
+        /// This can be achieved by enabling Read/Write enabled in the Texture Import Settings for the texture.
+        /// <para></para>
+        /// NOTE: Enable this only if necessary, as it will require more graphics memory and processing time.
+        /// </summary>
         public bool alphaHitTest
         {
             get => m_AlphaHitTest;
             set => m_AlphaHitTest = value;
         }
 
+        /// <summary>
+        /// Threshold for anti-alias masking.
+        /// The smaller this value, the less jagged it is.
+        /// </summary>
         public float antiAliasingThreshold
         {
             get => m_AntiAliasingThreshold;
@@ -97,16 +121,17 @@ namespace Coffee.UISoftMask
         }
 
         /// <summary>
-        /// The range for soft masking.
+        /// The minimum and maximum alpha values used for soft masking.
+        /// The larger the gap between these values, the stronger the softness effect.
         /// </summary>
-        public MinMax01 softMaskingRange
+        public MinMax01 softnessRange
         {
-            get => m_SoftMaskingRange;
+            get => m_SoftnessRange;
             set
             {
-                if (m_SoftMaskingRange.Approximately(value)) return;
+                if (m_SoftnessRange.Approximately(value)) return;
 
-                m_SoftMaskingRange = value;
+                m_SoftnessRange = value;
                 SetContainerDirty();
             }
         }
@@ -383,7 +408,7 @@ namespace Coffee.UISoftMask
                 _mpb = SoftMaskUtils.materialPropertyBlockPool.Rent();
             }
 
-            SoftMaskUtils.ApplyMaterialPropertyBlock(_mpb, depth, texture, softMaskingRange);
+            SoftMaskUtils.ApplyMaterialPropertyBlock(_mpb, depth, texture, softnessRange);
             var softMaterial = SoftMaskUtils.GetSoftMaskingMaterial(maskingMethod);
 
             cb.DrawMesh(mesh, transform.localToWorldMatrix, softMaterial, 0, 0, _mpb);

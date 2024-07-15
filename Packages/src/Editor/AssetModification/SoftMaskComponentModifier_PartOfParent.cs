@@ -1,8 +1,7 @@
 using Coffee.UISoftMaskInternal.AssetModification;
 using UnityEditor;
 using UnityEngine;
-
-#pragma warning disable CS0612 // Type or member is obsolete
+#pragma warning disable CS0612, CS0618 // Type or member is obsolete
 
 namespace Coffee.UISoftMask
 {

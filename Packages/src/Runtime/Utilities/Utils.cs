@@ -1,4 +1,4 @@
-﻿using Coffee.UISoftMaskInternal;
+using Coffee.UISoftMaskInternal;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
@@ -9,27 +9,6 @@ using UnityEditor.U2D;
 
 namespace Coffee.UISoftMask
 {
-    internal static class ShaderPropertyIds
-    {
-        public static readonly int mainTex = Shader.PropertyToID("_MainTex");
-        public static readonly int colorMask = Shader.PropertyToID("_ColorMask");
-        public static readonly int thresholdMinId = Shader.PropertyToID("_ThresholdMin");
-        public static readonly int thresholdMaxId = Shader.PropertyToID("_ThresholdMax");
-        public static readonly int softMaskTexId = Shader.PropertyToID("_SoftMaskTex");
-        public static readonly int softMaskColorId = Shader.PropertyToID("_SoftMaskColor");
-        public static readonly int stencilReadMaskId = Shader.PropertyToID("_StencilReadMask");
-        public static readonly int blendOp = Shader.PropertyToID("_BlendOp");
-        public static readonly int alphaClipThreshold = Shader.PropertyToID("_AlphaClipThreshold");
-        public static readonly int alphaAdd = Shader.PropertyToID("_AlphaAdd");
-#if UNITY_EDITOR
-        public static readonly int gameVpId = Shader.PropertyToID("_GameVP");
-        public static readonly int gameTvpId = Shader.PropertyToID("_GameTVP");
-        public static readonly int gameVp2Id = Shader.PropertyToID("_GameVP_2");
-        public static readonly int gameTvp2Id = Shader.PropertyToID("_GameTVP_2");
-        public static readonly int softMaskOutsideColor = Shader.PropertyToID("_SoftMaskOutsideColor");
-#endif
-    }
-
     internal static class Utils
     {
         /// <summary>

@@ -1,4 +1,4 @@
-﻿using Coffee.UISoftMaskInternal;
+using Coffee.UISoftMaskInternal;
 using UnityEditor;
 using UnityEditor.U2D;
 using UnityEngine;
@@ -20,7 +20,7 @@ namespace Coffee.UISoftMask
         private SerializedProperty _maskingMode;
         private bool _preview;
         private SerializedProperty _showMaskGraphic;
-        private SerializedProperty _softMaskingRange;
+        private SerializedProperty _softnessRange;
 
         protected void OnEnable()
         {
@@ -29,7 +29,7 @@ namespace Coffee.UISoftMask
             _showMaskGraphic = serializedObject.FindProperty("m_ShowMaskGraphic");
             _downSamplingRate = serializedObject.FindProperty("m_DownSamplingRate");
             _alphaHitTest = serializedObject.FindProperty("m_AlphaHitTest");
-            _softMaskingRange = serializedObject.FindProperty("m_SoftMaskingRange");
+            _softnessRange = serializedObject.FindProperty("m_SoftnessRange");
             _preview = EditorPrefs.GetBool(k_PrefsPreview, false);
 
             s_ContentMaskingMode.text = _maskingMode.displayName;
@@ -57,20 +57,30 @@ namespace Coffee.UISoftMask
             EditorGUILayout.PropertyField(_maskingMode);
             OpenProjectSettings(current);
 
-            if (_maskingMode.intValue == (int)SoftMask.MaskingMode.SoftMasking)
+            switch ((SoftMask.MaskingMode)_maskingMode.intValue)
             {
-                EditorGUILayout.PropertyField(_showMaskGraphic);
-                EditorGUILayout.PropertyField(_alphaHitTest);
-                EditorGUILayout.PropertyField(_downSamplingRate);
-                EditorGUILayout.PropertyField(_softMaskingRange);
+                case SoftMask.MaskingMode.SoftMasking:
+                {
+                    EditorGUILayout.PropertyField(_showMaskGraphic);
+                    EditorGUILayout.PropertyField(_alphaHitTest);
+                    EditorGUILayout.PropertyField(_downSamplingRate);
+                    EditorGUILayout.PropertyField(_softnessRange);
 
-                FixUiMaskIssue(current); // Fix 'UIMask' issue.
-                DrawSoftMaskBuffer(); // Preview soft mask buffer.
-            }
-            else
-            {
-                EditorGUILayout.PropertyField(_alphaHitTest);
-                EditorGUILayout.PropertyField(_antiAliasingThreshold);
+                    FixUiMaskIssue(current); // Fix 'UIMask' issue.
+                    DrawSoftMaskBuffer(); // Preview soft mask buffer.
+                    break;
+                }
+                case SoftMask.MaskingMode.AntiAliasing:
+                {
+                    EditorGUILayout.PropertyField(_alphaHitTest);
+                    EditorGUILayout.PropertyField(_antiAliasingThreshold);
+                    break;
+                }
+                case SoftMask.MaskingMode.Normal:
+                {
+                    EditorGUILayout.PropertyField(_showMaskGraphic);
+                    break;
+                }
             }
 
             serializedObject.ApplyModifiedProperties();

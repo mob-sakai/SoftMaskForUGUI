@@ -1,7 +1,7 @@
+using Coffee.UISoftMaskInternal;
 using Coffee.UISoftMaskInternal.AssetModification;
 using UnityEditor;
-
-#pragma warning disable CS0612 // Type or member is obsolete
+#pragma warning disable CS0612, CS0618 // Type or member is obsolete
 
 namespace Coffee.UISoftMask
 {
@@ -14,7 +14,7 @@ namespace Coffee.UISoftMask
             if (!dryRun)
             {
                 var go = softMask.gameObject;
-                softMask.softMaskingRange = new MinMax01(0, softMask.softness);
+                softMask.softnessRange = new MinMax01(0, softMask.softness);
                 softMask.softness = -1;
                 EditorUtility.SetDirty(go);
             }

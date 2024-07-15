@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Coffee.UISoftMaskInternal;
 using UnityEngine;
 
@@ -43,14 +43,14 @@ namespace Coffee.UISoftMask
         private void OnDestroy()
         {
             _canvas = null;
-            onViewChange = null;
+            onCanvasViewChanged = null;
             _checkViewProjectionMatrix = null;
         }
 
         /// <summary>
         /// Event that is triggered when the view projection matrix changes.
         /// </summary>
-        public event Action onViewChange;
+        public event Action onCanvasViewChanged;
 
         private void CheckViewProjectionMatrix()
         {
@@ -62,13 +62,14 @@ namespace Coffee.UISoftMask
             _lastCameraVpHash = vpMatrix.GetHashCode();
 
             var prevResHash = _lastResHash;
-            _lastResHash = Screen.currentResolution.GetHashCode();
+            var r = Screen.currentResolution;
+            _lastResHash = new Vector2Int(r.width, r.height).GetHashCode();
 
             // The matrix has changed.
             if (prevHash != _lastCameraVpHash || prevResHash != _lastResHash)
             {
                 Logging.Log(this, "ViewProjection changed.");
-                onViewChange?.Invoke();
+                onCanvasViewChanged?.Invoke();
             }
         }
 

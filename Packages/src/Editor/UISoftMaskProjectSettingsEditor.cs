@@ -1,4 +1,4 @@
-﻿using Coffee.UISoftMaskInternal;
+using Coffee.UISoftMaskInternal;
 using UnityEditor;
 using UnityEngine;
 
@@ -7,23 +7,21 @@ namespace Coffee.UISoftMask
     [CustomEditor(typeof(UISoftMaskProjectSettings))]
     internal class UISoftMaskProjectSettingsEditor : Editor
     {
+        private static readonly GUIContent s_ContentRemove = new GUIContent("-");
+        private static readonly GUIContent s_ContentReset = new GUIContent("Reset");
+        private static readonly GUIContent s_ContentIncluded = new GUIContent("Included Shaders");
         private static readonly GUIContent s_ContentUpgrade = new GUIContent("Upgrade");
-        private static readonly GUIContent s_ContentUpgradeButton = new GUIContent("Upgrade All Assets For V2");
+        private static readonly GUIContent s_ContentUpgradeButton = new GUIContent("Upgrade All Assets V1 to V2");
 
         public override void OnInspectorGUI()
         {
-            var prevEnabled = UISoftMaskProjectSettings.softMaskEnabled;
             base.OnInspectorGUI();
-            if (prevEnabled != UISoftMaskProjectSettings.softMaskEnabled)
-            {
-                UISoftMaskProjectSettings.ResetAllSoftMasks();
-            }
 
             // Draw SoftMask/SoftMaskable/TerminalShape Shaders;
             EditorGUILayout.BeginHorizontal();
             {
-                EditorGUILayout.PrefixLabel("Included Shaders");
-                if (GUILayout.Button("Reset", EditorStyles.miniButton, GUILayout.Width(80)))
+                EditorGUILayout.PrefixLabel(s_ContentIncluded);
+                if (GUILayout.Button(s_ContentReset, EditorStyles.miniButton, GUILayout.Width(80)))
                 {
                     UISoftMaskProjectSettings.instance.ReloadShaders(true);
                 }
@@ -36,7 +34,7 @@ namespace Coffee.UISoftMask
 
                 EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.ObjectField(shader, typeof(Shader), false);
-                if (GUILayout.Button("-", EditorStyles.miniButton, GUILayout.Width(20)))
+                if (GUILayout.Button(s_ContentRemove, EditorStyles.miniButton, GUILayout.Width(20)))
                 {
                     AlwaysIncludedShadersProxy.Remove(shader);
                 }

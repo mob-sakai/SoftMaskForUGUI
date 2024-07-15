@@ -34,10 +34,12 @@ namespace Coffee.UISoftMask
         }
 
 
-        [Tooltip("Target RectTransform to fit.")] [SerializeField]
+        [Tooltip("Target RectTransform to fit.")]
+        [SerializeField]
         private RectTransform m_Target;
 
-        [Tooltip("Target RectTransform properties.")] [SerializeField]
+        [Tooltip("Target RectTransform properties.")]
+        [SerializeField]
         private RectTransformProperties m_TargetProperties = RectTransformProperties.Position
                                                              | RectTransformProperties.Rotation
                                                              | RectTransformProperties.Scale

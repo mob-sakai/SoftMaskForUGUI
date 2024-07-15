@@ -1,4 +1,4 @@
-﻿#pragma warning disable CS0414
+#pragma warning disable CS0414
 using System.Linq;
 using Coffee.UISoftMaskInternal;
 using UnityEditor;
@@ -99,11 +99,16 @@ namespace Coffee.UISoftMask
             }
         }
 
-        internal static void ResetAllSoftMasks()
+        private static void ResetAllSoftMasks()
         {
             var softMasks = ListPool<SoftMask>.Rent();
             var components = ListPool<IMaskable>.Rent();
+
+#if UNITY_2023_1_OR_NEWER
+            foreach (var softMask in FindObjectsByType<SoftMask>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+#else
             foreach (var softMask in FindObjectsOfType<SoftMask>())
+#endif
             {
                 softMask.GetComponentsInParent(true, softMasks);
                 if (1 < softMasks.Count) continue;

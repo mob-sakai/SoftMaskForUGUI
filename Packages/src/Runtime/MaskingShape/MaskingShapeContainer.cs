@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Coffee.UISoftMaskInternal;
 using UnityEngine;
@@ -138,6 +138,8 @@ namespace Coffee.UISoftMask
 
         private void CheckTransformChanged()
         {
+            if (!_mask) return;
+
             var softMask = _mask as SoftMask;
             _needTerminal = false;
             for (var i = 0; i < m_MaskingShapes.Count; i++)
@@ -170,7 +172,8 @@ namespace Coffee.UISoftMask
 
             _dirty = false;
 
-            if (!_mask.MaskEnabled() || (softMask && softMask.SoftMaskingEnabled()))
+            if (!_mask.MaskEnabled()
+                || (softMask && softMask.SoftMaskingEnabled() && !UISoftMaskProjectSettings.useStencilOutsideScreen))
             {
                 _needTerminal = false;
             }
@@ -248,7 +251,7 @@ namespace Coffee.UISoftMask
 
             var go = new GameObject("[generated] TerminalMaskingShape");
             go.transform.SetParent(transform, false);
-            go.hideFlags = HideFlags.DontSave | HideFlags.NotEditable;
+            go.hideFlags = HideFlags.HideAndDontSave;
 
             return go.AddComponent<TerminalMaskingShape>();
         }
