@@ -1,14 +1,12 @@
 {
   "branches": [
-    "+([0-9])?(.{+([0-9]),x}).x",
-    "master",
-    "main",
+    "release",
+    "release-1.x",
     {
-      "name": "preview",
-      "prerelease": true
+      "name": "release-preview",
+      "prerelease": "preview"
     }
   ],
-  "tagFormat": "${version}",
   "plugins": [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
