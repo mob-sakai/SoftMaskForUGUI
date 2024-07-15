@@ -1,3 +1,5 @@
+using System.Diagnostics;
+using UnityEditor;
 using UnityEngine;
 
 namespace Coffee.UISoftMaskInternal
@@ -32,6 +34,15 @@ namespace Coffee.UISoftMaskInternal
             {
                 Object.Destroy(obj);
             }
+        }
+
+        [Conditional("UNITY_EDITOR")]
+        public static void SetDirty(Object obj)
+        {
+#if UNITY_EDITOR
+            if (!obj) return;
+            EditorUtility.SetDirty(obj);
+#endif
         }
     }
 }

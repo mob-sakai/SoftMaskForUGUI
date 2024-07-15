@@ -1,11 +1,12 @@
 using System;
 using System.Text;
 using UnityEngine;
-using Conditional = System.Diagnostics.ConditionalAttribute;
 using Object = UnityEngine.Object;
 #if ENABLE_COFFEE_LOGGER
 using System.Reflection;
 using System.Collections.Generic;
+#else
+using Conditional = System.Diagnostics.ConditionalAttribute;
 #endif
 
 namespace Coffee.UISoftMaskInternal
@@ -139,6 +140,9 @@ namespace Coffee.UISoftMaskInternal
 
                 switch (tag)
                 {
+                    case string name:
+                        sb.Append(name);
+                        break;
                     case Type type:
                         AppendType(sb, type);
                         break;

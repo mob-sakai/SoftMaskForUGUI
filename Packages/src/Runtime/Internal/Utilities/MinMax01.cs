@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using UnityEditor;
 using UnityEngine;
 
-namespace Coffee.UISoftMask
+namespace Coffee.UISoftMaskInternal
 {
     [Serializable]
     public struct MinMax01
@@ -39,6 +39,8 @@ namespace Coffee.UISoftMask
             }
         }
 
+        public float average => (m_Max + m_Min) * 0.5f;
+
         public bool Approximately(MinMax01 other)
         {
             return Mathf.Approximately(m_Min, other.m_Min) && Mathf.Approximately(m_Max, other.m_Max);
@@ -61,7 +63,7 @@ namespace Coffee.UISoftMask
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            return IsSingleLine(label) ? 18 : 32;
+            return IsSingleLine(label) ? 18 : 36;
         }
 
         public override void OnGUI(Rect position, SerializedProperty prop, GUIContent label)
@@ -84,12 +86,11 @@ namespace Coffee.UISoftMask
             {
                 EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
                 var indent = (EditorGUI.indentLevel + 1) * 15f;
-                position = new Rect(position.x + indent, position.y + 18, position.width - indent, 18);
+                position = new Rect(position.x + indent, position.y + 18, position.width - indent, 16);
             }
 
             var min = _min.floatValue;
             var max = _max.floatValue;
-
             if (Draw(position, ref min, ref max))
             {
                 _min.floatValue = min;
@@ -101,6 +102,8 @@ namespace Coffee.UISoftMask
 
         public static bool Draw(Rect position, ref float minValue, ref float maxValue)
         {
+            var indentLevel = EditorGUI.indentLevel;
+            EditorGUI.indentLevel = 0;
             EditorGUI.BeginChangeCheck();
 
             var rect = new Rect(position.x, position.y, k_NumWidth, position.height);
@@ -114,6 +117,7 @@ namespace Coffee.UISoftMask
             rect.width = k_NumWidth;
             maxValue = Mathf.Clamp(EditorGUI.FloatField(rect, maxValue), minValue, 1);
 
+            EditorGUI.indentLevel = indentLevel;
             return EditorGUI.EndChangeCheck();
         }
 
@@ -130,7 +134,7 @@ namespace Coffee.UISoftMask
                 position = EditorGUILayout.GetControlRect(true, 36f);
                 EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
                 var indent = (EditorGUI.indentLevel + 1) * 15f;
-                position = new Rect(position.x + indent, position.y + 18, position.width - indent, 18);
+                position = new Rect(position.x + indent, position.y + 18, position.width - indent, 16);
             }
 
             return Draw(position, ref minValue, ref maxValue);
