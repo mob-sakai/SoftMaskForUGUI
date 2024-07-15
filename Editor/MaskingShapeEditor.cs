@@ -1,4 +1,4 @@
-﻿using UnityEditor;
+using UnityEditor;
 using UnityEngine;
 
 namespace Coffee.UISoftMask
@@ -11,7 +11,7 @@ namespace Coffee.UISoftMask
         private SerializedProperty _antiAliasingThreshold;
         private SerializedProperty _maskingMethod;
         private SerializedProperty _showMaskGraphic;
-        private SerializedProperty _softMaskingRange;
+        private SerializedProperty _softnessRange;
 
         protected void OnEnable()
         {
@@ -19,7 +19,7 @@ namespace Coffee.UISoftMask
             _showMaskGraphic = serializedObject.FindProperty("m_ShowMaskGraphic");
             _alphaHitTest = serializedObject.FindProperty("m_AlphaHitTest");
             _antiAliasingThreshold = serializedObject.FindProperty("m_AntiAliasingThreshold");
-            _softMaskingRange = serializedObject.FindProperty("m_SoftMaskingRange");
+            _softnessRange = serializedObject.FindProperty("m_SoftnessRange");
         }
 
         public override void OnInspectorGUI()
@@ -34,17 +34,14 @@ namespace Coffee.UISoftMask
             EditorGUILayout.EnumPopup(new GUIContent("Masking Mode"), maskingMode);
             EditorGUI.EndDisabledGroup();
 
-
             EditorGUILayout.PropertyField(_maskingMethod);
-            // EditorGUILayout.PropertyField(_showMaskGraphic);
-            // EditorGUILayout.PropertyField(_alphaHitTest);
 
             switch (maskingMode)
             {
                 case SoftMask.MaskingMode.SoftMasking:
                     EditorGUILayout.PropertyField(_showMaskGraphic);
                     EditorGUILayout.PropertyField(_alphaHitTest);
-                    EditorGUILayout.PropertyField(_softMaskingRange);
+                    EditorGUILayout.PropertyField(_softnessRange);
                     break;
                 case SoftMask.MaskingMode.AntiAliasing:
                     EditorGUILayout.PropertyField(_alphaHitTest);
@@ -54,24 +51,6 @@ namespace Coffee.UISoftMask
                     EditorGUILayout.PropertyField(_showMaskGraphic);
                     break;
             }
-
-            // AntiAliasing is only available in Mask
-            // EditorGUI.BeginDisabledGroup(mask is SoftMask);
-            // {
-            //     EditorGUILayout.PropertyField(_antiAliasing);
-            //     EditorGUI.BeginDisabledGroup(!_antiAliasing.boolValue);
-            //     {
-            //         EditorGUILayout.PropertyField(_antiAliasingThreshold);
-            //     }
-            // }
-            // EditorGUI.EndDisabledGroup();
-            //
-            // // Softness is only available in SoftMask
-            // EditorGUI.BeginDisabledGroup(!(mask is SoftMask));
-            // {
-            //     EditorGUILayout.PropertyField(_softnessRange);
-            // }
-            // EditorGUI.EndDisabledGroup();
 
             serializedObject.ApplyModifiedProperties();
 

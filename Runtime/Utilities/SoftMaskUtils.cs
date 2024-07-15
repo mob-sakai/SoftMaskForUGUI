@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Coffee.UISoftMaskInternal;
 using UnityEditor;
@@ -8,7 +8,9 @@ using UnityEngine.Rendering;
 #if UNITY_MODULE_VR
 using UnityEngine.XR;
 #endif
-
+#if TMP_ENABLE
+using TMPro;
+#endif
 
 namespace Coffee.UISoftMask
 {
@@ -35,11 +37,19 @@ namespace Coffee.UISoftMask
                 x => x != null,
                 x => x.Clear());
 
-        private static Material s_SoftMaskingMaterial;
+        private static Material s_SoftMaskingMaterialAdd;
         private static Material s_SoftMaskingMaterialSub;
-        private static Vector2Int s_BufferSize;
-        private static int s_Count;
-        private static readonly FastAction s_OnChangeBufferSize = new FastAction();
+        private static readonly int s_SoftMaskableStereo = Shader.PropertyToID("_SoftMaskableStereo");
+        private static readonly int s_SoftMaskableEnable = Shader.PropertyToID("_SoftMaskableEnable");
+        private static readonly int s_SoftMaskOutsideColor = Shader.PropertyToID("_SoftMaskOutsideColor");
+        private static readonly int s_SoftMaskTex = Shader.PropertyToID("_SoftMaskTex");
+        private static readonly int s_SoftMaskColor = Shader.PropertyToID("_SoftMaskColor");
+        private static readonly int s_MainTex = Shader.PropertyToID("_MainTex");
+        private static readonly int s_ColorMask = Shader.PropertyToID("_ColorMask");
+        private static readonly int s_BlendOp = Shader.PropertyToID("_BlendOp");
+        private static readonly int s_StencilReadMask = Shader.PropertyToID("_StencilReadMask");
+        private static readonly int s_ThresholdMin = Shader.PropertyToID("_ThresholdMin");
+        private static readonly int s_ThresholdMax = Shader.PropertyToID("_ThresholdMax");
 
         private static readonly string[] s_SoftMaskableShaderNameFormats =
         {
@@ -50,15 +60,6 @@ namespace Coffee.UISoftMask
 
         private static readonly Dictionary<int, string> s_SoftMaskableShaderNames = new Dictionary<int, string>();
 
-        /// <summary>
-        /// Event that gets triggered when the buffer size changes.
-        /// </summary>
-        public static event Action onChangeBufferSize
-        {
-            add => s_OnChangeBufferSize.Add(value);
-            remove => s_OnChangeBufferSize.Remove(value);
-        }
-
 #if UNITY_EDITOR
         [InitializeOnLoadMethod]
 #else
@@ -66,14 +67,45 @@ namespace Coffee.UISoftMask
 #endif
         private static void InitializeOnLoadMethod()
         {
-            UIExtraCallbacks.onBeforeCanvasRebuild += () =>
+#if TMP_ENABLE
+            TMPro_EventManager.TEXT_CHANGED_EVENT.Add(obj =>
             {
-                var size = RenderTextureRepository.GetScreenSize();
-                if (s_BufferSize == size) return;
-                s_BufferSize = size;
-                s_OnChangeBufferSize.Invoke();
-            };
+                if (!(obj is TextMeshProUGUI text)) return;
+
+                if (text.TryGetComponent<SoftMask>(out var sm))
+                {
+                    UpdateSubMeshUI(text, sm.showMaskGraphic, sm.antiAliasingThreshold, sm.softnessRange);
+                }
+                else if (text.TryGetComponent<MaskingShape>(out var ms))
+                {
+                    UpdateSubMeshUI(text, ms.showMaskGraphic, ms.antiAliasingThreshold, ms.softnessRange);
+                }
+            });
+#endif
+
+#if UNITY_EDITOR
+            EditorApplication.projectChanged += s_SoftMaskableShaderNames.Clear;
+#endif
         }
+
+#if TMP_ENABLE
+        private static void UpdateSubMeshUI(TextMeshProUGUI text, bool show, float aa, MinMax01 softness)
+        {
+            var subMeshes = ListPool<TMP_SubMeshUI>.Rent();
+            text.GetComponentsInChildren(subMeshes, 1);
+
+            for (var i = 0; i < subMeshes.Count; i++)
+            {
+                var maskingShape = subMeshes[i].GetOrAddComponent<MaskingShape>();
+                maskingShape.hideFlags = HideFlags.DontSave | HideFlags.NotEditable;
+                maskingShape.antiAliasingThreshold = aa;
+                maskingShape.softnessRange = softness;
+                maskingShape.showMaskGraphic = show;
+            }
+
+            ListPool<TMP_SubMeshUI>.Return(ref subMeshes);
+        }
+#endif
 
         /// <summary>
         /// Applies properties to a MaterialPropertyBlock for soft masking.
@@ -84,14 +116,10 @@ namespace Coffee.UISoftMask
             Profiler.BeginSample("(SM4UI)[SoftMaskUtils] ApplyMaterialPropertyBlock");
             var colorMask = Vector4.zero;
             colorMask[depth] = 1;
-            mpb.SetVector(ShaderPropertyIds.colorMask, colorMask);
-            if (texture)
-            {
-                mpb.SetTexture(ShaderPropertyIds.mainTex, texture);
-            }
-
-            mpb.SetFloat(ShaderPropertyIds.thresholdMinId, threshold.min);
-            mpb.SetFloat(ShaderPropertyIds.thresholdMaxId, threshold.max);
+            mpb.SetVector(s_ColorMask, colorMask);
+            mpb.SetTexture(s_MainTex, texture ? texture : null);
+            mpb.SetFloat(s_ThresholdMin, threshold.min);
+            mpb.SetFloat(s_ThresholdMax, threshold.max);
             Profiler.EndSample();
         }
 
@@ -101,7 +129,7 @@ namespace Coffee.UISoftMask
         public static Material GetSoftMaskingMaterial(MaskingShape.MaskingMethod method)
         {
             return method == MaskingShape.MaskingMethod.Additive
-                ? GetSoftMaskingMaterial(ref s_SoftMaskingMaterial, BlendOp.Add)
+                ? GetSoftMaskingMaterial(ref s_SoftMaskingMaterialAdd, BlendOp.Add)
                 : GetSoftMaskingMaterial(ref s_SoftMaskingMaterialSub, BlendOp.ReverseSubtract);
         }
 
@@ -116,7 +144,7 @@ namespace Coffee.UISoftMask
             {
                 hideFlags = HideFlags.DontSave
             };
-            mat.SetInt(ShaderPropertyIds.blendOp, (int)op);
+            mat.SetInt(s_BlendOp, (int)op);
             return mat;
         }
 
@@ -134,35 +162,26 @@ namespace Coffee.UISoftMask
                 shader = GetSoftMaskableShader(baseMat.shader, fallbackBehavior),
                 hideFlags = HideFlags.HideAndDontSave
             };
-
             Profiler.EndSample();
 
             Profiler.BeginSample("(SM4UI)[SoftMaskableMaterial] Create > Set Properties");
-            mat.SetTexture(ShaderPropertyIds.softMaskTexId, softMaskBuffer);
-            mat.SetInt(ShaderPropertyIds.stencilReadMaskId, stencilBits);
-            mat.SetVector(ShaderPropertyIds.softMaskColorId, new Vector4(
+            mat.SetTexture(s_SoftMaskTex, softMaskBuffer);
+            mat.SetInt(s_SoftMaskableStereo, isStereo ? 1 : 0);
+            mat.SetInt(s_SoftMaskableEnable, 1);
+            mat.SetInt(s_StencilReadMask, stencilBits);
+            mat.SetVector(s_SoftMaskColor, new Vector4(
                 0 <= softMaskDepth ? 1 : 0,
                 1 <= softMaskDepth ? 1 : 0,
                 2 <= softMaskDepth ? 1 : 0,
                 3 <= softMaskDepth ? 1 : 0
             ));
-
             Profiler.EndSample();
-
-            Profiler.BeginSample("(SM4UI)[SoftMaskableMaterial] Create > Set Keywords");
-            if (isStereo)
-            {
-                mat.EnableKeyword("UI_SOFT_MASKABLE_STEREO");
-            }
 
 #if UNITY_EDITOR
-            mat.EnableKeyword("UI_SOFT_MASKABLE_EDITOR");
-            mat.SetVector(ShaderPropertyIds.softMaskOutsideColor,
+            mat.EnableKeyword("SOFTMASK_EDITOR");
+            mat.SetVector(s_SoftMaskOutsideColor,
                 UISoftMaskProjectSettings.useStencilOutsideScreen ? Vector4.one : Vector4.zero);
-#else
-            mat.EnableKeyword("UI_SOFT_MASKABLE");
 #endif
-            Profiler.EndSample();
             return mat;
         }
 

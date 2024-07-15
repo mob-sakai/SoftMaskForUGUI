@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Coffee.UISoftMaskInternal;
 using UnityEditor;
@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Profiling;
 using UnityEngine.Rendering;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Coffee.UISoftMask
@@ -15,7 +16,7 @@ namespace Coffee.UISoftMask
     /// </summary>
     [DisallowMultipleComponent]
     [ExecuteAlways]
-    public class SoftMask : Mask, IMeshModifier, IMaskable, IMaskingShapeContainerOwner
+    public class SoftMask : Mask, IMeshModifier, IMaskable, IMaskingShapeContainerOwner, ISerializationCallbackReceiver
     {
         /// <summary>
         /// Down sampling rate.
@@ -47,31 +48,41 @@ namespace Coffee.UISoftMask
         private static readonly Camera.MonoOrStereoscopicEye[] s_StereoEyes =
             { Camera.MonoOrStereoscopicEye.Left, Camera.MonoOrStereoscopicEye.Right };
 
-        [Tooltip("Masking mode\n\n" +
+        [Tooltip("Masking mode.\n\n" +
                  "SoftMasking: Use RenderTexture as a soft mask buffer. The alpha of the masking graphic can be used.\n" +
-                 "AntiAliasing: Suppress the jaggedness of the masking graphic. The masking graphic cannot be displayed.")]
+                 "AntiAliasing: Suppress the jaggedness of the masking graphic. The masking graphic cannot be displayed.\n" +
+                 "Normal: Same as Mask component's stencil mask.")]
         [SerializeField]
         private MaskingMode m_MaskingMode = MaskingMode.SoftMasking;
 
-        [Tooltip("Enable alpha hit test.")]
+        [Tooltip("The transparent part of the mask cannot be clicked.\n" +
+                 "This can be achieved by enabling Read/Write enabled in the Texture Import Settings for the texture.\n\n" +
+                 "NOTE: Enable this only if necessary, as it will require more graphics memory and processing time.")]
         [SerializeField]
         private bool m_AlphaHitTest;
 
-        [Tooltip("The threshold for soft masking.")]
+        [Tooltip("The minimum and maximum alpha values used for soft masking.\n" +
+                 "The larger the gap between these values, the stronger the softness effect.")]
         [SerializeField]
-        private MinMax01 m_SoftMaskingRange = new MinMax01(0, 1f);
+        private MinMax01 m_SoftnessRange = new MinMax01(0, 1f);
 
-        [Tooltip("The down sampling rate for soft mask buffer.")]
+        [Tooltip("The down sampling rate for soft mask buffer.\n" +
+                 "The higher this value, the lower the quality of the soft masking, but the performance will improve.")]
         [SerializeField]
         private DownSamplingRate m_DownSamplingRate = DownSamplingRate.x1;
 
-        [Tooltip("The threshold for anti-alias masking.")] [SerializeField] [Range(0f, 1f)]
+        [Tooltip("The threshold for anti-alias masking.\n" +
+                 "The smaller this value, the less jagged it is.")]
+        [SerializeField]
+        [Range(0f, 1f)]
         private float m_AntiAliasingThreshold;
 
-        [SerializeField] [Obsolete]
+        [SerializeField]
+        [Obsolete]
         private float m_Softness = -1;
 
-        [SerializeField] [Obsolete]
+        [SerializeField]
+        [Obsolete]
         private bool m_PartOfParent;
 
         private CommandBuffer _cb;
@@ -82,12 +93,11 @@ namespace Coffee.UISoftMask
         private Mesh _mesh;
         private MaterialPropertyBlock _mpb;
         private Action _onBeforeCanvasRebuild;
-        private Action _onResolutionChanged;
+        private Action _onCanvasViewChanged;
         private SoftMask _parent;
         private Matrix4x4 _prevTransformMatrix;
         private Action _renderSoftMaskBuffer;
         private Canvas _rootCanvas;
-        private Action _setDirtyAndNotify;
         private UnityAction _setSoftMaskDirty;
         private MaskingShapeContainer _shapeContainer;
         internal RenderTexture _softMaskBuffer;
@@ -95,9 +105,10 @@ namespace Coffee.UISoftMask
         private CanvasViewChangeTrigger _viewChangeTrigger;
 
         /// <summary>
-        /// Masking mode<br />
+        /// Masking mode.<br />
         /// <b>SoftMasking</b>: Use RenderTexture as a soft mask buffer. The alpha of the masking graphic can be used.<br />
-        /// <b>AntiAliasing</b>: Suppress the jaggedness of the masking graphic. The masking graphic cannot be displayed.
+        /// <b>AntiAliasing</b>: Suppress the jaggedness of the masking graphic. The masking graphic cannot be displayed.<br />
+        /// <b>Normal</b>: Same as Mask component's stencil mask.
         /// </summary>
         public MaskingMode maskingMode
         {
@@ -110,6 +121,11 @@ namespace Coffee.UISoftMask
                 AddSoftMaskableOnChildren();
                 UpdateAntiAlias();
                 SetDirtyAndNotify();
+
+                if (graphic)
+                {
+                    graphic.SetMaterialDirty();
+                }
             }
         }
 
@@ -120,12 +136,13 @@ namespace Coffee.UISoftMask
             {
                 if (m_DownSamplingRate == value) return;
                 m_DownSamplingRate = value;
-                SetSoftMaskDirty();
+                SetDirtyAndNotify();
             }
         }
 
         /// <summary>
         /// Threshold for anti-alias masking.
+        /// The smaller this value, the less jagged it is.
         /// </summary>
         public float antiAliasingThreshold
         {
@@ -134,7 +151,10 @@ namespace Coffee.UISoftMask
         }
 
         /// <summary>
-        /// Enable alpha hit test.
+        /// The transparent part of the mask cannot be clicked.
+        /// This can be achieved by enabling Read/Write enabled in the Texture Import Settings for the texture.
+        /// <para></para>
+        /// NOTE: Enable this only if necessary, as it will require more graphics memory and processing time.
         /// </summary>
         public bool alphaHitTest
         {
@@ -165,7 +185,7 @@ namespace Coffee.UISoftMask
         /// <summary>
         /// Is the soft mask a part of parent soft mask?
         /// </summary>
-        [Obsolete]
+        [Obsolete("Use MaskingShape component instead.", false)]
         public bool partOfParent
         {
             get => m_PartOfParent;
@@ -176,14 +196,14 @@ namespace Coffee.UISoftMask
         /// <summary>
         /// The value used by the soft mask to select the area of influence defined over the soft mask's graphic.
         /// </summary>
-        [Obsolete]
+        [Obsolete("Use softnessRange instead.", false)]
         public float softness
         {
-            get => m_Softness;
+            get => softnessRange.max;
             set
             {
-                softMaskingRange = new MinMax01(0, value);
-                m_Softness = value;
+                softnessRange = new MinMax01(0, Mathf.Clamp01(value));
+                m_Softness = -1;
             }
         }
 
@@ -198,10 +218,18 @@ namespace Coffee.UISoftMask
             {
                 if (SoftMaskingEnabled())
                 {
-                    var id = GetInstanceID();
-                    var size = RenderTextureRepository.GetScreenSize();
-                    var rate = (int)downSamplingRate;
-                    return RenderTextureRepository.Get(id, size, rate, ref _softMaskBuffer, false);
+                    var size = RenderTextureRepository.GetScreenSize((int)downSamplingRate);
+                    var hash = new Hash128((uint)GetInstanceID(), (uint)size.x, (uint)size.y, 0);
+                    if (!RenderTextureRepository.Valid(hash, _softMaskBuffer))
+                    {
+                        RenderTextureRepository.Get(hash, ref _softMaskBuffer,
+                            x => new RenderTexture(RenderTextureRepository.GetDescriptor(x, false))
+                            {
+                                hideFlags = HideFlags.DontSave
+                            }, size);
+                    }
+
+                    return _softMaskBuffer;
                 }
 
                 RenderTextureRepository.Release(ref _softMaskBuffer);
@@ -210,16 +238,17 @@ namespace Coffee.UISoftMask
         }
 
         /// <summary>
-        /// The threshold for soft masking.
+        /// The minimum and maximum alpha values used for soft masking.
+        /// The larger the gap between these values, the stronger the softness effect.
         /// </summary>
-        public MinMax01 softMaskingRange
+        public MinMax01 softnessRange
         {
-            get => m_SoftMaskingRange;
+            get => m_SoftnessRange;
             set
             {
-                if (m_SoftMaskingRange.Approximately(value)) return;
+                if (m_SoftnessRange.Approximately(value)) return;
 
-                m_SoftMaskingRange = value;
+                m_SoftnessRange = value;
                 SetSoftMaskDirty();
             }
         }
@@ -248,8 +277,6 @@ namespace Coffee.UISoftMask
                 _onBeforeCanvasRebuild ?? (_onBeforeCanvasRebuild = OnBeforeCanvasRebuild);
             UIExtraCallbacks.onAfterCanvasRebuild +=
                 _renderSoftMaskBuffer ?? (_renderSoftMaskBuffer = RenderSoftMaskBuffer);
-            SoftMaskUtils.onChangeBufferSize +=
-                _setDirtyAndNotify ?? (_setDirtyAndNotify = SetDirtyAndNotify);
 
             if (graphic)
             {
@@ -276,8 +303,6 @@ namespace Coffee.UISoftMask
                 _onBeforeCanvasRebuild ?? (_onBeforeCanvasRebuild = OnBeforeCanvasRebuild);
             UIExtraCallbacks.onAfterCanvasRebuild -=
                 _renderSoftMaskBuffer ?? (_renderSoftMaskBuffer = RenderSoftMaskBuffer);
-            SoftMaskUtils.onChangeBufferSize -=
-                _setDirtyAndNotify ?? (_setDirtyAndNotify = SetDirtyAndNotify);
 
             if (graphic)
             {
@@ -309,10 +334,9 @@ namespace Coffee.UISoftMask
         {
             ListPool<SoftMask>.Return(ref _children);
             _onBeforeCanvasRebuild = null;
-            _setDirtyAndNotify = null;
             _renderSoftMaskBuffer = null;
             _setSoftMaskDirty = null;
-            _onResolutionChanged = null;
+            _onCanvasViewChanged = null;
             _updateParentSoftMask = null;
         }
 
@@ -340,7 +364,7 @@ namespace Coffee.UISoftMask
         /// </summary>
         protected override void OnRectTransformDimensionsChange()
         {
-            SetSoftMaskDirty();
+            SetDirtyAndNotifyIfBufferSizeChanged();
         }
 
         protected void OnTransformChildrenChanged()
@@ -406,8 +430,19 @@ namespace Coffee.UISoftMask
             _mesh.RecalculateBounds();
 
             Profiler.EndSample();
-
             Logging.Log(this, " >>>> Graphic mesh is modified.");
+        }
+
+        private void SetDirtyAndNotifyIfBufferSizeChanged()
+        {
+            if (!SoftMaskingEnabled() || !_softMaskBuffer) return;
+
+            var size = RenderTextureRepository.GetScreenSize((int)downSamplingRate);
+            var hash = new Hash128((uint)GetInstanceID(), (uint)size.x, (uint)size.y, 0);
+            if (RenderTextureRepository.Valid(hash, _softMaskBuffer)) return;
+
+            // If the size of the soft mask buffer is changed, reset the SoftMaskable.
+            SetDirtyAndNotify();
         }
 
         private void AddSoftMaskableOnChildren()
@@ -424,6 +459,7 @@ namespace Coffee.UISoftMask
                 // SoftMasking mode: If transform or view has changed, set dirty flag.
                 case MaskingMode.SoftMasking:
                 {
+                    SetDirtyAndNotifyIfBufferSizeChanged();
                     if (transform.HasChanged(ref _prevTransformMatrix, UISoftMaskProjectSettings.sensitivity))
                     {
                         SetSoftMaskDirty();
@@ -455,14 +491,14 @@ namespace Coffee.UISoftMask
 
                 if (_viewChangeTrigger)
                 {
-                    _viewChangeTrigger.onViewChange -=
-                        _onResolutionChanged ?? (_onResolutionChanged = OnResolutionChanged);
+                    _viewChangeTrigger.onCanvasViewChanged -=
+                        _onCanvasViewChanged ?? (_onCanvasViewChanged = OnCanvasViewChanged);
                 }
 
                 if (trigger)
                 {
-                    trigger.onViewChange +=
-                        _onResolutionChanged ?? (_onResolutionChanged = OnResolutionChanged);
+                    trigger.onCanvasViewChanged +=
+                        _onCanvasViewChanged ?? (_onCanvasViewChanged = OnCanvasViewChanged);
                 }
             }
 
@@ -537,10 +573,17 @@ namespace Coffee.UISoftMask
             MaskUtilities.NotifyStencilStateChanged(this);
         }
 
-        private void OnResolutionChanged()
+        private void OnCanvasViewChanged()
         {
             _hasResolutionChanged = true;
             SetSoftMaskDirty();
+
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+            {
+                EditorApplication.QueuePlayerLoopUpdate();
+            }
+#endif
         }
 
         public void SetSoftMaskDirty()
@@ -669,7 +712,6 @@ namespace Coffee.UISoftMask
                 if (_hasSoftMaskBufferDrawn || _hasResolutionChanged)
                 {
                     Profiler.BeginSample("(SM4UI)[SoftMask] RenderSoftMaskBuffer > Clear");
-
                     _cb.Clear();
                     _cb.SetRenderTarget(softMaskBuffer);
                     _cb.ClearRenderTarget(true, true, clearColor);
@@ -736,9 +778,8 @@ namespace Coffee.UISoftMask
                 Profiler.EndSample();
 
                 Profiler.BeginSample("(SM4UI)[SoftMask] RenderSoftMaskBuffer > ApplyMaterialPropertyBlock");
-                var mat = graphic.canvasRenderer.GetMaterial(0);
                 var texture = graphic.mainTexture;
-                SoftMaskUtils.ApplyMaterialPropertyBlock(_mpb, softMaskDepth, texture, softMaskingRange);
+                SoftMaskUtils.ApplyMaterialPropertyBlock(_mpb, softMaskDepth, texture, softnessRange);
                 Profiler.EndSample();
             }
 
@@ -777,6 +818,27 @@ namespace Coffee.UISoftMask
                 _shapeContainer.DrawSoftMaskBuffer(cb, softMaskDepth);
                 Profiler.EndSample();
             }
+        }
+
+        void ISerializationCallbackReceiver.OnBeforeSerialize()
+        {
+        }
+
+        void ISerializationCallbackReceiver.OnAfterDeserialize()
+        {
+#pragma warning disable CS0612, CS0618 // Type or member is obsolete
+            if (0 <= m_Softness)
+            {
+                m_SoftnessRange = new MinMax01(0, Mathf.Clamp01(m_Softness));
+                m_Softness = -1;
+            }
+
+            if (m_PartOfParent)
+            {
+                Debug.LogWarning(
+                    $"[SoftMask] The 'partOfParent' property is obsolete. Use MaskingShape component instead.", this);
+            }
+#pragma warning restore CS0612, CS0618 // Type or member is obsolete
         }
     }
 }
