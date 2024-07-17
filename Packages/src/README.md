@@ -18,7 +18,7 @@
 
 Enhance Unity UI (uGUI) with advanced soft-masking features to create more visually appealing effects!  
 
-<img src="https://github.com/user-attachments/assets/51f6d528-cb36-429c-afe7-e021d807fb96" width="500" alt=""/>
+![](https://github.com/user-attachments/assets/51f6d528-cb36-429c-afe7-e021d807fb96)
 
 - [📌 Key Features](#-key-features)
 - [🎮 Demo](#-demo)
@@ -60,17 +60,17 @@ Enhance Unity UI (uGUI) with advanced soft-masking features to create more visua
 - **Versatile Masking Options**: `Text`, `Image`, `RawImage` can be used as a masking graphic.
 - **Support for Multiple Sprites and SpriteAtlas**: `SoftMask` supports multiple sprites and `SpriteAtlas`.
 - **Nested Soft Masks**: `SoftMask` supports up to 4 nested soft masks.  
-  <img height="200" src="https://github.com/user-attachments/assets/462fa225-1451-4c81-8226-d69f81926fac"/>
+  ![](https://github.com/user-attachments/assets/c3a6ab32-9d1a-4eff-9747-2df9ab28eee4)
 - **ScrollRect Support**: `SoftMask` supports `ScrollRect` component.
 - **All Render Mode Support**: `SoftMask` supports overlay, camera space, and world space.
 - **Soft-Maskable UI Shader Included**: The package includes a soft-maskable UI shader for `UI/Dafault`.
 - **Custom Shader Support**: You can make your custom shaders soft-maskable with little modification. For details, please see [soft-maskable shader](#usage-with-your-custom-shaders).
 - **Performance/Quality Adjustment**: You can adjust the soft mask buffer size to improve performance or quality.  
-  <img height="200" src="https://github.com/user-attachments/assets/4ed9ef1f-5c00-46a5-9fde-e59ab4f26530"/>
+  ![](https://github.com/user-attachments/assets/66440b45-1777-4ed9-8706-b407616865f5)
 - **Efficient Rendering**: The soft mask buffer will be updated only when needed to improve performance.
 - **SoftMaskable Component**: `SoftMaskable` component will be added automatically at runtime as needed.
 - **Soft Mask Buffer Preview**: You can preview the soft mask buffer in the inspector.  
-  <img height="200" src="https://github.com/user-attachments/assets/fc544d1b-8fd1-4a2e-bd97-6469b60b28d5"/>
+  ![](https://github.com/user-attachments/assets/4ffaf563-a616-43e2-8638-3c8bdead51fa)
 - **Anti-Alias Masking Mode**: If you don't need semi-transparent masks, you can use the more performant "Anti-Aliasing Masking Mode".  
   ![](https://github.com/user-attachments/assets/490fd9d8-aa0d-45e2-a094-311236850ca2)
 - **Masking Shape**: You can add or remove mask region using `MaskingShape` component.  
@@ -81,11 +81,11 @@ Enhance Unity UI (uGUI) with advanced soft-masking features to create more visua
   This feature is useful for preventing clicks on masked parts during tutorials.  
   ![](https://github.com/user-attachments/assets/430735c7-7b85-46e8-bbf4-ab1fe70aa19a)
 - **Stereo Support**: Soft masking for VR.  
-  <img height="200" src="https://github.com/user-attachments/assets/c6944734-9305-4d25-ba64-45bf64425871"/>
+  ![](https://github.com/user-attachments/assets/8ae038cd-b8da-4b83-ac48-15083fb2e3a6)
 - **TextMeshProUGUI Support**: Support `TextMeshProUGUI` by importing additional shaders.  
   It also supports TextMeshPro v3.2/4.0 (pre-release) and uGUI 2.0 (Unity 2023.2+/6.0+).
   For details, please see [Support TextMeshPro](#usage-with-textmeshpro).  
-  <img height="200" src="https://github.com/user-attachments/assets/7b0e7bc4-ef90-4327-b962-108c6d56b580"/>
+  ![](https://github.com/user-attachments/assets/6e33fce4-526c-41af-9894-36da1ccb2f51)
 - **Better Editor Experience**: In the Scene view, objects outside the screen are displayed as stencil masks, allowing for more intuitive editing.  
   ![](https://github.com/user-attachments/assets/e8349fe7-b3a8-471f-a5a7-1ee00c431561)
 - **Automatic Shader Include and Stripping**: SoftMaskable shaders are automatically included at build time, and unused shader variants are removed.  
