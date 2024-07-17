@@ -12,7 +12,7 @@
 [![](https://img.shields.io/github/watchers/mob-sakai/SoftMaskForUGUI.svg?style=social&label=Watch)](https://github.com/mob-sakai/SoftMaskForUGUI/subscription)
 [![](https://img.shields.io/twitter/follow/mob_sakai.svg?label=Follow&style=social)](https://twitter.com/intent/follow?screen_name=mob_sakai)
 
-<< [📝 Description](#-description----omit-in-toc---) | [📌 Key Features](#-key-features) | [🎮 Demo](#-demo) | [⚙️ Installation](#-installation) | [🔄 Upgrading from v1 to v2](#-upgrading-from-v1-to-v2) | [🚀 Usage](#-usage) | [🤝 Contributing](#-contributing) >>
+<< [📝 Description](#-description-) | [📌 Key Features](#-key-features) | [🎮 Demo](#-demo) | [⚙ Installation](#-installation) | [🚀 Usage](#-usage) | [🤝 Contributing](#-contributing) >>
 
 ## 📝 Description <!-- omit in toc -->
 
@@ -22,7 +22,7 @@ Enhance Unity UI (uGUI) with advanced soft-masking features to create more visua
 
 - [📌 Key Features](#-key-features)
 - [🎮 Demo](#-demo)
-- [⚙️ Installation](#-installation)
+- [⚙ Installation](#-installation)
   - [Install via OpenUPM](#install-via-openupm)
   - [Install via UPM (with Package Manager UI)](#install-via-upm-with-package-manager-ui)
   - [Install via UPM (Manually)](#install-via-upm-manually)
@@ -39,7 +39,7 @@ Enhance Unity UI (uGUI) with advanced soft-masking features to create more visua
   - [Usage with Scripts](#usage-with-scripts)
   - [Usage with TextMeshPro](#usage-with-textmeshpro)
   - [Usage with Your Custom Shaders](#usage-with-your-custom-shaders)
-  - [⚠️ Limitations](#-limitations)
+  - [:warning: Limitations](#warning-limitations)
 - [🤝 Contributing](#-contributing)
   - [Issues](#issues)
   - [Pull Requests](#pull-requests)
@@ -99,7 +99,7 @@ Enhance Unity UI (uGUI) with advanced soft-masking features to create more visua
 
 <br><br>
 
-## ⚙️ Installation
+## ⚙ Installation
 
 _This package requires **Unity 2019.4 or later**._
 
@@ -372,7 +372,7 @@ Here, let's make [UI/Additive](https://raw.githubusercontent.com/mob-sakai/SoftM
 
 <br><br>
 
-### ⚠️ Limitations
+### :warning: Limitations
 
 The following are the limitations of SoftMaskForUGUI.
 
