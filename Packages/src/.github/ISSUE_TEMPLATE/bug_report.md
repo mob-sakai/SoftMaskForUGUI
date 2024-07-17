@@ -26,10 +26,10 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Environment (please complete the following information):**
- - Version [e.g. 1.0.0]
+ - Version [e.g. 2.0.0]
  - Platform: [e.g. Editor(Windows/Mac), Standalone(Windows/Mac), iOS, Android, WebGL]
- - Unity version: [e.g. 2018.2.8f1]
- - Build options: [e.g. IL2CPP, .Net 4.x, LWRP]
+ - Unity version: [e.g. 2022.3.0f1]
+ - Build options: [e.g. IL2CPP, .Net 4.x, URP, HDRP]
 
 **Additional context**
 Add any other context about the problem here.
