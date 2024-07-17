@@ -1,3 +1,33 @@
+# [2.0.0](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v1.0.2...v2.0.0) (2024-07-17)
+
+
+### Bug Fixes
+
+* fix a major performance regression where if you had a lot of softmaskable components (even if the parent canvas was in-active) it would eat over 20ms doing a certain editor-only function ([6e9fb30](https://github.com/mob-sakai/SoftMaskForUGUI/commit/6e9fb303e0aacfae292c7c011630ba877fdb4b63))
+* fix broken anchor on README.md ([03a0425](https://github.com/mob-sakai/SoftMaskForUGUI/commit/03a0425c83119e9ff35252c0d6fce8fe2e35758c))
+* fix soft-maskable shaders for TextMeshPro v2.0/v2.1/v2.2/v3.0 ([51d84c9](https://github.com/mob-sakai/SoftMaskForUGUI/commit/51d84c96b0c9018826c9e757b489538cd626b515))
+* when changing resolution, display, or screen orientation, soft-masking do not work properly ([b39fcd9](https://github.com/mob-sakai/SoftMaskForUGUI/commit/b39fcd98b01310254613915d90b284b8d82fd10c))
+
+
+### Features
+
+* 'SoftMask.partOfParent' is now obsolete. Please use 'MaskingShape' component instead. ([3ac1dd2](https://github.com/mob-sakai/SoftMaskForUGUI/commit/3ac1dd28d4e42f5ee258b3f82a8949dd610a1d3b))
+* (editor) use stencil outside screen in scene view for development ([028b85b](https://github.com/mob-sakai/SoftMaskForUGUI/commit/028b85b0877397a45d52690714b4dca0dcc95ef0))
+* add 'AntiAliasing' masking mode. This mode suppresses stencil-derived mask aliasing without using RenderTexture. ([efb7f64](https://github.com/mob-sakai/SoftMaskForUGUI/commit/efb7f64dc1f7f9d68752e6271bc4fb3f22a745a0))
+* add 'SoftMask.softMaskingRange' option ([76f69cf](https://github.com/mob-sakai/SoftMaskForUGUI/commit/76f69cf859097409d1c022188a617d18ebf11418))
+* add asset modify system to migrate from v1 to v2 ([c451cf5](https://github.com/mob-sakai/SoftMaskForUGUI/commit/c451cf5a156e6fb05a7fb14b7f50a41d2e556e38))
+* add explicit dependencies ([90a97c6](https://github.com/mob-sakai/SoftMaskForUGUI/commit/90a97c604c017c49fb786bc7a8dceaaa657228ba))
+* add project settings for SoftMask ([4a124d4](https://github.com/mob-sakai/SoftMaskForUGUI/commit/4a124d41fcac3d291e07613a067ff97fc1845042))
+* add soft-maskable shaders for TextMeshPro v3.2/v4.0 ([df888e0](https://github.com/mob-sakai/SoftMaskForUGUI/commit/df888e0091d3ebd3449f470b6e0b8048167aeec7))
+* add stereo mode to shader ([e2e6733](https://github.com/mob-sakai/SoftMaskForUGUI/commit/e2e67339676a1e09b235eabb148cef7c06ed7065))
+* exclude unused shader variants from the build (option) ([87b6060](https://github.com/mob-sakai/SoftMaskForUGUI/commit/87b60600b5608a54a58c2e8d23e73818dc15ca31))
+* support uGUI 2.0.0 ([725278a](https://github.com/mob-sakai/SoftMaskForUGUI/commit/725278a6b3fbe57b9bfc78d929a03b97a1405eb3))
+
+
+### BREAKING CHANGES
+
+* The implementation way of the 'SoftMaskable' shader has been changed. Please refer to the "Migrating from v1 to v2" section in the Readme for details.
+
 ## [1.0.2](https://github.com/mob-sakai/SoftMaskForUGUI/compare/1.0.1...1.0.2) (2022-05-15)
 
 
