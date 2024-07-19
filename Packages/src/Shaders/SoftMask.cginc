@@ -39,11 +39,23 @@ float2 WorldToUv(float4 worldPos)
         isSceneView);
 }
 
-float2 ClipToUv(float4 clipPos)
+float2 ClipToUv(const float2 clipPos)
 {
     half2 uv = clipPos.xy / _ScreenParams.xy;
-    #if UNITY_UV_STARTS_AT_TOP
-    uv.y = lerp(uv.y, 1 - uv.y, step(0, _ProjectionParams.x));
+    if (0 < _ProjectionParams.x)
+        uv.y = 1 - uv.y;
+
+    #if UNITY_PRETRANSFORM_TO_DISPLAY_ORIENTATION
+    float ratio = _ScreenParams.x / _ScreenParams.y;
+    switch (UNITY_DISPLAY_ORIENTATION_PRETRANSFORM)
+    {
+        case UNITY_DISPLAY_ORIENTATION_PRETRANSFORM_90:
+            return half2((1 - uv.y) / ratio, uv.x * ratio);
+        case UNITY_DISPLAY_ORIENTATION_PRETRANSFORM_180:
+            return half2(1 - uv.x, 1 - uv.y);
+        case UNITY_DISPLAY_ORIENTATION_PRETRANSFORM_270:
+            return half2((uv.y + ratio - 1) / ratio, 1 - uv.x * ratio);
+    }
     #endif
 
     return uv;
