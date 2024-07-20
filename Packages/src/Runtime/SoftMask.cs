@@ -79,14 +79,18 @@ namespace Coffee.UISoftMask
 
         [SerializeField]
         [Obsolete]
+        internal float m_Alpha = -1;
+
+        [SerializeField]
+        [Obsolete]
         private float m_Softness = -1;
 
         [SerializeField]
         [Obsolete]
         private bool m_PartOfParent;
 
+        private CanvasGroup _canvasGroup;
         private CommandBuffer _cb;
-
         private List<SoftMask> _children;
         private bool _hasResolutionChanged;
         private bool _hasSoftMaskBufferDrawn;
@@ -251,6 +255,27 @@ namespace Coffee.UISoftMask
 
                 m_SoftnessRange = value;
                 SetSoftMaskDirty();
+            }
+        }
+
+        /// <summary>
+        /// The transparency of the masking graphic.
+        /// </summary>
+        public float alpha
+        {
+            get => graphic ? graphic.color.a : 1;
+            set
+            {
+                value = Mathf.Clamp01(value);
+                if (!this || Mathf.Approximately(alpha, value)) return;
+
+                isDirty = true;
+                if (graphic)
+                {
+                    var color = graphic.color;
+                    color.a = value;
+                    graphic.color = color;
+                }
             }
         }
 
