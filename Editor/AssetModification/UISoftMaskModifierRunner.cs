@@ -15,6 +15,7 @@ namespace Coffee.UISoftMask
                     componentModifiers = new IComponentModifier[]
                     {
                         new SoftMaskComponentModifier_Softness(),
+                        new SoftMaskComponentModifier_Alpha(),
                         new SoftMaskComponentModifier_PartOfParent(),
                         new SoftMaskableComponentModifier()
                     }
@@ -25,6 +26,7 @@ namespace Coffee.UISoftMask
                     componentModifiers = new IComponentModifier[]
                     {
                         new SoftMaskComponentModifier_Softness(),
+                        new SoftMaskComponentModifier_Alpha(),
                         new SoftMaskComponentModifier_PartOfParent(),
                         new SoftMaskableComponentModifier()
                     }
