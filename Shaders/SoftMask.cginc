@@ -88,9 +88,11 @@ float SoftMaskSample(float2 uv, float a)
 
 #if SOFTMASK_EDITOR
 #define EDITOR_ONLY(x) x
+#define SOFTMASK_EDITOR_ONLY(x) x
 #define SoftMask(_, worldPos, alpha) SoftMaskSample(WorldToUv(worldPos), alpha)
 #else
 #define EDITOR_ONLY(_)
+#define SOFTMASK_EDITOR_ONLY(_)
 #define SoftMask(clipPos, _, __) SoftMaskSample(ClipToUv(clipPos), 1)
 #endif
 #endif // UI_SOFT_MASK_INCLUDED

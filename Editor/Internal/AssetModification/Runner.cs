@@ -54,7 +54,7 @@ namespace Coffee.UISoftMaskInternal.AssetModification
             Run(assetPaths, dryRun);
         }
 
-        public void Run(string[] assetPaths, bool dryRun)
+        public virtual void Run(string[] assetPaths, bool dryRun)
         {
             var modifiers = GetModifiers(assetPaths);
             var canceled = false;

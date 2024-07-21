@@ -1,6 +1,8 @@
+using Coffee.UISoftMaskInternal;
 using Coffee.UISoftMaskInternal.AssetModification;
 using UnityEditor;
 using UnityEngine;
+
 #pragma warning disable CS0612, CS0618 // Type or member is obsolete
 
 namespace Coffee.UISoftMask
@@ -13,15 +15,13 @@ namespace Coffee.UISoftMask
 
             if (!dryRun)
             {
-                var go = softMask.gameObject;
+                var shape = softMask.GetOrAddComponent<MaskingShape>();
+                shape.softnessRange = softMask.softnessRange;
+                shape.alphaHitTest = softMask.alphaHitTest;
+                shape.showMaskGraphic = softMask.showMaskGraphic;
+
                 Object.DestroyImmediate(softMask);
-
-                if (!go.TryGetComponent<MaskingShape>(out _))
-                {
-                    go.AddComponent<MaskingShape>();
-                }
-
-                EditorUtility.SetDirty(go);
+                EditorUtility.SetDirty(shape.gameObject);
             }
 
             return true;
