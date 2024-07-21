@@ -83,7 +83,7 @@ namespace Coffee.UISoftMask
 
         [SerializeField]
         [Obsolete]
-        private float m_Softness = -1;
+        internal float m_Softness = -1;
 
         [SerializeField]
         [Obsolete]

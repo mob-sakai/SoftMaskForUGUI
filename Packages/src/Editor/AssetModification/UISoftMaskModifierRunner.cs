@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Coffee.UISoftMaskInternal.AssetModification;
+using UnityEditor;
 
 namespace Coffee.UISoftMask
 {
@@ -34,6 +35,17 @@ namespace Coffee.UISoftMask
                 (".shader", SoftMaskableShaderModifier.Create)
             })
         {
+        }
+
+        public override void Run(string[] assetPaths, bool dryRun)
+        {
+            if (!dryRun)
+            {
+                AssetDatabase.ImportAsset("Packages/com.coffee.softmask-for-ugui/Shaders",
+                    ImportAssetOptions.ImportRecursive);
+            }
+
+            base.Run(assetPaths, dryRun);
         }
     }
 }

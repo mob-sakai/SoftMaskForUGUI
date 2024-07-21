@@ -25,8 +25,7 @@ namespace Coffee.UISoftMask
 
         public override string Report()
         {
-            return "  -> SoftMask.alpha API has been changed. " +
-                   "Use CanvasGroup component and CanvasGroup.alpha instead.\n";
+            return "  -> SoftMask.alpha API has been changed. Use Graphic.color.a instead.";
         }
     }
 }

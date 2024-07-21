@@ -26,5 +26,16 @@ namespace Coffee.UISoftMask
                 }
             };
         }
+
+        protected override bool RunModify(bool dryRun)
+        {
+            var modified = base.RunModify(dryRun);
+            if (!dryRun && modified)
+            {
+                AssetDatabase.ImportAsset(path);
+            }
+
+            return modified;
+        }
     }
 }
