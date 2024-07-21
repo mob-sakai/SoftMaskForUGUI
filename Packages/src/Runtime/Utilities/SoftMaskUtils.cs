@@ -111,11 +111,11 @@ namespace Coffee.UISoftMask
         /// Applies properties to a MaterialPropertyBlock for soft masking.
         /// </summary>
         public static void ApplyMaterialPropertyBlock(MaterialPropertyBlock mpb, int depth, Texture texture,
-            MinMax01 threshold)
+            MinMax01 threshold, float alpha)
         {
             Profiler.BeginSample("(SM4UI)[SoftMaskUtils] ApplyMaterialPropertyBlock");
             var colorMask = Vector4.zero;
-            colorMask[depth] = 1;
+            colorMask[depth] = alpha;
             mpb.SetVector(s_ColorMask, colorMask);
             mpb.SetTexture(s_MainTex, texture ? texture : null);
             mpb.SetFloat(s_ThresholdMin, threshold.min);
