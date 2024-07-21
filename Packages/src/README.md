@@ -154,8 +154,15 @@ _This package requires **Unity 2019.4 or later**._
 If you are currently using SoftMaskForUGUI v1.x, the following breaking changes are included when upgrading to v2:
 
 1. **API changes**: Some APIs are obsolete.
-    - `SoftMask.softness`: Use `SoftMask.softnessRange` instead.
-    - `SoftMask.partOfParent`: Use `MaskingShape` component instead.
+  - `SoftMask.alpha`: Use `Graphic.color.a` instead.
+  - `SoftMask.softness`: Use `SoftMask.softnessRange` instead.
+  - `SoftMask.partOfParent`: Use `MaskingShape` component instead.
+  - `SoftMask.ignoreParent`: Removed.
+  - `SoftMask.ignoreSelfGraphic`: Removed.
+  - `SoftMask.ignoreSelfStencil`: Removed.
+  - `SoftMaskable.useStencil`: Removed.
+  - `SoftMaskable.raycastFilter`: Use `SoftMask.alphaHitTest` instead.
+  - `SoftMaskable.maskInteraction`: If you want to use as inverse mask, use `MaskingShape` component and `MaskingMethod=Subtract`.
 
 2. **`SoftMaskable` component**: `SoftMaskable` component is no longer required to be added explicitly.
    It will be added automatically at runtime as needed.
@@ -174,12 +181,12 @@ To apply these changes automatically, please follow the steps below:
 
 1. Click `Edit > Project Settings` to open the Project Settings window and select `UI > SoftMask` category.
 
-2. Click on "Upgrade All Assets V1 to V2" to modify the assets.  
+2. Click `Upgrade All Assets V1 to V2` to upgrade the assets.  
    ![](https://github.com/user-attachments/assets/54415f0b-e952-4271-ac6c-545f675030e3)
 
-- ⚠️ If you select "Dry Run", you can check the changes before upgrading.  
-  ![](https://github.com/user-attachments/assets/9e5a4d2a-e072-4074-8be4-e6dd48a537bc)  
-  ![](https://github.com/user-attachments/assets/02d0add8-005b-4fe3-8e9a-480221feb503)
+  - ⚠️ If you select `Dry Run`, you can check the changes before upgrading.  
+    ![](https://github.com/user-attachments/assets/9e5a4d2a-e072-4074-8be4-e6dd48a537bc)  
+    ![](https://github.com/user-attachments/assets/02d0add8-005b-4fe3-8e9a-480221feb503)
 
 <br><br>
 
