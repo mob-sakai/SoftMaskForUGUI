@@ -805,7 +805,7 @@ namespace Coffee.UISoftMask
 
                 Profiler.BeginSample("(SM4UI)[SoftMask] RenderSoftMaskBuffer > ApplyMaterialPropertyBlock");
                 var texture = graphic.mainTexture;
-                SoftMaskUtils.ApplyMaterialPropertyBlock(_mpb, softMaskDepth, texture, softnessRange);
+                SoftMaskUtils.ApplyMaterialPropertyBlock(_mpb, softMaskDepth, texture, softnessRange, alpha);
                 Profiler.EndSample();
             }
 

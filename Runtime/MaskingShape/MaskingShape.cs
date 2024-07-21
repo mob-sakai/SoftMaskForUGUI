@@ -428,7 +428,7 @@ namespace Coffee.UISoftMask
                 _mpb = SoftMaskUtils.materialPropertyBlockPool.Rent();
             }
 
-            SoftMaskUtils.ApplyMaterialPropertyBlock(_mpb, depth, texture, softnessRange);
+            SoftMaskUtils.ApplyMaterialPropertyBlock(_mpb, depth, texture, softnessRange, alpha);
             var softMaterial = SoftMaskUtils.GetSoftMaskingMaterial(maskingMethod);
 
             cb.DrawMesh(mesh, transform.localToWorldMatrix, softMaterial, 0, 0, _mpb);
