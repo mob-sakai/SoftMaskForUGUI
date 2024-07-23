@@ -1,3 +1,20 @@
+# [2.1.0](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.0.0...v2.1.0) (2024-07-23)
+
+
+### Bug Fixes
+
+* fix null exception ([15d6917](https://github.com/mob-sakai/SoftMaskForUGUI/commit/15d6917e80a58f35deabcbf7b8f3b8697f498d71))
+* fix upgrading asset system (v1 to v2) ([e6d0c60](https://github.com/mob-sakai/SoftMaskForUGUI/commit/e6d0c60edf63fe71c1cf8457a8e22c20485711bb))
+* support 'Apply display rotation during rendering' for Vulkan (experimental) ([f5c9b41](https://github.com/mob-sakai/SoftMaskForUGUI/commit/f5c9b414d420ce978e509af643ae51f92c1078d1)), closes [#171](https://github.com/mob-sakai/SoftMaskForUGUI/issues/171)
+
+
+### Features
+
+* add 'Hide Generated Components' option in project settings ([053e92b](https://github.com/mob-sakai/SoftMaskForUGUI/commit/053e92ba7a063b7a354dea19aefd1839e665c96a))
+* add a help box to the auto-generated object inspector ([f2d2115](https://github.com/mob-sakai/SoftMaskForUGUI/commit/f2d211538d07427fc2a5c8ba2063f2ee944057db)), closes [#175](https://github.com/mob-sakai/SoftMaskForUGUI/issues/175)
+* revive `SoftMask.alpha` ([8080cb2](https://github.com/mob-sakai/SoftMaskForUGUI/commit/8080cb24091ec49511e28c3c5ed92ff3477b5867)), closes [#172](https://github.com/mob-sakai/SoftMaskForUGUI/issues/172)
+* softmask buffers are now baked considering `Graphic.color.a` ([2eaaad6](https://github.com/mob-sakai/SoftMaskForUGUI/commit/2eaaad639673f440e096fd1ab529607d88fd5ba0))
+
 # [2.0.0](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v1.0.2...v2.0.0) (2024-07-17)
 
 
