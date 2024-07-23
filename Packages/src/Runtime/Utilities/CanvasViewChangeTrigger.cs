@@ -22,7 +22,7 @@ namespace Coffee.UISoftMask
         /// </summary>
         private void OnEnable()
         {
-            hideFlags = HideFlags.DontSave | HideFlags.NotEditable;
+            hideFlags = UISoftMaskProjectSettings.hideFlagsForTemp;
             TryGetComponent(out _canvas);
             UIExtraCallbacks.onBeforeCanvasRebuild +=
                 _checkViewProjectionMatrix ?? (_checkViewProjectionMatrix = CheckViewProjectionMatrix);

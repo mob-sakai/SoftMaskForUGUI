@@ -3,6 +3,7 @@ using System.Linq;
 using Coffee.UISoftMaskInternal;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 #if UNITY_MODULE_VR
 using UnityEngine.XR;
@@ -28,26 +29,41 @@ namespace Coffee.UISoftMask
         private static bool s_UseStereoMock;
 
         [Header("Setting")]
+        [Tooltip("Enable SoftMask globally.")]
         [SerializeField]
         internal bool m_SoftMaskEnabled = true;
 
+        [Tooltip("Enable stereo rendering for VR devices.")]
         [SerializeField]
         private bool m_StereoEnabled = true;
 
+        [Tooltip("Behavior when SoftMaskable shader is not found.")]
         [SerializeField]
         private FallbackBehavior m_FallbackBehavior;
 
+        [Tooltip("Sensitivity of transform that automatically rebuilds the soft mask buffer.")]
         [SerializeField]
         private TransformSensitivity m_TransformSensitivity = TransformSensitivity.Medium;
 
         [Header("Editor")]
+        [Tooltip(
+            "In the Scene view, objects outside the screen are displayed as stencil masks, allowing for more intuitive editing.")]
         [SerializeField]
         private bool m_UseStencilOutsideScreen = true;
 
+        [Tooltip("Hide the automatically generated components.\n" +
+                 "  - SoftMaskable\n" +
+                 "  - MaskingShapeContainer\n" +
+                 "  - TerminalMaskingShape")]
+        [SerializeField]
+        private bool m_HideGeneratedComponents = true;
+
         [Header("Shader")]
+        [Tooltip("Automatically include shaders required for SoftMask.")]
         [SerializeField]
         private bool m_AutoIncludeShaders = true;
 
+        [Tooltip("Strip unused shader variants in the build.")]
         [SerializeField]
         internal bool m_StripShaderVariants = true;
 
@@ -67,6 +83,10 @@ namespace Coffee.UISoftMask
 #endif
 
         public static FallbackBehavior fallbackBehavior => instance.m_FallbackBehavior;
+
+        public static HideFlags hideFlagsForTemp => instance.m_HideGeneratedComponents
+            ? HideFlags.DontSave | HideFlags.NotEditable | HideFlags.HideInHierarchy | HideFlags.HideInInspector
+            : HideFlags.DontSave | HideFlags.NotEditable;
 
         public static TransformSensitivity transformSensitivity
         {
@@ -125,11 +145,28 @@ namespace Coffee.UISoftMask
         private void OnValidate()
         {
             ResetAllSoftMasks();
+            ResetAllHideFlags<SoftMaskable>(hideFlagsForTemp);
+            ResetAllHideFlags<MaskingShapeContainer>(hideFlagsForTemp);
+            ResetAllHideFlags<TerminalMaskingShape>(hideFlagsForTemp);
         }
 
         private void Reset()
         {
             ReloadShaders(false);
+        }
+
+        private static void ResetAllHideFlags<T>(HideFlags flags) where T : Component
+        {
+#if UNITY_2023_1_OR_NEWER
+            foreach (var component in FindObjectsByType<T>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+#else
+            foreach (var component in FindObjectsOfType<T>())
+#endif
+            {
+                Debug.Log($"{component}, {component.hideFlags}");
+                component.hideFlags = flags;
+                EditorUtility.SetDirty(component);
+            }
         }
 
         internal void ReloadShaders(bool force)

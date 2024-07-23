@@ -97,7 +97,7 @@ namespace Coffee.UISoftMask
             for (var i = 0; i < subMeshes.Count; i++)
             {
                 var maskingShape = subMeshes[i].GetOrAddComponent<MaskingShape>();
-                maskingShape.hideFlags = HideFlags.DontSave | HideFlags.NotEditable;
+                maskingShape.hideFlags = UISoftMaskProjectSettings.hideFlagsForTemp;
                 maskingShape.antiAliasingThreshold = aa;
                 maskingShape.softnessRange = softness;
                 maskingShape.showMaskGraphic = show;
@@ -142,7 +142,7 @@ namespace Coffee.UISoftMask
 
             mat = new Material(Shader.Find("Hidden/UI/SoftMask"))
             {
-                hideFlags = HideFlags.DontSave
+                hideFlags = HideFlags.DontSave | HideFlags.NotEditable
             };
             mat.SetInt(s_BlendOp, (int)op);
             return mat;

@@ -475,7 +475,7 @@ namespace Coffee.UISoftMask
         {
             if (!isActiveAndEnabled || !SoftMaskingEnabled()) return;
 
-            this.AddComponentOnChildren<SoftMaskable>(HideFlags.DontSave | HideFlags.NotEditable, true);
+            this.AddComponentOnChildren<SoftMaskable>(UISoftMaskProjectSettings.hideFlagsForTemp, true);
         }
 
         private void OnBeforeCanvasRebuild()

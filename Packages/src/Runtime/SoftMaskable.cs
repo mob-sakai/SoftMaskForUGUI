@@ -30,9 +30,8 @@ namespace Coffee.UISoftMask
 
         private void OnEnable()
         {
-            this.AddComponentOnChildren<SoftMaskable>(HideFlags.DontSave | HideFlags.NotEditable, false);
-
-            hideFlags = HideFlags.DontSave | HideFlags.NotEditable;
+            hideFlags = UISoftMaskProjectSettings.hideFlagsForTemp;
+            this.AddComponentOnChildren<SoftMaskable>(hideFlags, false);
             _shouldRecalculateStencil = true;
             if (TryGetComponent(out _graphic))
             {
@@ -81,7 +80,7 @@ namespace Coffee.UISoftMask
 
         private void OnTransformChildrenChanged()
         {
-            this.AddComponentOnChildren<SoftMaskable>(HideFlags.DontSave | HideFlags.NotEditable, false);
+            this.AddComponentOnChildren<SoftMaskable>(UISoftMaskProjectSettings.hideFlagsForTemp, false);
         }
 
         void IMaskable.RecalculateMasking()
