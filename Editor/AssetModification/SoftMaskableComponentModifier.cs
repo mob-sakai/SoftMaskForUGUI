@@ -8,7 +8,7 @@ namespace Coffee.UISoftMask
     {
         protected override bool ModifyComponent(SoftMaskable c, bool dryRun)
         {
-            if (c.hideFlags.HasFlag(HideFlags.DontSave | HideFlags.NotEditable)) return false;
+            if ((c.hideFlags & HideFlags.DontSave) != 0) return false;
 
             if (!dryRun)
             {

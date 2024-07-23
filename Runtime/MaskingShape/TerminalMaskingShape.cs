@@ -31,13 +31,14 @@ namespace Coffee.UISoftMask
             {
                 s_SharedTerminalMaterial = new Material(Shader.Find("Hidden/UI/TerminalMaskingShape"))
                 {
-                    hideFlags = HideFlags.DontSave
+                    hideFlags = HideFlags.DontSave | HideFlags.NotEditable
                 };
             }
 
             material = s_SharedTerminalMaterial;
             transform.parent.TryGetComponent(out _parentMask);
             _shouldRecalculateStencil = true;
+            hideFlags = UISoftMaskProjectSettings.hideFlagsForTemp;
 
             base.OnEnable();
         }

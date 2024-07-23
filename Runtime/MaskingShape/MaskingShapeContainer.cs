@@ -15,6 +15,7 @@ namespace Coffee.UISoftMask
 
     [ExecuteAlways]
     [DisallowMultipleComponent]
+    [AddComponentMenu("")]
     public class MaskingShapeContainer : MonoBehaviour, ICanvasRaycastFilter, IMaterialModifier
     {
         [SerializeField]
@@ -31,7 +32,7 @@ namespace Coffee.UISoftMask
         {
             UIExtraCallbacks.onBeforeCanvasRebuild +=
                 _checkTransformChanged ?? (_checkTransformChanged = CheckTransformChanged);
-            hideFlags = HideFlags.DontSave | HideFlags.NotEditable;
+            hideFlags = UISoftMaskProjectSettings.hideFlagsForTemp;
             SetContainerDirty();
 
             if (_mask is IMaskingShapeContainerOwner owner)
