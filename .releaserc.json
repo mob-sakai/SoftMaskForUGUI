@@ -1,7 +1,7 @@
 {
   "branches": [
     "release",
-    "release-1.x",
+    "release-[0-9]+.x",
     {
       "name": "release-preview",
       "prerelease": "preview"
