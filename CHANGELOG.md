@@ -1,3 +1,10 @@
+## [2.1.1](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.1.0...v2.1.1) (2024-07-24)
+
+
+### Bug Fixes
+
+* flashing when SoftnessRange is changed in inspector ([d1c6235](https://github.com/mob-sakai/SoftMaskForUGUI/commit/d1c623588c5cfd37aa8f23c57d5e15f397049eda))
+
 # [2.1.0](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.0.0...v2.1.0) (2024-07-23)
 
 
