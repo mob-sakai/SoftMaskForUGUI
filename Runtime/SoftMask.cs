@@ -463,6 +463,7 @@ namespace Coffee.UISoftMask
         {
             if (!SoftMaskingEnabled() || !_softMaskBuffer) return;
 
+            Logging.Log(this, "SetDirtyAndNotifyIfBufferSizeChanged");
             var size = RenderTextureRepository.GetScreenSize((int)downSamplingRate);
             var hash = new Hash128((uint)GetInstanceID(), (uint)size.x, (uint)size.y, 0);
             if (RenderTextureRepository.Valid(hash, _softMaskBuffer)) return;
@@ -485,7 +486,6 @@ namespace Coffee.UISoftMask
                 // SoftMasking mode: If transform or view has changed, set dirty flag.
                 case MaskingMode.SoftMasking:
                 {
-                    SetDirtyAndNotifyIfBufferSizeChanged();
                     if (transform.HasChanged(ref _prevTransformMatrix, UISoftMaskProjectSettings.sensitivity))
                     {
                         SetSoftMaskDirty();
