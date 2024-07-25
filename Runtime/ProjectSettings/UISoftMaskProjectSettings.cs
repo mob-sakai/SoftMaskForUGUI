@@ -1,12 +1,15 @@
 #pragma warning disable CS0414
 using System.Linq;
 using Coffee.UISoftMaskInternal;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 #if UNITY_MODULE_VR
 using UnityEngine.XR;
+#endif
+#if UNITY_EDITOR
+using UnityEditor;
+using UnityEditor.Build;
+using UnityEditor.Build.Reporting;
 #endif
 
 namespace Coffee.UISoftMask
@@ -196,6 +199,16 @@ namespace Coffee.UISoftMask
         private static SettingsProvider CreateSettingsProvider()
         {
             return new PreloadedProjectSettingsProvider("Project/UI/Soft Mask");
+        }
+
+        private class PreprocessBuildWithReport : IPreprocessBuildWithReport
+        {
+            int IOrderedCallback.callbackOrder => 0;
+
+            void IPreprocessBuildWithReport.OnPreprocessBuild(BuildReport report)
+            {
+                instance.ReloadShaders(false);
+            }
         }
 #endif
     }
