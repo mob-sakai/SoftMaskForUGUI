@@ -1,3 +1,10 @@
+## [2.1.2](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.1.1...v2.1.2) (2024-07-25)
+
+
+### Bug Fixes
+
+* shaders for SoftMask are not automatically included ([3a37659](https://github.com/mob-sakai/SoftMaskForUGUI/commit/3a376595d15ba1c7229e009e50f7cc84214d7093)), closes [#177](https://github.com/mob-sakai/SoftMaskForUGUI/issues/177) [#178](https://github.com/mob-sakai/SoftMaskForUGUI/issues/178)
+
 ## [2.1.1](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.1.0...v2.1.1) (2024-07-24)
 
 
