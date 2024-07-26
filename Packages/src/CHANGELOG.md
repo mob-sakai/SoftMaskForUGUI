@@ -1,3 +1,10 @@
+## [2.1.3](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.1.2...v2.1.3) (2024-07-26)
+
+
+### Bug Fixes
+
+* soft mask buffer is fliped on UNITY_UV_STARTS_AT_TOP devices ([e9c7822](https://github.com/mob-sakai/SoftMaskForUGUI/commit/e9c782287065adca628a32a6222adab4210e73fd)), closes [#179](https://github.com/mob-sakai/SoftMaskForUGUI/issues/179)
+
 ## [2.1.2](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.1.1...v2.1.2) (2024-07-25)
 
 
