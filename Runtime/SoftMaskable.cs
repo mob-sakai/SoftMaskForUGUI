@@ -96,7 +96,8 @@ namespace Coffee.UISoftMask
                 return baseMaterial;
             }
 
-            if (!isActiveAndEnabled || !_graphic || !_graphic.maskable || isTerminal || baseMaterial == null)
+            if (!isActiveAndEnabled || !_graphic || !_graphic.canvas || !_graphic.maskable || isTerminal ||
+                baseMaterial == null)
             {
                 MaterialRepository.Release(ref _maskableMaterial);
                 return baseMaterial;
