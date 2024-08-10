@@ -194,7 +194,7 @@ namespace Coffee.UISoftMask
             if (!shader) return false;
 
             var name = shader.name;
-            return name.EndsWith(" (SoftMaskable)")
+            return name.Contains("(SoftMaskable)")
                    || name == "Hidden/UI/SoftMask"
                    || name == "Hidden/UI/TerminalMaskingShape";
         }
