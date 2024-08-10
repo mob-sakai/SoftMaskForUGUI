@@ -130,11 +130,25 @@ namespace Coffee.UISoftMaskInternal
         public static Vector2Int GetScreenSize()
         {
 #if UNITY_EDITOR
-            if (!Application.isPlaying && !Camera.current)
+            int ParseToInt(string s, int start, int end)
             {
-                var res = UnityStats.screenRes.Split('x');
-                return new Vector2Int(Mathf.Max(8, int.Parse(res[0])), Mathf.Max(8, int.Parse(res[1])));
+                var result = 0;
+                for (var i = start; i < end; i++)
+                {
+                    result = result * 10 + (s[i] - '0');
+                }
+
+                return result;
             }
+
+            Profiler.BeginSample("(COF)[RTRepository] GetScreenSize (Editor)");
+            var screenRes = UnityStats.screenRes;
+            var separator = screenRes.IndexOf('x');
+            var w = Mathf.Max(8, ParseToInt(screenRes, 0, separator));
+            var h = Mathf.Max(8, ParseToInt(screenRes, separator + 1, screenRes.Length));
+            Profiler.EndSample();
+
+            return new Vector2Int(w, h);
 #endif
             return new Vector2Int(Screen.width, Screen.height);
         }
