@@ -182,6 +182,15 @@ namespace Coffee.UISoftMask
             return mat;
         }
 
+        public static bool IsSoftMaskableShaderName(string name)
+        {
+#if UNITY_2021_2_OR_NEWER
+            return name.Contains("(SoftMaskable)", StringComparison.Ordinal);
+#else
+            return name.Contains("(SoftMaskable)");
+#endif
+        }
+
         public static Shader GetSoftMaskableShader(Shader baseShader,
             UISoftMaskProjectSettings.FallbackBehavior fallback)
         {
@@ -202,7 +211,7 @@ namespace Coffee.UISoftMask
             for (var i = 0; i < s_SoftMaskableShaderNameFormats.Length; i++)
             {
                 var name = string.Format(s_SoftMaskableShaderNameFormats[i], shaderName);
-                if (!name.Contains("(SoftMaskable)", StringComparison.Ordinal)) continue;
+                if (!IsSoftMaskableShaderName(name)) continue;
 
                 var shader = Shader.Find(name);
                 if (!shader) continue;
