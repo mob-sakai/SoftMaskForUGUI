@@ -83,6 +83,11 @@ namespace Coffee.UISoftMask
             this.AddComponentOnChildren<SoftMaskable>(UISoftMaskProjectSettings.hideFlagsForTemp, false);
         }
 
+        private void OnTransformParentChanged()
+        {
+            _shouldRecalculateStencil = true;
+        }
+
         void IMaskable.RecalculateMasking()
         {
             _shouldRecalculateStencil = true;
