@@ -81,9 +81,9 @@ namespace Coffee.UISoftMask
 
 #if UNITY_MODULE_VR
         public static bool stereoEnabled =>
-    #if UNITY_EDITOR
+#if UNITY_EDITOR
             Application.isPlaying &&
-    #endif
+#endif
             softMaskEnabled && instance.m_StereoEnabled && XRSettings.enabled;
 #else
         public static bool stereoEnabled => false;

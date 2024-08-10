@@ -10,7 +10,7 @@ namespace Coffee.UISoftMask
 
         public override void OnInspectorGUI()
         {
-            EditorGUILayout.HelpBox(s_Help, true);
+            EditorGUILayout.HelpBox(s_Help);
         }
     }
 

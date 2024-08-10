@@ -5,9 +5,6 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
 using UnityEngine.Rendering;
-#if UNITY_MODULE_VR
-using UnityEngine.XR;
-#endif
 #if TMP_ENABLE
 using TMPro;
 #endif

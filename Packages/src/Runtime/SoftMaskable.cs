@@ -18,14 +18,6 @@ namespace Coffee.UISoftMask
         private int _softMaskDepth;
         private int _stencilBits;
 
-#if UNITY_EDITOR
-        private Action _updateSceneViewMatrix;
-        private static readonly int s_GameVp = Shader.PropertyToID("_GameVP");
-        private static readonly int s_GameTvp = Shader.PropertyToID("_GameTVP");
-        private static readonly int s_GameVp2 = Shader.PropertyToID("_GameVP_2");
-        private static readonly int s_GameTvp2 = Shader.PropertyToID("_GameTVP_2");
-#endif
-
         private bool isTerminal => _graphic is TerminalMaskingShape;
 
         private void OnEnable()
@@ -198,6 +190,11 @@ namespace Coffee.UISoftMask
         }
 
 #if UNITY_EDITOR
+        private Action _updateSceneViewMatrix;
+        private static readonly int s_GameVp = Shader.PropertyToID("_GameVP");
+        private static readonly int s_GameTvp = Shader.PropertyToID("_GameTVP");
+        private static readonly int s_GameVp2 = Shader.PropertyToID("_GameVP_2");
+        private static readonly int s_GameTvp2 = Shader.PropertyToID("_GameTVP_2");
         private void UpdateSceneViewMatrix()
         {
             if (!_graphic || !_graphic.canvas || !_maskableMaterial) return;
@@ -216,9 +213,7 @@ namespace Coffee.UISoftMask
                 var cam = canvas.worldCamera;
                 if (canvas && canvas.renderMode != RenderMode.ScreenSpaceOverlay && cam)
                 {
-                    var eye = isStereo
-                        ? Camera.MonoOrStereoscopicEye.Left
-                        : Camera.MonoOrStereoscopicEye.Mono;
+                    var eye = isStereo ? Camera.MonoOrStereoscopicEye.Left : Camera.MonoOrStereoscopicEye.Mono;
                     canvas.GetViewProjectionMatrix(eye, out var vMatrix, out var pMatrix);
                     gameVp = gameTvp = pMatrix * vMatrix;
                 }
