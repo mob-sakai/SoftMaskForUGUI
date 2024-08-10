@@ -581,7 +581,7 @@ namespace Coffee.UISoftMask
 
         public override Material GetModifiedMaterial(Material baseMaterial)
         {
-            if (!isActiveAndEnabled) return baseMaterial;
+            if (!isActiveAndEnabled || !graphic || !graphic.canvas) return baseMaterial;
 
             if (SoftMaskingEnabled() && !UISoftMaskProjectSettings.useStencilOutsideScreen)
             {
@@ -701,7 +701,7 @@ namespace Coffee.UISoftMask
 
         private void RenderSoftMaskBuffer()
         {
-            if (!SoftMaskingEnabled()) return;
+            if (!SoftMaskingEnabled() || !graphic || !graphic.canvas) return;
 
             if (FrameCache.TryGet(this, nameof(RenderSoftMaskBuffer), out bool _)) return;
             FrameCache.Set(this, nameof(RenderSoftMaskBuffer), true);
