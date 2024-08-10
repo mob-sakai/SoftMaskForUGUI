@@ -202,7 +202,7 @@ namespace Coffee.UISoftMask
             for (var i = 0; i < s_SoftMaskableShaderNameFormats.Length; i++)
             {
                 var name = string.Format(s_SoftMaskableShaderNameFormats[i], shaderName);
-                if (!name.EndsWith(" (SoftMaskable)", StringComparison.Ordinal)) continue;
+                if (!name.Contains("(SoftMaskable)", StringComparison.Ordinal)) continue;
 
                 var shader = Shader.Find(name);
                 if (!shader) continue;

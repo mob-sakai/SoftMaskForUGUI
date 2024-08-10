@@ -20,7 +20,7 @@ namespace Coffee.UISoftMask
             IList<ShaderCompilerData> data)
         {
             // If the shader is not SoftMask/SoftMaskable, do nothing.
-            if (shader.name != "Hidden/UI/SoftMask" && !shader.name.EndsWith(" (SoftMaskable)")) return;
+            if (shader.name != "Hidden/UI/SoftMask" && !shader.name.Contains("(SoftMaskable)")) return;
 
             // Remove the 'SOFTMASK_EDITOR' shader variants.
             var editor = new ShaderKeyword(shader, "SOFTMASK_EDITOR");

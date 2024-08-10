@@ -11,7 +11,7 @@ namespace Coffee.UISoftMask
         public static Modifier Create(string path)
         {
             var shader = AssetDatabase.LoadAssetAtPath<Shader>(path);
-            if (!shader || !shader.name.Contains(" (SoftMaskable)")) return null;
+            if (!shader || !shader.name.Contains("(SoftMaskable)")) return null;
 
             return new SoftMaskableShaderModifier
             {
