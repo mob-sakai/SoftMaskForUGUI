@@ -22,7 +22,7 @@ namespace Coffee.UISoftMask
                     // -> color.a *= SoftMask(input.IN.vertex, IN.worldPosition, color.a);
                     new TextReplaceModifier(
                         @"(([^. \t]+).*\*=\s*SoftMask\(.*[^.][^a])\);.*$",
-                        $"$1, $2.a); // Add for soft mask")
+                        "$1, $2.a); // Add for soft mask")
                 }
             };
         }
