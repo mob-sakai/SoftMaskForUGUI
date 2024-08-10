@@ -149,8 +149,9 @@ namespace Coffee.UISoftMaskInternal
             Profiler.EndSample();
 
             return new Vector2Int(w, h);
-#endif
+#else
             return new Vector2Int(Screen.width, Screen.height);
+#endif
         }
     }
 }
