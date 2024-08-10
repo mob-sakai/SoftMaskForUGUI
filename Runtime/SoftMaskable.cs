@@ -141,7 +141,7 @@ namespace Coffee.UISoftMask
 
             Profiler.BeginSample("(SM4UI)[SoftMaskable] GetModifiedMaterial");
 
-            var isStereo = Application.isPlaying && _graphic.canvas.IsStereoCanvas();
+            var isStereo = UISoftMaskProjectSettings.stereoEnabled && _graphic.canvas.IsStereoCanvas();
             var hash = new Hash128(
                 (uint)baseMaterial.GetInstanceID(),
                 (uint)_softMask.softMaskBuffer.GetInstanceID(),
@@ -207,6 +207,7 @@ namespace Coffee.UISoftMask
             }
 
             var canvas = _graphic.canvas.rootCanvas;
+            var isStereo = UISoftMaskProjectSettings.stereoEnabled && canvas.IsStereoCanvas();
             if (!FrameCache.TryGet(canvas, "GameVp", out Matrix4x4 gameVp) ||
                 !FrameCache.TryGet(canvas, "GameTvp", out Matrix4x4 gameTvp))
             {
@@ -215,7 +216,7 @@ namespace Coffee.UISoftMask
                 var cam = canvas.worldCamera;
                 if (canvas && canvas.renderMode != RenderMode.ScreenSpaceOverlay && cam)
                 {
-                    var eye = canvas.IsStereoCanvas()
+                    var eye = isStereo
                         ? Camera.MonoOrStereoscopicEye.Left
                         : Camera.MonoOrStereoscopicEye.Mono;
                     canvas.GetViewProjectionMatrix(eye, out var vMatrix, out var pMatrix);
@@ -248,7 +249,7 @@ namespace Coffee.UISoftMask
             Profiler.EndSample();
 
             // Calc Right eye matrices.
-            if (canvas.IsStereoCanvas())
+            if (isStereo)
             {
                 if (!FrameCache.TryGet(canvas, "GameVp2", out gameVp))
                 {

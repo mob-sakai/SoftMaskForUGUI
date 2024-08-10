@@ -760,7 +760,9 @@ namespace Coffee.UISoftMask
 
             Profiler.EndSample();
 
-            var eyes = graphic.canvas.IsStereoCanvas() ? s_StereoEyes : s_MonoEyes;
+            var eyes = UISoftMaskProjectSettings.stereoEnabled && graphic.canvas.IsStereoCanvas()
+                ? s_StereoEyes
+                : s_MonoEyes;
             for (var i = 0; i < eyes.Length; i++)
             {
                 RenderSoftMaskBuffer(_cb, eyes[i]);
