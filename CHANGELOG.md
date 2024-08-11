@@ -1,3 +1,18 @@
+# [2.2.0](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.1.3...v2.2.0) (2024-08-11)
+
+
+### Bug Fixes
+
+* `Stereo Enabled` option in preferences does not work ([552f806](https://github.com/mob-sakai/SoftMaskForUGUI/commit/552f806524a74ac253bfa8b23dfe23f13ba8bee4))
+* if no `Canvas` in the parents of the `SoftMask`, error occurred ([7c401d7](https://github.com/mob-sakai/SoftMaskForUGUI/commit/7c401d72c842fcce7696f045e109798b0966511a)), closes [#182](https://github.com/mob-sakai/SoftMaskForUGUI/issues/182)
+* placing a SoftMaskable object outside of a SoftMask makes the object invisible ([088b723](https://github.com/mob-sakai/SoftMaskForUGUI/commit/088b723dc6e7781d0f04bf3a359774bcf5ba7de3)), closes [#180](https://github.com/mob-sakai/SoftMaskForUGUI/issues/180)
+* softmask-buffer is cleared when TMPSubMeshUI is activated via EditorGUI ([13648ca](https://github.com/mob-sakai/SoftMaskForUGUI/commit/13648ca1bc860d36d580792187b536ead212bd3a)), closes [#180](https://github.com/mob-sakai/SoftMaskForUGUI/issues/180)
+
+
+### Features
+
+* support for shaders with `(SoftMaskable)` in the name except at the end ([3755656](https://github.com/mob-sakai/SoftMaskForUGUI/commit/37556569cb561bd6e6ac9463d502ec60ad6a45ea))
+
 ## [2.1.3](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.1.2...v2.1.3) (2024-07-26)
 
 
