@@ -1,3 +1,11 @@
+## [2.2.1](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.2.0...v2.2.1) (2024-08-16)
+
+
+### Bug Fixes
+
+* soft mask is upside down on some devices ([6e2ad42](https://github.com/mob-sakai/SoftMaskForUGUI/commit/6e2ad42423d43b7e3345efb54ab226d5388c88ab)), closes [#185](https://github.com/mob-sakai/SoftMaskForUGUI/issues/185)
+* soft masked image flickers or disappears when resizing canvas in editor ([d5568b8](https://github.com/mob-sakai/SoftMaskForUGUI/commit/d5568b86a69baa443e923bab0dd68958134673ea)), closes [#184](https://github.com/mob-sakai/SoftMaskForUGUI/issues/184)
+
 # [2.2.0](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.1.3...v2.2.0) (2024-08-11)
 
 
