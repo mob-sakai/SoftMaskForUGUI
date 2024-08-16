@@ -408,13 +408,24 @@ namespace Coffee.UISoftMask
         {
             base.OnValidate();
             AddSoftMaskableOnChildren();
-            SetDirtyAndNotify();
+            SetSoftMaskDirty();
             UpdateAntiAlias();
 
             if (graphic)
             {
                 graphic.SetVerticesDirty();
             }
+
+            var list = ListPool<IMaskable>.Rent();
+            GetComponents(list);
+            for (var i = 0; i < list.Count; i++)
+            {
+                if (list[i] == null) continue;
+
+                list[i].RecalculateMasking();
+            }
+
+            ListPool<IMaskable>.Return(ref list);
         }
 #endif
 
