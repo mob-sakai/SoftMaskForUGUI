@@ -45,6 +45,8 @@ float2 ClipToUv(const float2 clipPos)
     #if UNITY_UV_STARTS_AT_TOP
     uv.y = 1 - uv.y;
     #endif
+    if (_ProjectionParams.x < 0)
+        uv.y = 1 - uv.y;
 
     #if UNITY_PRETRANSFORM_TO_DISPLAY_ORIENTATION
     float ratio = _ScreenParams.x / _ScreenParams.y;
