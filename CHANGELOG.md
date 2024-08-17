@@ -1,3 +1,10 @@
+## [2.2.2](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.2.1...v2.2.2) (2024-08-17)
+
+
+### Bug Fixes
+
+* soft mask is upside down on some devices (refactor) ([d17784e](https://github.com/mob-sakai/SoftMaskForUGUI/commit/d17784e03eb38f3eb0aac93830093d45dcf63bc4))
+
 ## [2.2.1](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.2.0...v2.2.1) (2024-08-16)
 
 
