@@ -1,3 +1,10 @@
+## [2.2.3](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.2.2...v2.2.3) (2024-08-22)
+
+
+### Bug Fixes
+
+* in linear color mode, `TextMeshProUGUI` appeared darker ([4105efd](https://github.com/mob-sakai/SoftMaskForUGUI/commit/4105efd9d0fe4c105a67b021db86506549873a4d)), closes [#187](https://github.com/mob-sakai/SoftMaskForUGUI/issues/187)
+
 ## [2.2.2](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.2.1...v2.2.2) (2024-08-17)
 
 
