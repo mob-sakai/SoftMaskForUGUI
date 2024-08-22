@@ -4,10 +4,10 @@ Properties {
 	_FaceTex			("Face Texture", 2D) = "white" {}
 	_FaceUVSpeedX		("Face UV Speed X", Range(-5, 5)) = 0.0
 	_FaceUVSpeedY		("Face UV Speed Y", Range(-5, 5)) = 0.0
-	_FaceColor		    ("Face Color", Color) = (1,1,1,1)
+	[HDR]_FaceColor		("Face Color", Color) = (1,1,1,1)
 	_FaceDilate			("Face Dilate", Range(-1,1)) = 0
 
-	_OutlineColor	    ("Outline Color", Color) = (0,0,0,1)
+	[HDR]_OutlineColor	("Outline Color", Color) = (0,0,0,1)
 	_OutlineTex			("Outline Texture", 2D) = "white" {}
 	_OutlineUVSpeedX	("Outline UV Speed X", Range(-5, 5)) = 0.0
 	_OutlineUVSpeedY	("Outline UV Speed Y", Range(-5, 5)) = 0.0
@@ -21,7 +21,7 @@ Properties {
 	_BevelRoundness		("Bevel Roundness", Range(0,1)) = 0
 
 	_LightAngle			("Light Angle", Range(0.0, 6.2831853)) = 3.1416
-	_SpecularColor	    ("Specular", Color) = (1,1,1,1)
+	[HDR]_SpecularColor	("Specular", Color) = (1,1,1,1)
 	_SpecularPower		("Specular", Range(0,4)) = 2.0
 	_Reflectivity		("Reflectivity", Range(5.0,15.0)) = 10
 	_Diffuse			("Diffuse", Range(0,1)) = 0.5
@@ -37,13 +37,13 @@ Properties {
 	_EnvMatrixRotation	("Texture Rotation", vector) = (0, 0, 0, 0)
 
 
-	_UnderlayColor	    ("Border Color", Color) = (0,0,0, 0.5)
+	[HDR]_UnderlayColor	("Border Color", Color) = (0,0,0, 0.5)
 	_UnderlayOffsetX	("Border OffsetX", Range(-1,1)) = 0
 	_UnderlayOffsetY	("Border OffsetY", Range(-1,1)) = 0
 	_UnderlayDilate		("Border Dilate", Range(-1,1)) = 0
 	_UnderlaySoftness	("Border Softness", Range(0,1)) = 0
 
-	_GlowColor		    ("Color", Color) = (0, 1, 0, 0.5)
+	[HDR]_GlowColor			("Color", Color) = (0, 1, 0, 0.5)
 	_GlowOffset			("Offset", Range(-1,1)) = 0
 	_GlowInner			("Inner", Range(0,1)) = 0.05
 	_GlowOuter			("Outer", Range(0,1)) = 0.05
