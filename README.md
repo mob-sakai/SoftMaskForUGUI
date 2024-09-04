@@ -39,6 +39,7 @@ Enhance Unity UI (uGUI) with advanced soft-masking features to create more visua
   - [Usage with Scripts](#usage-with-scripts)
   - [Usage with TextMeshPro](#usage-with-textmeshpro)
   - [Usage with Your Custom Shaders](#usage-with-your-custom-shaders)
+  - [Usage with ShaderGraph](#usage-with-shadergraph)
   - [:warning: Limitations](#warning-limitations)
 - [🤝 Contributing](#-contributing)
   - [Issues](#issues)
@@ -379,6 +380,22 @@ Here, let's make [UI/Additive](https://raw.githubusercontent.com/mob-sakai/SoftM
 
 <br><br>
 
+### Usage with ShaderGraph
+
+NOTE: Unity 2023.2/600.0+ is required.
+
+1. Open the `Package Manager` window and select the `UI Soft Mask` package in the package list and click the `ShaderGraph Support > Import` button.
+
+2. The sample includes `UIDefault (SoftMaskable).shadergraph` and `SoftMask.subshadergraph`.  
+You can use the sample as references to make your own shader graph compatible with SoftMask.
+   1. Add `(SoftMaskable)` at the end of the shader name.
+   2. Add `SOFTMASK_EDITOR` as a `Boolean Keyword (Shader Feature)`.
+   3. Add the `Sub Graphs > SoftMask` node and connect it to the final alpha output.
+
+![](https://github.com/user-attachments/assets/8da64af8-a4e2-4477-a253-c45fe11d3eec)
+
+<br><br>
+
 ### :warning: Limitations
 
 The following are the limitations of SoftMaskForUGUI.
@@ -386,6 +403,7 @@ The following are the limitations of SoftMaskForUGUI.
 - (Android) `RGB ETC1 (+ Split alpha channel)` texture format is not supported.
   - Use a format that supports alpha, such as `RGBA ETC2`.
   - Technically possible, but not supported because [ETC2 support rate is over 95%](https://developer.android.com/guide/playcore/asset-delivery/texture-compression).
+  - If needed, feel free to create an issue.
 
 <br><br>
 

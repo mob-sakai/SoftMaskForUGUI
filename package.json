@@ -36,6 +36,11 @@
       "displayName": "TextMeshPro Support (ugui 2.0)",
       "description": "TextMeshPro Support (ugui 2.0)",
       "path": "Samples~/TextMeshPro Support (ugui 2.0)~"
+    },
+    {
+      "displayName": "ShaderGraph Support",
+      "description": "ShaderGraph Support",
+      "path": "Samples~/ShaderGraph Support"
     }
   ]
 }
