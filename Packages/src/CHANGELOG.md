@@ -1,3 +1,10 @@
+## [2.2.4](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.2.3...v2.2.4) (2024-09-04)
+
+
+### Bug Fixes
+
+* stencil masking does not working correctly when `SoftMask` component is placed under `Mask` component ([07084aa](https://github.com/mob-sakai/SoftMaskForUGUI/commit/07084aaa3e51ec2726af964613618f5443116e7e)), closes [#183](https://github.com/mob-sakai/SoftMaskForUGUI/issues/183)
+
 ## [2.2.3](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.2.2...v2.2.3) (2024-08-22)
 
 
