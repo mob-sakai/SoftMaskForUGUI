@@ -593,13 +593,6 @@ namespace Coffee.UISoftMask
         {
             if (!isActiveAndEnabled || !graphic || !graphic.canvas) return baseMaterial;
 
-            if (SoftMaskingEnabled() && !UISoftMaskProjectSettings.useStencilOutsideScreen)
-            {
-                graphic.canvasRenderer.hasPopInstruction = false;
-                graphic.canvasRenderer.popMaterialCount = 0;
-                return showMaskGraphic ? baseMaterial : null;
-            }
-
             return base.GetModifiedMaterial(baseMaterial);
         }
 
