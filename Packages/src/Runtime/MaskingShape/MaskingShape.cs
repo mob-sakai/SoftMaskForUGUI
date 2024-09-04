@@ -249,6 +249,8 @@ namespace Coffee.UISoftMask
 
         void IMaskable.RecalculateMasking()
         {
+            StencilMaterial.Remove(_maskMaterial);
+            _maskMaterial = null;
             _shouldRecalculateStencil = true;
             UpdateContainer();
             RegisterAntiAliasingIfNeeded();
@@ -258,6 +260,8 @@ namespace Coffee.UISoftMask
         {
             if (!isActiveAndEnabled)
             {
+                StencilMaterial.Remove(_maskMaterial);
+                _maskMaterial = null;
                 return baseMaterial;
             }
 
@@ -267,10 +271,11 @@ namespace Coffee.UISoftMask
             {
                 StencilMaterial.Remove(_maskMaterial);
                 _maskMaterial = null;
-                return null;
+                return baseMaterial;
             }
 
             // Mask material
+            var toUse = baseMaterial;
             Material maskMat = null;
             var colorMask = m_ShowMaskGraphic ? ColorWriteMask.All : 0;
             if (SoftMaskingEnabled() && !UISoftMaskProjectSettings.useStencilOutsideScreen)
@@ -303,8 +308,12 @@ namespace Coffee.UISoftMask
             }
 
             StencilMaterial.Remove(_maskMaterial);
-            _maskMaterial = maskMat;
-            return _maskMaterial;
+            if (maskMat && maskMat != baseMaterial)
+            {
+                toUse = _maskMaterial = maskMat;
+            }
+
+            return toUse;
         }
 
         void IMeshModifier.ModifyMesh(Mesh mesh)

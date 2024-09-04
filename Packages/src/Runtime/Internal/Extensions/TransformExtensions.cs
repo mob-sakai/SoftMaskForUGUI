@@ -25,15 +25,15 @@ namespace Coffee.UISoftMaskInternal
             Profiler.EndSample();
 
             Profiler.BeginSample("(COF)[TransformExt] CompareHierarchyIndex > Calc");
-            var loop = Mathf.Min(lTrs.Count, rTrs.Count);
+            var loop = Mathf.Max(lTrs.Count, rTrs.Count);
             var result = 0;
             for (var i = 0; i < loop; ++i)
             {
-                self = lTrs[lTrs.Count - i - 1];
-                other = rTrs[rTrs.Count - i - 1];
-                if (self == other) continue;
+                var selfIndex = 0 <= lTrs.Count - i - 1 ? lTrs[lTrs.Count - i - 1].GetSiblingIndex() : -1;
+                var otherIndex = 0 <= rTrs.Count - i - 1 ? rTrs[rTrs.Count - i - 1].GetSiblingIndex() : -1;
+                if (selfIndex == otherIndex) continue;
 
-                result = self.GetSiblingIndex() - other.GetSiblingIndex();
+                result = selfIndex - otherIndex;
                 break;
             }
 
