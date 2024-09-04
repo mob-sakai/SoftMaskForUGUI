@@ -103,28 +103,6 @@ namespace Coffee.UISoftMask
             RecalculateStencilIfNeeded();
             _softMaskDepth = _softMask ? _softMask.softMaskDepth : -1;
 
-            var useStencil = UISoftMaskProjectSettings.useStencilOutsideScreen;
-            var localId = 0u;
-#if UNITY_EDITOR
-            if (useStencil)
-            {
-                if (_softMask && _softMaskDepth < 0)
-                {
-                    MaterialRepository.Release(ref _maskableMaterial);
-                    return baseMaterial;
-                }
-
-                if (!_softMask && (!TryGetComponent(out _softMask) || !_softMask.SoftMaskingEnabled()))
-                {
-                    MaterialRepository.Release(ref _maskableMaterial);
-                    return baseMaterial;
-                }
-
-                localId = (uint)GetInstanceID() + (UISoftMaskProjectSettings.useStencilOutsideScreen ? 1u : 0u);
-            }
-            else
-#endif
-
             if (!_softMask || _softMaskDepth < 0 || 4 <= _softMaskDepth)
             {
                 MaterialRepository.Release(ref _maskableMaterial);
@@ -132,13 +110,13 @@ namespace Coffee.UISoftMask
             }
 
             Profiler.BeginSample("(SM4UI)[SoftMaskable] GetModifiedMaterial");
-
             var isStereo = UISoftMaskProjectSettings.stereoEnabled && _graphic.canvas.IsStereoCanvas();
+            var useStencil = UISoftMaskProjectSettings.useStencilOutsideScreen;
             var hash = new Hash128(
                 (uint)baseMaterial.GetInstanceID(),
                 (uint)_softMask.softMaskBuffer.GetInstanceID(),
-                (uint)_stencilBits + (isStereo ? 1 << 8 : 0u) + ((uint)_softMaskDepth << 9),
-                localId);
+                (uint)(_stencilBits + (isStereo ? 1 << 8 : 0) + (useStencil ? 1 << 9 : 0) + (_softMaskDepth << 10)),
+                0);
             MaterialRepository.Get(hash, ref _maskableMaterial,
                 x => SoftMaskUtils.CreateSoftMaskable(x.baseMaterial, x.softMaskBuffer, x._softMaskDepth,
                     x._stencilBits, x.isStereo, UISoftMaskProjectSettings.fallbackBehavior),
@@ -147,7 +125,7 @@ namespace Coffee.UISoftMask
 
 #if UNITY_EDITOR
             var threshold = 0f;
-            if (useStencil)
+            if (UISoftMaskProjectSettings.useStencilOutsideScreen)
             {
                 if (TryGetComponent(out MaskingShape s) && s.maskingMethod == MaskingShape.MaskingMethod.Subtract)
                 {
