@@ -5,7 +5,7 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "c51e4514c9ab944915a639433ee52342e55a644e"
+      "hash": "805474a9e49f534ff01bf75405bcd415ed57083c"
     },
     "com.coffee.nano-monitor": {
       "version": "https://github.com/mob-sakai/Coffee.Internal.git?path=Packages/NanoMonitor",
@@ -14,7 +14,7 @@
       "dependencies": {
         "com.unity.ugui": "1.0.0"
       },
-      "hash": "c51e4514c9ab944915a639433ee52342e55a644e"
+      "hash": "2efcc6a8fc4dda8e6d4cf8492ca952cd0542641d"
     },
     "com.coffee.softmask-for-ugui": {
       "version": "file:src",
@@ -23,13 +23,6 @@
       "dependencies": {
         "com.unity.ugui": "1.0.0"
       }
-    },
-    "com.coffee.sub-asset-editor": {
-      "version": "https://github.com/mob-sakai/SubAssetEditor.git",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "01464178eec1e4dbe741c11c9baeb94a151c99ee"
     },
     "com.unity.ext.nunit": {
       "version": "1.0.6",
