@@ -82,7 +82,7 @@ float SoftMaskSample(float2 uv, float a)
     #if SOFTMASK_EDITOR
         int inScreen = step(0, uv.x) * step(uv.x, 1) * step(0, uv.y) * step(uv.y, 1);
         alpha = lerp(_SoftMaskOutsideColor, alpha, inScreen);
-        clip (a * alpha.x * alpha.y * alpha.z * alpha.w - _AlphaClipThreshold * (1 - inScreen) - 0.001);
+        clip (a * alpha.x * alpha.y * alpha.z * alpha.w - _AlphaClipThreshold - 0.001);
     #endif
 
     return alpha.x * alpha.y * alpha.z * alpha.w;

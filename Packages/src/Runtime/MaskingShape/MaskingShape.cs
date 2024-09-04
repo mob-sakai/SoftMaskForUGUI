@@ -278,18 +278,6 @@ namespace Coffee.UISoftMask
             var toUse = baseMaterial;
             Material maskMat = null;
             var colorMask = m_ShowMaskGraphic ? ColorWriteMask.All : 0;
-            if (SoftMaskingEnabled() && !UISoftMaskProjectSettings.useStencilOutsideScreen)
-            {
-                if (m_ShowMaskGraphic)
-                {
-                    Profiler.BeginSample(
-                        "(SM4UI)[MaskingShape)] GetModifiedMaterial > StencilMaterial.Add for SoftMask");
-                    maskMat = StencilMaterial.Add(baseMaterial, _stencilBits, StencilOp.Keep, CompareFunction.Equal,
-                        colorMask, _stencilBits, _stencilBits);
-                    Profiler.EndSample();
-                }
-            }
-            else
             {
                 Profiler.BeginSample("(SM4UI)[MaskingShape)] GetModifiedMaterial > StencilMaterial.Add");
                 switch (maskingMethod)
