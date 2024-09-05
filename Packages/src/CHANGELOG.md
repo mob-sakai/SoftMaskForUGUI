@@ -1,3 +1,10 @@
+## [2.3.1](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.3.0...v2.3.1) (2024-09-05)
+
+
+### Bug Fixes
+
+* ShaderGraph support is not included ([ce29e1a](https://github.com/mob-sakai/SoftMaskForUGUI/commit/ce29e1a5a7f7a353d4308e44d83e4cbfe22cddcd))
+
 # [2.3.0](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.2.4...v2.3.0) (2024-09-05)
 
 
