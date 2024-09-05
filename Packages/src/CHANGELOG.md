@@ -1,3 +1,17 @@
+# [2.3.0](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.2.4...v2.3.0) (2024-09-05)
+
+
+### Bug Fixes
+
+* `MaskingShape.maskingMethod = Subtract` is not working correctly ([56e1262](https://github.com/mob-sakai/SoftMaskForUGUI/commit/56e12621267d9e3b03272101989d3956b424af7a))
+* nested `MaskingShape` is not working correctly ([b1331cf](https://github.com/mob-sakai/SoftMaskForUGUI/commit/b1331cf21376936ff4ad7fa57146e666698e4eb4)), closes [#189](https://github.com/mob-sakai/SoftMaskForUGUI/issues/189)
+* when `UseStencilOutsideScreen = true`, objects inside `SoftMask` are not batched in the editor ([21dfae7](https://github.com/mob-sakai/SoftMaskForUGUI/commit/21dfae7c2c4d53273df4649891e038eb41cb911f)), closes [#188](https://github.com/mob-sakai/SoftMaskForUGUI/issues/188)
+
+
+### Features
+
+* ShaderGraph support ([c4ebe58](https://github.com/mob-sakai/SoftMaskForUGUI/commit/c4ebe58cfa14140ab87cc889ceff214d97b3e2ba)), closes [#190](https://github.com/mob-sakai/SoftMaskForUGUI/issues/190)
+
 ## [2.2.4](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.2.3...v2.2.4) (2024-09-04)
 
 
