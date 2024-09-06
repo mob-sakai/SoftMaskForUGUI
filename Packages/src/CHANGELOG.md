@@ -1,3 +1,10 @@
+## [2.3.3](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.3.2...v2.3.3) (2024-09-06)
+
+
+### Bug Fixes
+
+* when the player window moved to a different resolution display, soft masking does not work property ([79cac0e](https://github.com/mob-sakai/SoftMaskForUGUI/commit/79cac0e065c358b21b9f70278821929532f10878)), closes [#193](https://github.com/mob-sakai/SoftMaskForUGUI/issues/193)
+
 ## [2.3.2](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.3.1...v2.3.2) (2024-09-06)
 
 
