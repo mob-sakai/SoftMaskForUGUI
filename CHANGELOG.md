@@ -1,3 +1,10 @@
+## [2.3.2](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.3.1...v2.3.2) (2024-09-06)
+
+
+### Bug Fixes
+
+* SetDirtyAndNotify causes null exceptions on GameObject delete ([706f022](https://github.com/mob-sakai/SoftMaskForUGUI/commit/706f022cb3d503fc57d72f5c0bb716d7a918cdf7)), closes [#192](https://github.com/mob-sakai/SoftMaskForUGUI/issues/192)
+
 ## [2.3.1](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.3.0...v2.3.1) (2024-09-05)
 
 
