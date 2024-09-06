@@ -598,6 +598,8 @@ namespace Coffee.UISoftMask
 
         private void SetDirtyAndNotify()
         {
+            if (isDirty || !this || !isActiveAndEnabled) return;
+
             SetSoftMaskDirty();
             MaskUtilities.NotifyStencilStateChanged(this);
         }
