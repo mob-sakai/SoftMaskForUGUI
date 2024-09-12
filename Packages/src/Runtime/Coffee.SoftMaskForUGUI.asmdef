@@ -1,7 +1,9 @@
 {
     "name": "Coffee.SoftMaskForUGUI",
     "references": [
-        "Unity.TextMeshPro"
+        "Unity.TextMeshPro",
+        "Unity.RenderPipelines.Universal.Runtime",
+        "Unity.RenderPipelines.Core.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -20,6 +22,11 @@
             "name": "com.unity.ugui",
             "expression": "2.0.0",
             "define": "TMP_ENABLE"
+        },
+        {
+            "name": "com.unity.render-pipelines.universal",
+            "expression": "16",
+            "define": "SHADERGRAPH_ENABLE"
         }
     ]
 }

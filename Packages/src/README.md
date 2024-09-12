@@ -382,17 +382,22 @@ Here, let's make [UI/Additive](https://raw.githubusercontent.com/mob-sakai/SoftM
 
 ### Usage with ShaderGraph
 
-NOTE: Unity 2023.2/600.0+ is required.
+NOTE: Unity 2023.2/6000.0+ is required.
 
 1. Open the `Package Manager` window and select the `UI Soft Mask` package in the package list and click the `ShaderGraph Support > Import` button.
 
 2. The sample includes `UIDefault (SoftMaskable).shadergraph` and `SoftMask.subshadergraph`.  
-You can use the sample as references to make your own shader graph compatible with SoftMask.
+You can use the sample as references to make your own shader graph compatible with `SoftMask`.
    1. Add `(SoftMaskable)` at the end of the shader name.
    2. Add `SOFTMASK_EDITOR` as a `Boolean Keyword (Shader Feature)`.
-   3. Add the `Sub Graphs > SoftMask` node and connect it to the final alpha output.
+   3. Add the `Sub Graphs > SoftMask` node and connect it to the final alpha output.  
+   ![](https://github.com/user-attachments/assets/8da64af8-a4e2-4477-a253-c45fe11d3eec)
 
-![](https://github.com/user-attachments/assets/8da64af8-a4e2-4477-a253-c45fe11d3eec)
+3. To use the soft-maskable ShaderGraph in the editor, the `SoftMaskable ShaderGraph Support (Editor)` renderer feature is required.  
+   This feature is specifically for previewing SoftMaskable ShaderGraph in the editor and will be automatically removed during the build process.  
+   ![SoftMaskable ShaderGraph Support](https://github.com/user-attachments/assets/43dd860d-11dc-4fb5-9cf8-619019a378eb)
+
+⚠️ Currently, the soft-maskable ShaderGraph does not display correctly in the SceneView.
 
 <br><br>
 

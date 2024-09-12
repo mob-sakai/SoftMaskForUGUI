@@ -8,6 +8,7 @@ using UnityEngine.Rendering;
 #if TMP_ENABLE
 using TMPro;
 #endif
+using Internal = Coffee.UISoftMaskInternal;
 
 namespace Coffee.UISoftMask
 {
@@ -19,8 +20,8 @@ namespace Coffee.UISoftMask
         /// <summary>
         /// Object pool for CommandBuffer instances.
         /// </summary>
-        public static readonly ObjectPool<CommandBuffer> commandBufferPool =
-            new ObjectPool<CommandBuffer>(
+        public static readonly Internal.ObjectPool<CommandBuffer> commandBufferPool =
+            new Internal.ObjectPool<CommandBuffer>(
                 () => new CommandBuffer(),
                 x => x != null,
                 x => x.Clear());
@@ -28,8 +29,8 @@ namespace Coffee.UISoftMask
         /// <summary>
         /// Object pool for MaterialPropertyBlock instances.
         /// </summary>
-        public static readonly ObjectPool<MaterialPropertyBlock> materialPropertyBlockPool =
-            new ObjectPool<MaterialPropertyBlock>(
+        public static readonly Internal.ObjectPool<MaterialPropertyBlock> materialPropertyBlockPool =
+            new Internal.ObjectPool<MaterialPropertyBlock>(
                 () => new MaterialPropertyBlock(),
                 x => x != null,
                 x => x.Clear());
@@ -88,7 +89,7 @@ namespace Coffee.UISoftMask
 #if TMP_ENABLE
         private static void UpdateSubMeshUI(TextMeshProUGUI text, bool show, float aa, MinMax01 softness)
         {
-            var subMeshes = ListPool<TMP_SubMeshUI>.Rent();
+            var subMeshes = Internal.ListPool<TMP_SubMeshUI>.Rent();
             text.GetComponentsInChildren(subMeshes, 1);
 
             for (var i = 0; i < subMeshes.Count; i++)
@@ -100,7 +101,7 @@ namespace Coffee.UISoftMask
                 maskingShape.showMaskGraphic = show;
             }
 
-            ListPool<TMP_SubMeshUI>.Return(ref subMeshes);
+            Internal.ListPool<TMP_SubMeshUI>.Return(ref subMeshes);
         }
 #endif
 
