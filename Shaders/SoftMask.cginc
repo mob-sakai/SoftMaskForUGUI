@@ -11,6 +11,8 @@ uniform float4x4 _GameVP;
 uniform float4x4 _GameTVP;
 uniform float4x4 _GameVP_2;
 uniform float4x4 _GameTVP_2;
+uniform int _SoftMaskInGameView;
+uniform int _SoftMaskInSceneView;
 
 float Approximately(float4x4 a, float4x4 b)
 {
@@ -39,14 +41,9 @@ float2 WorldToUv(float4 worldPos, float offset)
         isSceneView);
 }
 
-float2 ClipToUv(const float2 clipPos)
+float2 ScreenToUv(const float2 screenPos)
 {
-    half2 uv = clipPos.xy / _ScreenParams.xy;
-    #if UNITY_UV_STARTS_AT_TOP
-    if (0 <= _ProjectionParams.x)
-        uv.y = 1 - uv.y;
-    #endif
-
+    half2 uv = screenPos;
     #if UNITY_PRETRANSFORM_TO_DISPLAY_ORIENTATION
     float ratio = _ScreenParams.x / _ScreenParams.y;
     switch (UNITY_DISPLAY_ORIENTATION_PRETRANSFORM)
@@ -61,6 +58,16 @@ float2 ClipToUv(const float2 clipPos)
     #endif
 
     return uv;
+}
+
+float2 ClipToUv(const float2 clipPos)
+{
+    half2 screenPos = clipPos / _ScreenParams.xy;
+    #if UNITY_UV_STARTS_AT_TOP
+    if (0 <= _ProjectionParams.x)
+        screenPos.y = 1 - screenPos.y;
+    #endif
+    return ScreenToUv(screenPos);
 }
 
 float SoftMaskSample(float2 uv, float a)
@@ -82,7 +89,10 @@ float SoftMaskSample(float2 uv, float a)
     #if SOFTMASK_EDITOR
         int inScreen = step(0, uv.x) * step(uv.x, 1) * step(0, uv.y) * step(uv.y, 1);
         alpha = lerp(_SoftMaskOutsideColor, alpha, inScreen);
-        clip (a * alpha.x * alpha.y * alpha.z * alpha.w - _AlphaClipThreshold - 0.001);
+        if (inScreen == 0)
+        {
+            clip (a * alpha.x * alpha.y * alpha.z * alpha.w - _AlphaClipThreshold - 0.001);
+        }
     #endif
 
     return alpha.x * alpha.y * alpha.z * alpha.w;
@@ -91,9 +101,20 @@ float SoftMaskSample(float2 uv, float a)
 void SoftMaskForGraph_float(float4 ScreenPos, float4 WorldPos, float InAlpha, out float A)
 {
     #if SOFTMASK_EDITOR
-    A = SoftMaskSample(WorldToUv(WorldPos, 0), InAlpha) * InAlpha;
+    if (_SoftMaskInGameView == 1)
+    {
+        A = SoftMaskSample(ScreenToUv(ScreenPos.xy), 1) * InAlpha;
+    }
+    else if (_SoftMaskInSceneView == 1)
+    {
+        A = InAlpha;
+    }
+    else
+    {
+        A = SoftMaskSample(WorldToUv(WorldPos, 0.5), InAlpha) * InAlpha;
+    }
     #else
-    A = SoftMaskSample(ScreenPos.xy, 1) * InAlpha;
+    A = SoftMaskSample(ScreenToUv(ScreenPos.xy), 1) * InAlpha;
     #endif
 }
 
