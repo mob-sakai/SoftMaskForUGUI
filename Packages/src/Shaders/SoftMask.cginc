@@ -13,6 +13,7 @@ uniform float4x4 _GameVP_2;
 uniform float4x4 _GameTVP_2;
 uniform int _SoftMaskInGameView;
 uniform int _SoftMaskInSceneView;
+uniform int _MaskingShapeSubtract;
 
 float Approximately(float4x4 a, float4x4 b)
 {
@@ -87,12 +88,19 @@ float SoftMaskSample(float2 uv, float a)
                                 lerp(mask, half4(1, 1, 1, 1) - mask, _SoftMaskColor - half4(1, 1, 1, 1)),
                                 _SoftMaskColor));
     #if SOFTMASK_EDITOR
-        int inScreen = step(0, uv.x) * step(uv.x, 1) * step(0, uv.y) * step(uv.y, 1);
-        alpha = lerp(_SoftMaskOutsideColor, alpha, inScreen);
-        if (inScreen == 0)
+    int inScreen = step(0, uv.x) * step(uv.x, 1) * step(0, uv.y) * step(uv.y, 1);
+    alpha = lerp(_SoftMaskOutsideColor, alpha, inScreen);
+    #ifdef UNITY_UI_ALPHACLIP
+    if (_MaskingShapeSubtract == 1)
+    {
+        if (_SoftMaskInSceneView == 1)
         {
-            clip (a * alpha.x * alpha.y * alpha.z * alpha.w - _AlphaClipThreshold - 0.001);
+            clip (a - _AlphaClipThreshold - 0.001);
+            return 1;
         }
+        clip (a * alpha.x * alpha.y * alpha.z * alpha.w - _AlphaClipThreshold - 0.001);
+    }
+    #endif
     #endif
 
     return alpha.x * alpha.y * alpha.z * alpha.w;
