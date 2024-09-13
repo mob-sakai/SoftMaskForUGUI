@@ -46,7 +46,6 @@ namespace Coffee.UISoftMaskInternal
             GetFrameCache<T>().Set((key1.GetHashCode(), key2.GetHashCode()), result);
         }
 
-
         /// <summary>
         /// Sets a value in the frame cache with a specified key.
         /// </summary>

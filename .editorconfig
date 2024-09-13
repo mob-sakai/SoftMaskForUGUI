@@ -210,3 +210,11 @@ csharp_space_between_square_brackets = false
 resharper_check_namespace_highlighting = none
 resharper_for_can_be_converted_to_foreach_highlighting = none
 resharper_xmldoc_indent_text = ZeroIndent
+
+# Microsoft .NET properties
+csharp_preserve_single_line_blocks = true
+
+# ReSharper properties
+resharper_csharp_keep_blank_lines_in_code = 1
+resharper_csharp_keep_blank_lines_in_declarations = 1
+resharper_place_simple_blocks_on_single_line = false

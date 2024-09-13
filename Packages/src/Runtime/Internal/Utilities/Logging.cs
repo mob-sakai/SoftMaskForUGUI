@@ -42,7 +42,6 @@ namespace Coffee.UISoftMaskInternal
 #endif
         }
 
-
 #if !ENABLE_COFFEE_LOGGER
         [Conditional(k_DisableSymbol)]
 #endif
@@ -52,7 +51,6 @@ namespace Coffee.UISoftMaskInternal
             Log_Internal(LogType.Log, tag, message, context ? context : tag as Object);
         }
 
-
 #if !ENABLE_COFFEE_LOGGER
         [Conditional(k_DisableSymbol)]
 #endif
@@ -60,7 +58,6 @@ namespace Coffee.UISoftMaskInternal
         {
             Log_Internal(LogType.Log, tag, message, context ? context : tag as Object);
         }
-
 
 #if !ENABLE_COFFEE_LOGGER
         [Conditional(k_DisableSymbol)]
@@ -78,7 +75,6 @@ namespace Coffee.UISoftMaskInternal
             Debug.LogError($"{tag}: {message}", context);
 #endif
         }
-
 
 #if !ENABLE_COFFEE_LOGGER
         [Conditional(k_DisableSymbol)]
@@ -122,7 +118,6 @@ namespace Coffee.UISoftMaskInternal
             s_Sb.Length = 0;
 #endif
         }
-
 
 #if !ENABLE_COFFEE_LOGGER
         [Conditional(k_DisableSymbol)]
@@ -169,7 +164,6 @@ namespace Coffee.UISoftMaskInternal
 #endif
         }
 
-
 #if !ENABLE_COFFEE_LOGGER
         [Conditional(k_DisableSymbol)]
 #endif
@@ -207,7 +201,6 @@ namespace Coffee.UISoftMaskInternal
             s_TypeNameCache.Add(type, sb.ToString(start, sb.Length - start));
 #endif
         }
-
 
 #if !ENABLE_COFFEE_LOGGER
         [Conditional(k_DisableSymbol)]

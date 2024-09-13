@@ -197,7 +197,6 @@ namespace Coffee.UISoftMask
             set => m_PartOfParent = value;
         }
 
-
         /// <summary>
         /// The value used by the soft mask to select the area of influence defined over the soft mask's graphic.
         /// </summary>

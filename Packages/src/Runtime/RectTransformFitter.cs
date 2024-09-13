@@ -33,7 +33,6 @@ namespace Coffee.UISoftMask
             SizeDelta = SizeDeltaY | SizeDeltaX
         }
 
-
         [Tooltip("Target RectTransform to fit.")]
         [SerializeField]
         private RectTransform m_Target;
