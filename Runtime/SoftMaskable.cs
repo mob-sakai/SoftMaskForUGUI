@@ -9,7 +9,10 @@ namespace Coffee.UISoftMask
     [ExecuteAlways]
     public class SoftMaskable : MonoBehaviour, IMaterialModifier, IMaskable
     {
+#if UNITY_EDITOR
         private static readonly int s_AlphaClipThreshold = Shader.PropertyToID("_AlphaClipThreshold");
+        private static readonly int s_MaskingShapeSubtract = Shader.PropertyToID("_MaskingShapeSubtract");
+#endif
         private Action _checkGraphic;
         private MaskableGraphic _graphic;
         private Material _maskableMaterial;
@@ -112,24 +115,16 @@ namespace Coffee.UISoftMask
             Profiler.BeginSample("(SM4UI)[SoftMaskable] GetModifiedMaterial");
             var isStereo = UISoftMaskProjectSettings.stereoEnabled && _graphic.canvas.IsStereoCanvas();
             var useStencil = UISoftMaskProjectSettings.useStencilOutsideScreen;
-            var hash = new Hash128(
-                (uint)baseMaterial.GetInstanceID(),
-                (uint)_softMask.softMaskBuffer.GetInstanceID(),
-                (uint)(_stencilBits + (isStereo ? 1 << 8 : 0) + (useStencil ? 1 << 9 : 0) + (_softMaskDepth << 10)),
-                0);
-            MaterialRepository.Get(hash, ref _maskableMaterial,
-                x => SoftMaskUtils.CreateSoftMaskable(x.baseMaterial, x.softMaskBuffer, x._softMaskDepth,
-                    x._stencilBits, x.isStereo, UISoftMaskProjectSettings.fallbackBehavior),
-                (baseMaterial, _softMask.softMaskBuffer, _softMaskDepth, _stencilBits, isStereo));
-            Profiler.EndSample();
-
+            var localId = 0u;
 #if UNITY_EDITOR
             var threshold = 0f;
-            if (UISoftMaskProjectSettings.useStencilOutsideScreen)
+            var subtract = false;
+            if (useStencil)
             {
                 if (TryGetComponent(out MaskingShape s) && s.maskingMethod == MaskingShape.MaskingMethod.Subtract)
                 {
                     threshold = s.softnessRange.average;
+                    subtract = true;
                 }
                 else if (_softMask)
                 {
@@ -137,7 +132,23 @@ namespace Coffee.UISoftMask
                 }
             }
 
+            localId = (uint)(Mathf.Clamp01(threshold) * (1 << 8) + (subtract ? 1 << 9 : 0));
+#endif
+
+            var hash = new Hash128(
+                (uint)baseMaterial.GetInstanceID(),
+                (uint)_softMask.softMaskBuffer.GetInstanceID(),
+                (uint)(_stencilBits + (isStereo ? 1 << 8 : 0) + (useStencil ? 1 << 9 : 0) + (_softMaskDepth << 10)),
+                localId);
+            MaterialRepository.Get(hash, ref _maskableMaterial,
+                x => SoftMaskUtils.CreateSoftMaskable(x.baseMaterial, x.softMaskBuffer, x._softMaskDepth,
+                    x._stencilBits, x.isStereo, UISoftMaskProjectSettings.fallbackBehavior),
+                (baseMaterial, _softMask.softMaskBuffer, _softMaskDepth, _stencilBits, isStereo));
+            Profiler.EndSample();
+
+#if UNITY_EDITOR
             _maskableMaterial.SetFloat(s_AlphaClipThreshold, threshold);
+            _maskableMaterial.SetInt(s_MaskingShapeSubtract, subtract ? 1 : 0);
 #endif
 
             return _maskableMaterial;
