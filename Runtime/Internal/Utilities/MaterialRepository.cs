@@ -55,7 +55,6 @@ namespace Coffee.UISoftMaskInternal
             Profiler.EndSample();
         }
 
-
         /// <summary>
         /// Adds or retrieves a cached material based on the hash.
         /// </summary>

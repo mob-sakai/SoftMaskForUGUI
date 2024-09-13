@@ -312,7 +312,6 @@ namespace Coffee.UISoftMask
         {
             if (!isActiveAndEnabled) return;
 
-
             Profiler.BeginSample("(SM4UI)[MaskingShape)] ModifyMesh");
             if (!_mesh)
             {
@@ -324,14 +323,7 @@ namespace Coffee.UISoftMask
             _mesh.RecalculateBounds();
 
             Profiler.EndSample();
-
             Logging.Log(this, " >>>> Graphic mesh is modified.");
-        }
-
-
-        internal bool SoftMaskingEnabled()
-        {
-            return isActiveAndEnabled && _mask is SoftMask softMask && softMask.SoftMaskingEnabled();
         }
 
         internal bool AntiAliasingEnabled()

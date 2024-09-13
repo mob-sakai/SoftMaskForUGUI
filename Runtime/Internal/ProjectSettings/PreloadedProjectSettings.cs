@@ -103,7 +103,6 @@ namespace Coffee.UISoftMaskInternal
     }
 #endif
 
-
     public abstract class PreloadedProjectSettings<T> : PreloadedProjectSettings
         where T : PreloadedProjectSettings<T>
     {
