@@ -1,3 +1,12 @@
+## [2.3.4](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.3.3...v2.3.4) (2024-09-14)
+
+
+### Bug Fixes
+
+* MaskingShapeContainer NullReferenceException in demo ([#195](https://github.com/mob-sakai/SoftMaskForUGUI/issues/195)) ([96a090f](https://github.com/mob-sakai/SoftMaskForUGUI/commit/96a090f09d16979d4b837da0d5c0095c5886bb3a))
+* ShaderGraph is not working correctly ([#191](https://github.com/mob-sakai/SoftMaskForUGUI/issues/191)) ([82c38dd](https://github.com/mob-sakai/SoftMaskForUGUI/commit/82c38dd290cd98b1daf9cfd3dc74334a53dbde8f))
+* subtract mode `MaskingShape` does not display correctly in the editor ([f83a647](https://github.com/mob-sakai/SoftMaskForUGUI/commit/f83a647c30a4b8df8a1f1d80ddfef299dc123408))
+
 ## [2.3.3](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.3.2...v2.3.3) (2024-09-06)
 
 
