@@ -357,13 +357,14 @@ namespace Coffee.UISoftMask
         private void UpdateContainer()
         {
             Mask mask = null;
+            MaskingShapeContainer newContainer = null;
             if (isActiveAndEnabled)
             {
                 var useStencil = UISoftMaskProjectSettings.useStencilOutsideScreen;
                 Utils.GetStencilBits(transform, false, useStencil, out mask, out var _);
+                newContainer = mask.GetOrAddComponent<MaskingShapeContainer>();
             }
 
-            var newContainer = mask.GetOrAddComponent<MaskingShapeContainer>();
             if (newContainer != _container)
             {
                 if (_container)
