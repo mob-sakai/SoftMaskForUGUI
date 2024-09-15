@@ -1,3 +1,10 @@
+## [2.3.5](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.3.4...v2.3.5) (2024-09-15)
+
+
+### Bug Fixes
+
+* alphaHitTestMinimumThreshold should not be modified on a texture not readeable or not using Crunch Compression ([98783ec](https://github.com/mob-sakai/SoftMaskForUGUI/commit/98783eceae6a7442f45cb1d829abc4d57c35efd4)), closes [#197](https://github.com/mob-sakai/SoftMaskForUGUI/issues/197)
+
 ## [2.3.4](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.3.3...v2.3.4) (2024-09-14)
 
 
