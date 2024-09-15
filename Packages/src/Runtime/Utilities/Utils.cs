@@ -1,6 +1,7 @@
 using Coffee.UISoftMaskInternal;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering;
 using UnityEngine.Profiling;
 using UnityEngine.UI;
 #if UNITY_EDITOR
@@ -131,7 +132,11 @@ namespace Coffee.UISoftMask
 
         private static bool AlphaHitTestValid(Image src, Vector2 sp, Camera eventCamera, float threshold)
         {
-            if (!src.overrideSprite || !src.overrideSprite.GetActualTexture().isReadable) return true;
+            if (!src) return true;
+
+            var texture = src.overrideSprite.GetActualTexture();
+            if (!texture) return true;
+            if (GraphicsFormatUtility.IsCrunchFormat(texture.format) || !texture.isReadable) return false;
 
             var origin = src.alphaHitTestMinimumThreshold;
             if (0 < origin && origin <= 1) return true;
