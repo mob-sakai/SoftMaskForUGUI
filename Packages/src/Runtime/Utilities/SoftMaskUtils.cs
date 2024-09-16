@@ -8,7 +8,7 @@ using UnityEngine.Rendering;
 #if TMP_ENABLE
 using TMPro;
 #endif
-using Internal = Coffee.UISoftMaskInternal;
+using UISoftMaskInternal = Coffee.UISoftMaskInternal;
 
 namespace Coffee.UISoftMask
 {
@@ -20,8 +20,8 @@ namespace Coffee.UISoftMask
         /// <summary>
         /// Object pool for CommandBuffer instances.
         /// </summary>
-        public static readonly Internal.ObjectPool<CommandBuffer> commandBufferPool =
-            new Internal.ObjectPool<CommandBuffer>(
+        public static readonly UISoftMaskInternal.ObjectPool<CommandBuffer> commandBufferPool =
+            new UISoftMaskInternal.ObjectPool<CommandBuffer>(
                 () => new CommandBuffer(),
                 x => x != null,
                 x => x.Clear());
@@ -29,8 +29,8 @@ namespace Coffee.UISoftMask
         /// <summary>
         /// Object pool for MaterialPropertyBlock instances.
         /// </summary>
-        public static readonly Internal.ObjectPool<MaterialPropertyBlock> materialPropertyBlockPool =
-            new Internal.ObjectPool<MaterialPropertyBlock>(
+        public static readonly UISoftMaskInternal.ObjectPool<MaterialPropertyBlock> materialPropertyBlockPool =
+            new UISoftMaskInternal.ObjectPool<MaterialPropertyBlock>(
                 () => new MaterialPropertyBlock(),
                 x => x != null,
                 x => x.Clear());
@@ -89,7 +89,7 @@ namespace Coffee.UISoftMask
 #if TMP_ENABLE
         private static void UpdateSubMeshUI(TextMeshProUGUI text, bool show, float aa, MinMax01 softness)
         {
-            var subMeshes = Internal.ListPool<TMP_SubMeshUI>.Rent();
+            var subMeshes = UISoftMaskInternal.ListPool<TMP_SubMeshUI>.Rent();
             text.GetComponentsInChildren(subMeshes, 1);
 
             for (var i = 0; i < subMeshes.Count; i++)
@@ -101,7 +101,7 @@ namespace Coffee.UISoftMask
                 maskingShape.showMaskGraphic = show;
             }
 
-            Internal.ListPool<TMP_SubMeshUI>.Return(ref subMeshes);
+            UISoftMaskInternal.ListPool<TMP_SubMeshUI>.Return(ref subMeshes);
         }
 #endif
 

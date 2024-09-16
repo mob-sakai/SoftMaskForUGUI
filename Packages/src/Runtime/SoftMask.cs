@@ -7,7 +7,7 @@ using UnityEngine.Events;
 using UnityEngine.Profiling;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
-using Internal = Coffee.UISoftMaskInternal;
+using UISoftMaskInternal = Coffee.UISoftMaskInternal;
 
 namespace Coffee.UISoftMask
 {
@@ -107,7 +107,7 @@ namespace Coffee.UISoftMask
         internal RenderTexture _softMaskBuffer;
         private UnityAction _updateParentSoftMask;
         private CanvasViewChangeTrigger _viewChangeTrigger;
-        private List<SoftMask> children => _children != null ? _children : _children = Internal.ListPool<SoftMask>.Rent();
+        private List<SoftMask> children => _children != null ? _children : _children = UISoftMaskInternal.ListPool<SoftMask>.Rent();
 
         /// <summary>
         /// Masking mode.<br />
@@ -357,7 +357,7 @@ namespace Coffee.UISoftMask
 
         protected override void OnDestroy()
         {
-            Internal.ListPool<SoftMask>.Return(ref _children);
+            UISoftMaskInternal.ListPool<SoftMask>.Return(ref _children);
             _onBeforeCanvasRebuild = null;
             _renderSoftMaskBuffer = null;
             _setSoftMaskDirty = null;
@@ -416,7 +416,7 @@ namespace Coffee.UISoftMask
                 graphic.SetVerticesDirty();
             }
 
-            var list = Internal.ListPool<IMaskable>.Rent();
+            var list = UISoftMaskInternal.ListPool<IMaskable>.Rent();
             GetComponents(list);
             for (var i = 0; i < list.Count; i++)
             {
@@ -425,7 +425,7 @@ namespace Coffee.UISoftMask
                 list[i].RecalculateMasking();
             }
 
-            Internal.ListPool<IMaskable>.Return(ref list);
+            UISoftMaskInternal.ListPool<IMaskable>.Return(ref list);
         }
 #endif
 
