@@ -1,3 +1,10 @@
+## [2.3.7](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.3.6...v2.3.7) (2024-09-16)
+
+
+### Bug Fixes
+
+* alias name conflict ([4b847ad](https://github.com/mob-sakai/SoftMaskForUGUI/commit/4b847adba35b8469dc8fbd6465e0db9f22aaff52)), closes [#198](https://github.com/mob-sakai/SoftMaskForUGUI/issues/198)
+
 ## [2.3.6](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.3.5...v2.3.6) (2024-09-16)
 
 
