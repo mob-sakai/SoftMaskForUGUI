@@ -1,3 +1,10 @@
+## [2.3.6](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.3.5...v2.3.6) (2024-09-16)
+
+
+### Bug Fixes
+
+* version 2.3.5 does not work ([23d4aa9](https://github.com/mob-sakai/SoftMaskForUGUI/commit/23d4aa90aa9260a8be6619438840dcb044b74259))
+
 ## [2.3.5](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.3.4...v2.3.5) (2024-09-15)
 
 
