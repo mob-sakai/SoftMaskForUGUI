@@ -5,10 +5,12 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
 using UnityEngine.Rendering;
+#if URP_ENABLE
+using UnityEngine.Rendering.Universal;
+#endif
 #if TMP_ENABLE
 using TMPro;
 #endif
-using UISoftMaskInternal = Coffee.UISoftMaskInternal;
 
 namespace Coffee.UISoftMask
 {
@@ -48,6 +50,8 @@ namespace Coffee.UISoftMask
         private static readonly int s_StencilReadMask = Shader.PropertyToID("_StencilReadMask");
         private static readonly int s_ThresholdMin = Shader.PropertyToID("_ThresholdMin");
         private static readonly int s_ThresholdMax = Shader.PropertyToID("_ThresholdMax");
+        private static readonly int s_RenderScale = Shader.PropertyToID("_RenderScale");
+        private static float s_CurrentRenderScale = 1;
 
         private static readonly string[] s_SoftMaskableShaderNameFormats =
         {
@@ -65,6 +69,27 @@ namespace Coffee.UISoftMask
 #endif
         private static void InitializeOnLoadMethod()
         {
+            s_CurrentRenderScale = 1;
+            Shader.SetGlobalFloat(s_RenderScale, s_CurrentRenderScale);
+#if URP_ENABLE
+            UIExtraCallbacks.onBeforeCanvasRebuild += () =>
+            {
+                // Discard variations lesser than 0.05f.
+                var renderScale = 1f;
+                if (GraphicsSettings.currentRenderPipeline is UniversalRenderPipelineAsset urpAsset
+                    && 0.05f < Mathf.Abs(urpAsset.renderScale - 1))
+                {
+                    renderScale = urpAsset.renderScale;
+                }
+
+                if (!Mathf.Approximately(s_CurrentRenderScale, renderScale))
+                {
+                    s_CurrentRenderScale = renderScale;
+                    Shader.SetGlobalFloat(s_RenderScale, s_CurrentRenderScale);
+                }
+            };
+#endif
+
 #if TMP_ENABLE
             TMPro_EventManager.TEXT_CHANGED_EVENT.Add(obj =>
             {

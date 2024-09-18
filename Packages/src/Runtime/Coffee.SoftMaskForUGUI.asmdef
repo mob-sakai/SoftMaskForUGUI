@@ -27,6 +27,11 @@
             "name": "com.unity.render-pipelines.universal",
             "expression": "16",
             "define": "SHADERGRAPH_ENABLE"
+        },
+        {
+            "name": "com.unity.render-pipelines.universal",
+            "expression": "1",
+            "define": "URP_ENABLE"
         }
     ]
 }

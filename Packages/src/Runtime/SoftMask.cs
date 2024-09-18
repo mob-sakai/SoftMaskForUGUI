@@ -7,7 +7,6 @@ using UnityEngine.Events;
 using UnityEngine.Profiling;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
-using UISoftMaskInternal = Coffee.UISoftMaskInternal;
 
 namespace Coffee.UISoftMask
 {
