@@ -34,9 +34,9 @@ namespace Coffee.UISoftMaskInternal
                 var defaultSettings = GetDefaultSettings(t);
                 if (!defaultSettings)
                 {
+                    // When create a new instance, automatically set it as default settings.
                     defaultSettings = t.GetProperty("instance", flags)
                         ?.GetValue(null, null) as PreloadedProjectSettings;
-                    SetDefaultSettings(defaultSettings);
                 }
                 else if (GetPreloadedSettings(t).Length != 1)
                 {
@@ -73,6 +73,7 @@ namespace Coffee.UISoftMaskInternal
 
         protected static void SetDefaultSettings(PreloadedProjectSettings asset)
         {
+            if (!asset) return;
             var type = asset.GetType();
             if (string.IsNullOrEmpty(AssetDatabase.GetAssetPath(asset)))
             {
