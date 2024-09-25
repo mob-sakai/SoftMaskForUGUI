@@ -51,7 +51,9 @@ namespace Coffee.UISoftMask
         private static readonly int s_ThresholdMin = Shader.PropertyToID("_ThresholdMin");
         private static readonly int s_ThresholdMax = Shader.PropertyToID("_ThresholdMax");
         private static readonly int s_RenderScale = Shader.PropertyToID("_RenderScale");
+        private static readonly int s_DynamicResolutionScale = Shader.PropertyToID("_DynamicResolutionScale");
         private static float s_CurrentRenderScale = 1;
+        private static Vector2 s_CurrentDynamicResolutionScale = Vector2.one;
 
         private static readonly string[] s_SoftMaskableShaderNameFormats =
         {
@@ -89,6 +91,18 @@ namespace Coffee.UISoftMask
                 }
             };
 #endif
+            UIExtraCallbacks.onBeforeCanvasRebuild += () =>
+            {
+                var s = new Vector2(ScalableBufferManager.widthScaleFactor, ScalableBufferManager.heightScaleFactor);
+                s.x = Mathf.Clamp(Mathf.CeilToInt(s.x / 0.05f) * 0.05f, 0.25f, 1.0f);
+                s.y = Mathf.Clamp(Mathf.CeilToInt(s.y / 0.05f) * 0.05f, 0.25f, 1.0f);
+
+                if (s_CurrentDynamicResolutionScale != s)
+                {
+                    s_CurrentDynamicResolutionScale = s;
+                    Shader.SetGlobalVector(s_DynamicResolutionScale, s_CurrentDynamicResolutionScale);
+                }
+            };
 
 #if TMP_ENABLE
             TMPro_EventManager.TEXT_CHANGED_EVENT.Add(obj =>

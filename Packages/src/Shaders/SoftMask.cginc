@@ -15,6 +15,9 @@ uniform int _SoftMaskInGameView;
 uniform int _SoftMaskInSceneView;
 uniform int _MaskingShapeSubtract;
 uniform float _RenderScale;
+uniform float2 _DynamicResolutionScale;
+uniform int _AllowRenderScale;
+uniform int _AllowDynamicResolution;
 
 float Approximately(float4x4 a, float4x4 b)
 {
@@ -84,11 +87,17 @@ float SoftMaskSample(float2 uv, float a)
         uv = lerp(half2(uv.x / 2, uv.y), half2(uv.x / 2 + 0.5, uv.y), unity_StereoEyeIndex);
     }
 
-    #if SOFTMASK_EDITOR
+#if !SOFTMASK_EDITOR
+    if (_AllowRenderScale == 1)
+    {
+        uv /= _RenderScale;
+    }
+    if (_AllowDynamicResolution == 1)
+    {
+        uv /= _DynamicResolutionScale;
+    }
+#endif
     half4 mask = tex2D(_SoftMaskTex, uv);
-    #else
-    half4 mask = tex2D(_SoftMaskTex, uv / _RenderScale);
-    #endif
     half4 alpha = saturate(lerp(half4(1, 1, 1, 1),
                                 lerp(mask, half4(1, 1, 1, 1) - mask, _SoftMaskColor - half4(1, 1, 1, 1)),
                                 _SoftMaskColor));

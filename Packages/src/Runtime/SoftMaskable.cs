@@ -13,6 +13,9 @@ namespace Coffee.UISoftMask
         private static readonly int s_AlphaClipThreshold = Shader.PropertyToID("_AlphaClipThreshold");
         private static readonly int s_MaskingShapeSubtract = Shader.PropertyToID("_MaskingShapeSubtract");
 #endif
+        private static readonly int s_AllowDynamicResolution = Shader.PropertyToID("_AllowDynamicResolution");
+        private static readonly int s_AllowRenderScale = Shader.PropertyToID("_AllowRenderScale");
+
         private Action _checkGraphic;
         private MaskableGraphic _graphic;
         private Material _maskableMaterial;
@@ -150,6 +153,9 @@ namespace Coffee.UISoftMask
             _maskableMaterial.SetFloat(s_AlphaClipThreshold, threshold);
             _maskableMaterial.SetInt(s_MaskingShapeSubtract, subtract ? 1 : 0);
 #endif
+
+            _maskableMaterial.SetInt(s_AllowDynamicResolution, _softMask.allowDynamicResolution ? 1 : 0);
+            _maskableMaterial.SetInt(s_AllowRenderScale, _softMask.allowRenderScale ? 1 : 0);
 
             return _maskableMaterial;
         }
