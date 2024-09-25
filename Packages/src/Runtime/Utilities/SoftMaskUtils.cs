@@ -97,6 +97,14 @@ namespace Coffee.UISoftMask
                 s.x = Mathf.Clamp(Mathf.CeilToInt(s.x / 0.05f) * 0.05f, 0.25f, 1.0f);
                 s.y = Mathf.Clamp(Mathf.CeilToInt(s.y / 0.05f) * 0.05f, 0.25f, 1.0f);
 
+#if URP_ENABLE
+                if (GraphicsSettings.currentRenderPipeline is UniversalRenderPipelineAsset urpAsset
+                    && Mathf.Abs(urpAsset.renderScale - 1) <= 0.05f)
+                {
+                    s = Vector2.one;
+                }
+#endif
+
                 if (s_CurrentDynamicResolutionScale != s)
                 {
                     s_CurrentDynamicResolutionScale = s;
