@@ -21,13 +21,12 @@ uniform int _AllowDynamicResolution;
 
 float Approximately(float4x4 a, float4x4 b)
 {
-    float4x4 d = abs(a - b);
-    return step(
-        max(d._m00,max(d._m01,max(d._m02,max(d._m03,
-        max(d._m10,max(d._m11,max(d._m12,max(d._m13,
-        max(d._m20,max(d._m21,max(d._m22,max(d._m23,
-        max(d._m30,max(d._m31,max(d._m32,d._m33))))))))))))))),
-        0.1);
+    const float4x4 d = abs(a - b);
+    const float max0 = max(d._m00, max(d._m01, max(d._m02, d._m03)));
+    const float max1 = max(d._m10, max(d._m11, max(d._m12, d._m13)));
+    const float max2 = max(d._m20, max(d._m21, max(d._m22, d._m23)));
+    const float max3 = max(d._m30, max(d._m31, max(d._m32, d._m33)));
+    return step(max(max0, max(max1, max(max2, max3))), 0.1);
 }
 
 float2 WorldToUv(float4 worldPos, float offset)
@@ -49,7 +48,7 @@ float2 WorldToUv(float4 worldPos, float offset)
 float2 ScreenToUv(const float2 screenPos)
 {
     half2 uv = screenPos;
-    #if UNITY_PRETRANSFORM_TO_DISPLAY_ORIENTATION
+#if UNITY_PRETRANSFORM_TO_DISPLAY_ORIENTATION
     float ratio = _ScreenParams.x / _ScreenParams.y;
     switch (UNITY_DISPLAY_ORIENTATION_PRETRANSFORM)
     {
@@ -60,7 +59,7 @@ float2 ScreenToUv(const float2 screenPos)
         case UNITY_DISPLAY_ORIENTATION_PRETRANSFORM_270:
             return half2((uv.y + ratio - 1) / ratio, 1 - uv.x * ratio);
     }
-    #endif
+#endif
 
     return uv;
 }
@@ -68,10 +67,10 @@ float2 ScreenToUv(const float2 screenPos)
 float2 ClipToUv(const float2 clipPos)
 {
     half2 screenPos = clipPos / _ScreenParams.xy;
-    #if UNITY_UV_STARTS_AT_TOP
+#if UNITY_UV_STARTS_AT_TOP
     if (0 <= _ProjectionParams.x)
         screenPos.y = 1 - screenPos.y;
-    #endif
+#endif
     return ScreenToUv(screenPos);
 }
 
@@ -101,10 +100,10 @@ float SoftMaskSample(float2 uv, float a)
     half4 alpha = saturate(lerp(half4(1, 1, 1, 1),
                                 lerp(mask, half4(1, 1, 1, 1) - mask, _SoftMaskColor - half4(1, 1, 1, 1)),
                                 _SoftMaskColor));
-    #if SOFTMASK_EDITOR
+#if SOFTMASK_EDITOR
     int inScreen = step(0, uv.x) * step(uv.x, 1) * step(0, uv.y) * step(uv.y, 1);
     alpha = lerp(_SoftMaskOutsideColor, alpha, inScreen);
-    #ifdef UNITY_UI_ALPHACLIP
+#ifdef UNITY_UI_ALPHACLIP
     if (_MaskingShapeSubtract == 1)
     {
         if (_SoftMaskInSceneView == 1)
@@ -114,15 +113,15 @@ float SoftMaskSample(float2 uv, float a)
         }
         clip (a * alpha.x * alpha.y * alpha.z * alpha.w - _AlphaClipThreshold - 0.001);
     }
-    #endif
-    #endif
+#endif
+#endif
 
     return alpha.x * alpha.y * alpha.z * alpha.w;
 }
 
 void SoftMaskForGraph_float(float4 ScreenPos, float4 WorldPos, float InAlpha, out float A)
 {
-    #if SOFTMASK_EDITOR
+#if SOFTMASK_EDITOR
     if (_SoftMaskInGameView == 1)
     {
         A = SoftMaskSample(ScreenToUv(ScreenPos.xy), 1) * InAlpha;
@@ -135,9 +134,9 @@ void SoftMaskForGraph_float(float4 ScreenPos, float4 WorldPos, float InAlpha, ou
     {
         A = SoftMaskSample(WorldToUv(WorldPos, 0.5), InAlpha) * InAlpha;
     }
-    #else
+#else
     A = SoftMaskSample(ScreenToUv(ScreenPos.xy), 1) * InAlpha;
-    #endif
+#endif
 }
 
 #if SOFTMASK_EDITOR
