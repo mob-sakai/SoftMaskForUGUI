@@ -70,7 +70,6 @@ namespace Coffee.UISoftMask.Demos
             }
         }
 
-
         private IEnumerator Co_Tween(float from, float to, float duration, Action<float> callback)
         {
             var value = from;

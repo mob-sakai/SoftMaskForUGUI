@@ -109,7 +109,9 @@ namespace Coffee.UISoftMask
         internal RenderTexture _softMaskBuffer;
         private UnityAction _updateParentSoftMask;
         private CanvasViewChangeTrigger _viewChangeTrigger;
-        private List<SoftMask> children => _children != null ? _children : _children = UISoftMaskInternal.ListPool<SoftMask>.Rent();
+
+        private List<SoftMask> children =>
+            _children != null ? _children : _children = UISoftMaskInternal.ListPool<SoftMask>.Rent();
 
         /// <summary>
         /// Masking mode.<br />

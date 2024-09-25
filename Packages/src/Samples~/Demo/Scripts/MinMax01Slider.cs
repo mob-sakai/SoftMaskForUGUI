@@ -138,7 +138,6 @@ namespace Coffee.UISoftMask
         {
             if (!m_MinSlider || !m_MaxSlider || !m_Background) return;
 
-
             var axisIndex = (int)m_MinSlider.direction / 2;
             var fillSize = m_Background.rect.size[axisIndex];
             if (fillSize <= 0) return;
@@ -186,7 +185,6 @@ namespace Coffee.UISoftMask
         public class MinMax01SliderEvent : UnityEvent<MinMax01>
         {
         }
-
 
 #if UNITY_EDITOR
         protected override void OnValidate()
