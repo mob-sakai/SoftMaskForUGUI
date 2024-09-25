@@ -6,6 +6,9 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Profiling;
 using UnityEngine.Rendering;
+#if URP_ENABLE
+using UnityEngine.Rendering.Universal;
+#endif
 using UnityEngine.UI;
 
 namespace Coffee.UISoftMask
@@ -290,6 +293,49 @@ namespace Coffee.UISoftMask
         {
             get;
             private set;
+        }
+
+        public bool allowRenderScale
+        {
+            get
+            {
+#if URP_ENABLE
+                if (_rootCanvas
+                    && _rootCanvas.renderMode != RenderMode.ScreenSpaceOverlay
+                    && _rootCanvas.worldCamera
+                    && GraphicsSettings.currentRenderPipeline is UniversalRenderPipelineAsset)
+                {
+                    return true;
+                }
+
+#endif
+                return false;
+            }
+        }
+
+        public bool allowDynamicResolution
+        {
+            get
+            {
+                var isSupported =
+#if UNITY_XBOXONE || UNITY_PS5 || UNITY_PS4 || UNITY_SWITCH || UNITY_IOS || UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+                    true;
+#elif UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX || UNITY_TVOS
+                    SystemInfo.graphicsDeviceType == GraphicsDeviceType.Metal;
+#elif UNITY_ANDROID
+                    SystemInfo.graphicsDeviceType == GraphicsDeviceType.Vulkan;
+#elif UNITY_WSA
+                    SystemInfo.graphicsDeviceType == GraphicsDeviceType.Direct3D12;
+#else
+                    false;
+#endif
+
+                return isSupported
+                       && _rootCanvas
+                       && _rootCanvas.renderMode != RenderMode.ScreenSpaceOverlay
+                       && _rootCanvas.worldCamera
+                       && _rootCanvas.worldCamera.allowDynamicResolution;
+            }
         }
 
         /// <summary>
