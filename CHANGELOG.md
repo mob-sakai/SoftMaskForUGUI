@@ -1,3 +1,13 @@
+## [2.3.8](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.3.7...v2.3.8) (2024-09-29)
+
+
+### Bug Fixes
+
+* if `UniversalRenderPipelineAsset.renderScale` is not 1, soft masking will not be rendered correctly ([6e5a7f9](https://github.com/mob-sakai/SoftMaskForUGUI/commit/6e5a7f97a40d96f0493ec74bf8185d57bc646a8f)), closes [#194](https://github.com/mob-sakai/SoftMaskForUGUI/issues/194)
+* in URP, dynamic resolution does not work when render scale is close to 1 ([afed40a](https://github.com/mob-sakai/SoftMaskForUGUI/commit/afed40a0e85aa83194d0f28f5305d4312b015b17))
+* recreates ProjectSettings scriptable object when the project is pulled from GitHub ([9f6ea22](https://github.com/mob-sakai/SoftMaskForUGUI/commit/9f6ea2293607e36104371c633fd899ded1b2305a)), closes [#200](https://github.com/mob-sakai/SoftMaskForUGUI/issues/200)
+* when using dynamic resolution, soft masking will not be rendered correctly ([5100e3f](https://github.com/mob-sakai/SoftMaskForUGUI/commit/5100e3f092d831c3e0a40b2a7b543412601545c3)), closes [#199](https://github.com/mob-sakai/SoftMaskForUGUI/issues/199)
+
 ## [2.3.7](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.3.6...v2.3.7) (2024-09-16)
 
 
