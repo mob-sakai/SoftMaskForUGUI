@@ -1,9 +1,13 @@
-#if SHADERGRAPH_ENABLE
+#if SHADERGRAPH_CANVAS_ENABLE
 using System;
 using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.Rendering.RenderGraphModule;
 using UnityEngine.Rendering.Universal;
+#if UNITY_6000_0_OR_NEWER
+using UnityEngine.Rendering.RenderGraphModule;
+#else
+using UnityEngine.Experimental.Rendering.RenderGraphModule;
+#endif
 
 namespace Coffee.UISoftMask
 {
@@ -23,12 +27,20 @@ namespace Coffee.UISoftMask
                 public bool isGameView;
             }
 
+#if UNITY_6000_0_OR_NEWER
             public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer frameData)
+#else
+            public override void RecordRenderGraph(RenderGraph renderGraph, FrameResources frameResources, ref RenderingData renderingData)
+#endif
             {
                 using (var builder = renderGraph.AddRasterRenderPass<Data>("SoftMaskableShaderGraphSupport", out var d))
                 {
+#if UNITY_6000_0_OR_NEWER
                     var cam = frameData.Get<UniversalCameraData>();
                     d.isGameView = cam.cameraType == CameraType.Game;
+#else
+                    d.isGameView = renderingData.cameraData.cameraType == CameraType.Game;
+#endif
                     builder.AllowPassCulling(false);
                     builder.AllowGlobalStateModification(true);
                     builder.SetRenderFunc<Data>((x, context) =>
