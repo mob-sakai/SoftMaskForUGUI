@@ -10,11 +10,13 @@ namespace Coffee.UISoftMask
     {
         private SerializedProperty _ignoreSelf;
         private SerializedProperty _ignoreChildren;
+        private SerializedProperty _power;
 
         private void OnEnable()
         {
             _ignoreSelf = serializedObject.FindProperty("m_IgnoreSelf");
             _ignoreChildren = serializedObject.FindProperty("m_IgnoreChildren");
+            _power = serializedObject.FindProperty("m_Power");
         }
 
         public override void OnInspectorGUI()
@@ -27,6 +29,7 @@ namespace Coffee.UISoftMask
             serializedObject.Update();
             DrawProperty(_ignoreSelf, x => x.SetMaterialDirty());
             DrawProperty(_ignoreChildren, x => x.SetMaterialDirtyForChildren());
+            DrawProperty(_power, x => x.SetMaterialDirty());
             serializedObject.ApplyModifiedProperties();
 
             if (targets.Length == 1 && target is SoftMaskable softMaskable && softMaskable.ignored)
