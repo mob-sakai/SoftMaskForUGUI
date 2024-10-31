@@ -18,6 +18,7 @@ uniform float _RenderScale;
 uniform float2 _DynamicResolutionScale;
 uniform int _AllowRenderScale;
 uniform int _AllowDynamicResolution;
+uniform float _SoftMaskingPower;
 
 float Approximately(float4x4 a, float4x4 b)
 {
@@ -116,7 +117,7 @@ float SoftMaskSample(float2 uv, float a)
 #endif
 #endif
 
-    return alpha.x * alpha.y * alpha.z * alpha.w;
+    return pow(alpha.x * alpha.y * alpha.z * alpha.w, _SoftMaskingPower);
 }
 
 void SoftMaskForGraph_float(float4 ScreenPos, float4 WorldPos, float InAlpha, out float A)

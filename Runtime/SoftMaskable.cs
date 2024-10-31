@@ -15,6 +15,9 @@ namespace Coffee.UISoftMask
 #endif
         private static readonly int s_AllowDynamicResolution = Shader.PropertyToID("_AllowDynamicResolution");
         private static readonly int s_AllowRenderScale = Shader.PropertyToID("_AllowRenderScale");
+        private static readonly int s_SoftMaskingPower = Shader.PropertyToID("_SoftMaskingPower");
+        private const float k_PowerMin = 1f;
+        private const float k_PowerMax = 5f;
 
         [Tooltip("The graphic is ignored when soft-masking.")]
         [SerializeField]
@@ -23,6 +26,13 @@ namespace Coffee.UISoftMask
         [Tooltip("The child graphics are ignored when soft-masking.")]
         [SerializeField]
         private bool m_IgnoreChildren;
+
+        [Tooltip("Soft masking power.\n" +
+                 "The higher this value, the faster it becomes transparent.\n" +
+                 "If overlapping objects appear see-through, please adjust this value.")]
+        [SerializeField]
+        [Range(k_PowerMin, k_PowerMax)]
+        private float m_Power = 1f;
 
         /// <summary>
         /// The graphic is ignored when soft-masking.
@@ -78,6 +88,23 @@ namespace Coffee.UISoftMask
                 }
 
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// Soft masking power.
+        /// The higher this value, the faster it becomes transparent.
+        /// If overlapping objects appear see-through, please adjust this value.
+        /// </summary>
+        public float power
+        {
+            get => m_Power;
+            set
+            {
+                value = Mathf.Clamp(value, k_PowerMin, k_PowerMax);
+                if (Mathf.Approximately(m_Power, value)) return;
+                m_Power = value;
+                SetMaterialDirty();
             }
         }
 
@@ -183,7 +210,7 @@ namespace Coffee.UISoftMask
             Profiler.BeginSample("(SM4UI)[SoftMaskable] GetModifiedMaterial");
             var isStereo = UISoftMaskProjectSettings.stereoEnabled && _graphic.canvas.IsStereoCanvas();
             var useStencil = UISoftMaskProjectSettings.useStencilOutsideScreen;
-            var localId = 0u;
+            var localId = (uint)(Mathf.InverseLerp(k_PowerMin, k_PowerMax, power) * (1 << 10));
 #if UNITY_EDITOR
             var threshold = 0f;
             var subtract = false;
@@ -200,7 +227,7 @@ namespace Coffee.UISoftMask
                 }
             }
 
-            localId = (uint)(Mathf.Clamp01(threshold) * (1 << 8) + (subtract ? 1 << 9 : 0));
+            localId = (uint)(Mathf.Clamp01(threshold) * (1 << 8) + (subtract ? 1 << 9 : 0) + (localId << 10));
 #endif
 
             var hash = new Hash128(
@@ -220,6 +247,7 @@ namespace Coffee.UISoftMask
 #endif
             _maskableMaterial.SetInt(s_AllowDynamicResolution, _softMask.allowDynamicResolution ? 1 : 0);
             _maskableMaterial.SetInt(s_AllowRenderScale, _softMask.allowRenderScale ? 1 : 0);
+            _maskableMaterial.SetFloat(s_SoftMaskingPower, power);
             return _maskableMaterial;
         }
 
@@ -270,7 +298,9 @@ namespace Coffee.UISoftMask
 
         private void UpdateHideFlags()
         {
-            hideFlags = ignoreSelf || ignoreChildren ? HideFlags.None : HideFlags.DontSave;
+            hideFlags = ignoreSelf || ignoreChildren || !Mathf.Approximately(power, 1f)
+                ? HideFlags.None
+                : HideFlags.DontSave;
         }
 
 #if UNITY_EDITOR
