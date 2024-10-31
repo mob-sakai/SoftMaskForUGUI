@@ -33,6 +33,7 @@ Enhance Unity UI (uGUI) with advanced soft-masking features to create more visua
   - [Comparison of Masking Mode](#comparison-of-masking-mode)
   - [RectMask2D vs SoftMask](#rectmask2d-vs-softmask)
   - [Component: SoftMask](#component-softmask)
+  - [Component: SoftMaskable](#component-softmaskable)
   - [Component: MaskingShape](#component-maskingshape)
   - [Component: RectTransformFitter](#component-recttransformfitter)
   - [Project Settings](#project-settings)
@@ -281,6 +282,22 @@ To apply these changes automatically, please follow the steps below:
 
 <br><br>
 
+### Component: SoftMaskable
+
+![](https://github.com/user-attachments/assets/3af167bf-23c0-42a1-a6b5-239fc25c2364)
+
+- **Ignore Self**: The graphic is ignored when soft-masking.
+- **Ignore Children**: The child graphics are ignored when soft-masking.
+- **Power**: Soft masking power.
+  - The higher this value, the faster it becomes transparent.
+  - If overlapping objects appear see-through, please adjust this value.  
+    ![](https://github.com/user-attachments/assets/435c94ee-d42a-4b74-9411-cd11db0a5b2f)
+
+NOTE: `SoftMaskable` components are added automatically.  
+If the properties are set to their default values, it is marked as `HideFlag.DontSave` and will not be saved in the scene or prefab.
+
+<br><br>
+
 ### Component: MaskingShape
 
 ![](https://github.com/user-attachments/assets/4a568aba-99f6-46c5-98d9-30eb673c9026)
@@ -294,7 +311,6 @@ To apply these changes automatically, please follow the steps below:
   ![](https://github.com/user-attachments/assets/f9ba1d8a-594b-4488-acf3-bed8bad5eacc)  
   ![](https://github.com/user-attachments/assets/c120cbed-4ba9-4813-9a6f-59ad6c581856)  
   ![](https://github.com/user-attachments/assets/b944f863-e070-4069-a54b-409484e43a5a)
-
 
 <br><br>
 
@@ -313,7 +329,8 @@ To apply these changes automatically, please follow the steps below:
 ![](https://github.com/user-attachments/assets/9013169b-516a-4502-b069-86439a32b712)
 
 - Click `Edit > Project Settings` to open the Project Settings window and then select `UI > SoftMask` category.
-- By default, the soft-maskable shaders will be included in the build, but you can remove it if you don't need it.
+- To use the softmaskable shaders at runtime, you need to register the shaders as `Always Included Shaders`.
+  - By default, the soft-maskable shaders will be included in the build, but you can remove it if you don't need it.
 
 <br><br>
 
