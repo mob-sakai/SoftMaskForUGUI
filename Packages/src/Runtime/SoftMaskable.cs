@@ -16,6 +16,71 @@ namespace Coffee.UISoftMask
         private static readonly int s_AllowDynamicResolution = Shader.PropertyToID("_AllowDynamicResolution");
         private static readonly int s_AllowRenderScale = Shader.PropertyToID("_AllowRenderScale");
 
+        [Tooltip("The graphic is ignored when soft-masking.")]
+        [SerializeField]
+        private bool m_IgnoreSelf;
+
+        [Tooltip("The child graphics are ignored when soft-masking.")]
+        [SerializeField]
+        private bool m_IgnoreChildren;
+
+        /// <summary>
+        /// The graphic is ignored when soft-masking.
+        /// </summary>
+        public bool ignoreSelf
+        {
+            get => m_IgnoreSelf;
+            set
+            {
+                if (m_IgnoreSelf == value) return;
+                m_IgnoreSelf = value;
+                UpdateHideFlags();
+                SetMaterialDirty();
+            }
+        }
+
+        /// <summary>
+        /// The child graphics are ignored when soft-masking.
+        /// </summary>
+        public bool ignoreChildren
+        {
+            get => m_IgnoreChildren;
+            set
+            {
+                if (m_IgnoreChildren == value) return;
+                m_IgnoreChildren = value;
+                UpdateHideFlags();
+                SetMaterialDirtyForChildren();
+            }
+        }
+
+        /// <summary>
+        /// The graphic is ignored when soft-masking.
+        /// </summary>
+        public bool ignored
+        {
+            get
+            {
+                if (m_IgnoreSelf) return true;
+
+                RecalculateStencilIfNeeded();
+                if (!_softMask || !_softMask.isActiveAndEnabled) return true;
+
+                var tr = transform.parent;
+                while (tr)
+                {
+                    if (tr.TryGetComponent<SoftMaskable>(out var parent) && parent.ignoreChildren)
+                    {
+                        return true;
+                    }
+
+                    tr = tr.parent;
+                }
+
+                return false;
+            }
+        }
+
         private Action _checkGraphic;
         private MaskableGraphic _graphic;
         private Material _maskableMaterial;
@@ -28,8 +93,8 @@ namespace Coffee.UISoftMask
 
         private void OnEnable()
         {
-            hideFlags = UISoftMaskProjectSettings.hideFlagsForTemp;
-            this.AddComponentOnChildren<SoftMaskable>(hideFlags, false);
+            UpdateHideFlags();
+            this.AddComponentOnChildren<SoftMaskable>(false);
             _shouldRecalculateStencil = true;
             if (TryGetComponent(out _graphic))
             {
@@ -78,7 +143,7 @@ namespace Coffee.UISoftMask
 
         private void OnTransformChildrenChanged()
         {
-            this.AddComponentOnChildren<SoftMaskable>(UISoftMaskProjectSettings.hideFlagsForTemp, false);
+            this.AddComponentOnChildren<SoftMaskable>(false);
         }
 
         private void OnTransformParentChanged()
@@ -100,7 +165,7 @@ namespace Coffee.UISoftMask
             }
 
             if (!isActiveAndEnabled || !_graphic || !_graphic.canvas || !_graphic.maskable || isTerminal ||
-                baseMaterial == null)
+                baseMaterial == null || ignored)
             {
                 MaterialRepository.Release(ref _maskableMaterial);
                 return baseMaterial;
@@ -153,10 +218,8 @@ namespace Coffee.UISoftMask
             _maskableMaterial.SetFloat(s_AlphaClipThreshold, threshold);
             _maskableMaterial.SetInt(s_MaskingShapeSubtract, subtract ? 1 : 0);
 #endif
-
             _maskableMaterial.SetInt(s_AllowDynamicResolution, _softMask.allowDynamicResolution ? 1 : 0);
             _maskableMaterial.SetInt(s_AllowRenderScale, _softMask.allowRenderScale ? 1 : 0);
-
             return _maskableMaterial;
         }
 
@@ -184,7 +247,38 @@ namespace Coffee.UISoftMask
             Misc.Destroy(this);
         }
 
+        public void SetMaterialDirty()
+        {
+            if (!isActiveAndEnabled || !_graphic) return;
+            _graphic.SetMaterialDirty();
+        }
+
+        public void SetMaterialDirtyForChildren()
+        {
+            if (!isActiveAndEnabled || !_graphic) return;
+
+            var childCount = transform.childCount;
+            for (var i = 0; i < childCount; i++)
+            {
+                if (transform.GetChild(i).TryGetComponent<SoftMaskable>(out var child))
+                {
+                    child.SetMaterialDirty();
+                    child.SetMaterialDirtyForChildren();
+                }
+            }
+        }
+
+        private void UpdateHideFlags()
+        {
+            hideFlags = ignoreSelf || ignoreChildren ? HideFlags.None : HideFlags.DontSave;
+        }
+
 #if UNITY_EDITOR
+        private void OnValidate()
+        {
+            UpdateHideFlags();
+        }
+
         private Action _updateSceneViewMatrix;
         private static readonly int s_GameVp = Shader.PropertyToID("_GameVP");
         private static readonly int s_GameTvp = Shader.PropertyToID("_GameTVP");
