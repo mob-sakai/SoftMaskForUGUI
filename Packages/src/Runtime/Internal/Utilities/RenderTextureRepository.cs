@@ -59,8 +59,8 @@ namespace Coffee.UISoftMaskInternal
         {
             Profiler.BeginSample("(COF)[RTRepository] GetDescriptor");
             var rtd = new RenderTextureDescriptor(
-                size.x,
-                size.y,
+                Mathf.Max(8, size.x),
+                Mathf.Max(8, size.y),
                 s_GraphicsFormat,
                 useStencil ? 24 : 0)
             {
