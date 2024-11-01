@@ -1,3 +1,17 @@
+# [2.4.0](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.3.8...v2.4.0) (2024-11-01)
+
+
+### Bug Fixes
+
+* argumentException: RenderTextureDesc width must be greater than zero when setting the Down Sampling Rate to X8. ([3ffe109](https://github.com/mob-sakai/SoftMaskForUGUI/commit/3ffe109c456e7d97f41d909b11426fe48c10596d)), closes [#204](https://github.com/mob-sakai/SoftMaskForUGUI/issues/204)
+* compile error in UniversalRP 16 (Unity 2023.2) ([80413fc](https://github.com/mob-sakai/SoftMaskForUGUI/commit/80413fc4473f3ccf76e34a43b2a09267f0fd2f4c)), closes [#206](https://github.com/mob-sakai/SoftMaskForUGUI/issues/206)
+
+
+### Features
+
+* add `ignoreSelf` and `ignoreChildren` option for SoftMaskable element ([315b86c](https://github.com/mob-sakai/SoftMaskForUGUI/commit/315b86c08452731674b3fe1e31cfb8cf19f9dde8))
+* add `power` option for SoftMaskable element ([1362b18](https://github.com/mob-sakai/SoftMaskForUGUI/commit/1362b1874b9d65bcd29e8ea013c296f2d1e29014))
+
 ## [2.3.8](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.3.7...v2.3.8) (2024-09-29)
 
 
