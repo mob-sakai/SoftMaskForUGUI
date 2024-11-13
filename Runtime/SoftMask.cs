@@ -543,7 +543,7 @@ namespace Coffee.UISoftMask
                 // SoftMasking mode: If transform or view has changed, set dirty flag.
                 case MaskingMode.SoftMasking:
                 {
-                    if (transform.HasChanged(ref _prevTransformMatrix, UISoftMaskProjectSettings.sensitivity))
+                    if (transform.HasChanged(ref _prevTransformMatrix, UISoftMaskProjectSettings.transformSensitivity))
                     {
                         SetSoftMaskDirty();
                     }
