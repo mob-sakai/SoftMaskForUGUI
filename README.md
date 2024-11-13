@@ -426,6 +426,7 @@ The following are the limitations of SoftMaskForUGUI.
   - Use a format that supports alpha, such as `RGBA ETC2`.
   - Technically possible, but not supported because [ETC2 support rate is over 95%](https://developer.android.com/guide/playcore/asset-delivery/texture-compression).
   - If needed, feel free to create an issue.
+- Alpha hit test is not supported when the texture is in crunch format or non-readable.
 
 <br><br>
 
