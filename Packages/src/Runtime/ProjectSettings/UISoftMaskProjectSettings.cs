@@ -1,27 +1,16 @@
 #pragma warning disable CS0414
-using System.Linq;
 using Coffee.UISoftMaskInternal;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 #if UNITY_MODULE_VR
 using UnityEngine.XR;
-#endif
-#if UNITY_EDITOR
-using UnityEditor;
-using UnityEditor.Build;
-using UnityEditor.Build.Reporting;
 #endif
 
 namespace Coffee.UISoftMask
 {
     public class UISoftMaskProjectSettings : PreloadedProjectSettings<UISoftMaskProjectSettings>
     {
-        public enum FallbackBehavior
-        {
-            DefaultSoftMaskable,
-            None
-        }
-
         private static bool s_UseStereoMock;
 
         [Header("Setting")]
@@ -32,10 +21,6 @@ namespace Coffee.UISoftMask
         [Tooltip("Enable stereo rendering for VR devices.")]
         [SerializeField]
         private bool m_StereoEnabled = true;
-
-        [Tooltip("Behavior when SoftMaskable shader is not found.")]
-        [SerializeField]
-        private FallbackBehavior m_FallbackBehavior;
 
         [Tooltip("Sensitivity of transform that automatically rebuilds the soft mask buffer.")]
         [SerializeField]
@@ -48,20 +33,18 @@ namespace Coffee.UISoftMask
         private bool m_UseStencilOutsideScreen = true;
 
         [Tooltip("Hide the automatically generated components.\n" +
-                 "  - SoftMaskable\n" +
                  "  - MaskingShapeContainer\n" +
                  "  - TerminalMaskingShape")]
         [SerializeField]
         private bool m_HideGeneratedComponents = true;
 
-        [Header("Shader")]
-        [Tooltip("Automatically include shaders required for SoftMask.")]
+        [HideInInspector]
         [SerializeField]
-        private bool m_AutoIncludeShaders = true;
+        private ShaderVariantRegistry m_ShaderVariantRegistry = new ShaderVariantRegistry();
 
-        [Tooltip("Strip unused shader variants in the build.")]
-        [SerializeField]
-        internal bool m_StripShaderVariants = true;
+        public static ShaderVariantRegistry shaderRegistry => instance.m_ShaderVariantRegistry;
+
+        public static ShaderVariantCollection shaderVariantCollection => shaderRegistry.shaderVariantCollection;
 
         public static bool softMaskEnabled => instance.m_SoftMaskEnabled;
 
@@ -81,8 +64,6 @@ namespace Coffee.UISoftMask
 #else
         public static bool stereoEnabled => false;
 #endif
-
-        public static FallbackBehavior fallbackBehavior => instance.m_FallbackBehavior;
 
         public static HideFlags hideFlagsForTemp => instance.m_HideGeneratedComponents
             ? HideFlags.DontSave | HideFlags.NotEditable | HideFlags.HideInHierarchy | HideFlags.HideInInspector
@@ -110,11 +91,7 @@ namespace Coffee.UISoftMask
             var softMasks = ListPool<SoftMask>.Rent();
             var components = ListPool<IMaskable>.Rent();
 
-#if UNITY_2023_1_OR_NEWER
-            foreach (var softMask in FindObjectsByType<SoftMask>(FindObjectsInactive.Include, FindObjectsSortMode.None))
-#else
-            foreach (var softMask in FindObjectsOfType<SoftMask>())
-#endif
+            foreach (var softMask in Misc.FindObjectsOfType<SoftMask>())
             {
                 // #208: Accessing game object transform hierarchy before loading of scene has completed.
                 if (!softMask.gameObject.scene.isLoaded) continue;
@@ -131,6 +108,16 @@ namespace Coffee.UISoftMask
         }
 
 #if UNITY_EDITOR
+        protected override void OnCreateAsset()
+        {
+            m_ShaderVariantRegistry.InitializeIfNeeded(this, "(SoftMaskable)");
+        }
+
+        protected override void OnInitialize()
+        {
+            m_ShaderVariantRegistry.InitializeIfNeeded(this, "(SoftMaskable)");
+        }
+
         private void OnValidate()
         {
             ResetAllSoftMasks();
@@ -140,60 +127,22 @@ namespace Coffee.UISoftMask
 
         private void Reset()
         {
-            ReloadShaders(false);
+            m_ShaderVariantRegistry.InitializeIfNeeded(this, "(SoftMaskable)");
         }
 
         private static void ResetAllHideFlags<T>(HideFlags flags) where T : Component
         {
-#if UNITY_2023_1_OR_NEWER
-            foreach (var component in FindObjectsByType<T>(FindObjectsInactive.Include, FindObjectsSortMode.None))
-#else
-            foreach (var component in FindObjectsOfType<T>())
-#endif
+            foreach (var component in Misc.FindObjectsOfType<T>())
             {
-                Debug.Log($"{component}, {component.hideFlags}");
                 component.hideFlags = flags;
                 EditorUtility.SetDirty(component);
             }
-        }
-
-        internal void ReloadShaders(bool force)
-        {
-            if (!force && !m_AutoIncludeShaders) return;
-
-            foreach (var shader in AssetDatabase.FindAssets("t:Shader")
-                         .Select(AssetDatabase.GUIDToAssetPath)
-                         .Select(AssetDatabase.LoadAssetAtPath<Shader>)
-                         .Where(CanIncludeShader))
-            {
-                AlwaysIncludedShadersProxy.Add(shader);
-            }
-        }
-
-        internal static bool CanIncludeShader(Shader shader)
-        {
-            if (!shader) return false;
-
-            var name = shader.name;
-            return SoftMaskUtils.IsSoftMaskableShaderName(name)
-                   || name == "Hidden/UI/SoftMask"
-                   || name == "Hidden/UI/TerminalMaskingShape";
         }
 
         [SettingsProvider]
         private static SettingsProvider CreateSettingsProvider()
         {
             return new PreloadedProjectSettingsProvider("Project/UI/Soft Mask");
-        }
-
-        private class PreprocessBuildWithReport : IPreprocessBuildWithReport
-        {
-            int IOrderedCallback.callbackOrder => 0;
-
-            void IPreprocessBuildWithReport.OnPreprocessBuild(BuildReport report)
-            {
-                instance.ReloadShaders(false);
-            }
         }
 #endif
     }

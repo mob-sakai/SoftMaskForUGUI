@@ -7,47 +7,34 @@ namespace Coffee.UISoftMask
     [CustomEditor(typeof(UISoftMaskProjectSettings))]
     internal class UISoftMaskProjectSettingsEditor : Editor
     {
-        private static readonly GUIContent s_ContentRemove = new GUIContent("-");
-        private static readonly GUIContent s_ContentReset = new GUIContent("Reset");
-        private static readonly GUIContent s_ContentIncluded = new GUIContent("Included Shaders");
-        private static readonly GUIContent s_ContentUpgrade = new GUIContent("Upgrade");
-        private static readonly GUIContent s_ContentUpgradeButton = new GUIContent("Upgrade All Assets V1 to V2");
+        private ShaderVariantRegistryEditor _shaderVariantRegistryEditor;
 
         public override void OnInspectorGUI()
         {
+            EditorGUIUtility.labelWidth = 180;
             base.OnInspectorGUI();
 
-            // Draw SoftMask/SoftMaskable/TerminalShape Shaders;
-            EditorGUILayout.BeginHorizontal();
-            {
-                EditorGUILayout.PrefixLabel(s_ContentIncluded);
-                if (GUILayout.Button(s_ContentReset, EditorStyles.miniButton, GUILayout.Width(80)))
-                {
-                    UISoftMaskProjectSettings.instance.ReloadShaders(true);
-                }
-            }
-            EditorGUILayout.EndHorizontal();
-
-            foreach (var shader in AlwaysIncludedShadersProxy.GetShaders())
-            {
-                if (!UISoftMaskProjectSettings.CanIncludeShader(shader)) continue;
-
-                EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.ObjectField(shader, typeof(Shader), false);
-                if (GUILayout.Button(s_ContentRemove, EditorStyles.miniButton, GUILayout.Width(20)))
-                {
-                    AlwaysIncludedShadersProxy.Remove(shader);
-                }
-
-                EditorGUILayout.EndHorizontal();
-            }
-
+            // Shader registry.
             EditorGUILayout.Space();
-            EditorGUILayout.LabelField(s_ContentUpgrade, EditorStyles.boldLabel);
-            if (GUILayout.Button(s_ContentUpgradeButton))
+            EditorGUILayout.LabelField("Shader", EditorStyles.boldLabel);
+            if (_shaderVariantRegistryEditor == null)
+            {
+                var property = serializedObject.FindProperty("m_ShaderVariantRegistry");
+                _shaderVariantRegistryEditor = new ShaderVariantRegistryEditor(property, "(SoftMaskable)");
+            }
+
+            _shaderVariantRegistryEditor.Draw();
+            serializedObject.ApplyModifiedProperties();
+
+            // Upgrade v1 to v2.
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("Upgrade", EditorStyles.boldLabel);
+            if (GUILayout.Button("Upgrade All Assets V1 to V2"))
             {
                 EditorApplication.delayCall += () => new UISoftMaskModifierRunner().RunIfUserWantsTo();
             }
+
+            GUILayout.FlexibleSpace();
         }
     }
 }

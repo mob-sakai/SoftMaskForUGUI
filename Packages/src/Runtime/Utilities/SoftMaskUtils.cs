@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using Coffee.UISoftMaskInternal;
 using UnityEditor;
 using UnityEngine;
@@ -54,15 +52,6 @@ namespace Coffee.UISoftMask
         private static readonly int s_DynamicResolutionScale = Shader.PropertyToID("_DynamicResolutionScale");
         private static float s_CurrentRenderScale = 1;
         private static Vector2 s_CurrentDynamicResolutionScale = Vector2.one;
-
-        private static readonly string[] s_SoftMaskableShaderNameFormats =
-        {
-            "{0}",
-            "Hidden/{0} (SoftMaskable)",
-            "{0} (SoftMaskable)"
-        };
-
-        private static readonly Dictionary<int, string> s_SoftMaskableShaderNames = new Dictionary<int, string>();
 
 #if UNITY_EDITOR
         [InitializeOnLoadMethod]
@@ -128,9 +117,6 @@ namespace Coffee.UISoftMask
             });
 #endif
 
-#if UNITY_EDITOR
-            EditorApplication.projectChanged += s_SoftMaskableShaderNames.Clear;
-#endif
         }
 
 #if TMP_ENABLE
@@ -190,6 +176,10 @@ namespace Coffee.UISoftMask
                 hideFlags = HideFlags.DontSave | HideFlags.NotEditable
             };
             mat.SetInt(s_BlendOp, (int)op);
+
+#if UNITY_EDITOR
+            UISoftMaskProjectSettings.shaderRegistry.RegisterVariant(mat, "UI > Soft Mask");
+#endif
             return mat;
         }
 
@@ -198,13 +188,13 @@ namespace Coffee.UISoftMask
             Texture softMaskBuffer,
             int softMaskDepth,
             int stencilBits,
-            bool isStereo,
-            UISoftMaskProjectSettings.FallbackBehavior fallbackBehavior)
+            bool isStereo)
         {
             Profiler.BeginSample("(SM4UI)[SoftMaskableMaterial] Create > Create New Material");
             var mat = new Material(baseMat)
             {
-                shader = GetSoftMaskableShader(baseMat.shader, fallbackBehavior),
+                shader = UISoftMaskProjectSettings.shaderRegistry.FindAliasShader(baseMat.shader,
+                    "Hidden/{0} (SoftMaskable)", "Hidden/UI/Default (SoftMaskable)"),
                 hideFlags = HideFlags.HideAndDontSave
             };
             Profiler.EndSample();
@@ -223,74 +213,12 @@ namespace Coffee.UISoftMask
             Profiler.EndSample();
 
 #if UNITY_EDITOR
+            UISoftMaskProjectSettings.shaderRegistry.RegisterVariant(mat, "UI > Soft Mask");
             mat.EnableKeyword("SOFTMASK_EDITOR");
             mat.SetVector(s_SoftMaskOutsideColor,
                 UISoftMaskProjectSettings.useStencilOutsideScreen ? Vector4.one : Vector4.zero);
 #endif
             return mat;
-        }
-
-        public static bool IsSoftMaskableShaderName(string name)
-        {
-#if UNITY_2021_2_OR_NEWER
-            return name.Contains("(SoftMaskable)", StringComparison.Ordinal);
-#else
-            return name.Contains("(SoftMaskable)");
-#endif
-        }
-
-        public static Shader GetSoftMaskableShader(Shader baseShader,
-            UISoftMaskProjectSettings.FallbackBehavior fallback)
-        {
-            Profiler.BeginSample("(SM4UI)[SoftMaskUtils] GetSoftMaskableShader > From cache");
-            var id = baseShader.GetInstanceID();
-            if (s_SoftMaskableShaderNames.TryGetValue(id, out var shaderName))
-            {
-                var shader = Shader.Find(shaderName);
-                Profiler.EndSample();
-
-                return shader;
-            }
-
-            Profiler.EndSample();
-
-            Profiler.BeginSample("(SM4UI)[SoftMaskableMaterial] GetSoftMaskableShader > Find soft maskable shader");
-            shaderName = baseShader.name;
-            for (var i = 0; i < s_SoftMaskableShaderNameFormats.Length; i++)
-            {
-                var name = string.Format(s_SoftMaskableShaderNameFormats[i], shaderName);
-                if (!IsSoftMaskableShaderName(name)) continue;
-
-                var shader = Shader.Find(name);
-                if (!shader) continue;
-
-                s_SoftMaskableShaderNames.Add(id, name);
-                Profiler.EndSample();
-                return shader;
-            }
-
-            Profiler.EndSample();
-
-            Profiler.BeginSample("(SM4UI)[SoftMaskableMaterial] GetSoftMaskableShader > Fallback");
-            switch (fallback)
-            {
-                case UISoftMaskProjectSettings.FallbackBehavior.DefaultSoftMaskable:
-                {
-                    s_SoftMaskableShaderNames.Add(id, "Hidden/UI/Default (SoftMaskable)");
-                    var shader = Shader.Find("Hidden/UI/Default (SoftMaskable)");
-                    Profiler.EndSample();
-                    return shader;
-                }
-                case UISoftMaskProjectSettings.FallbackBehavior.None:
-                {
-                    s_SoftMaskableShaderNames.Add(id, shaderName);
-                    Profiler.EndSample();
-                    return baseShader;
-                }
-                default:
-                    Profiler.EndSample();
-                    throw new ArgumentOutOfRangeException(nameof(fallback), fallback, null);
-            }
         }
     }
 }

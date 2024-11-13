@@ -40,6 +40,9 @@ namespace Coffee.UISoftMask
             _shouldRecalculateStencil = true;
             hideFlags = UISoftMaskProjectSettings.hideFlagsForTemp;
 
+#if UNITY_EDITOR
+            UISoftMaskProjectSettings.shaderRegistry.RegisterVariant(s_SharedTerminalMaterial, "UI > Soft Mask");
+#endif
             base.OnEnable();
         }
 
@@ -103,7 +106,6 @@ namespace Coffee.UISoftMask
 
             StencilMaterial.Remove(m_MaskMaterial);
             m_MaskMaterial = maskMat;
-
             return maskMat;
         }
 

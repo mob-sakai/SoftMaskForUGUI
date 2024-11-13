@@ -237,7 +237,7 @@ namespace Coffee.UISoftMask
                 localId);
             MaterialRepository.Get(hash, ref _maskableMaterial,
                 x => SoftMaskUtils.CreateSoftMaskable(x.baseMaterial, x.softMaskBuffer, x._softMaskDepth,
-                    x._stencilBits, x.isStereo, UISoftMaskProjectSettings.fallbackBehavior),
+                    x._stencilBits, x.isStereo),
                 (baseMaterial, _softMask.softMaskBuffer, _softMaskDepth, _stencilBits, isStereo));
             Profiler.EndSample();
 
