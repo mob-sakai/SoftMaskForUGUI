@@ -13,6 +13,11 @@ env:
 
 on:
   workflow_dispatch:
+    inputs:
+      usePeriodVersions:
+        description: 'Use the period versions (.0f1, .10f1, 20f1, ...).'
+        required: false
+        default: 'true'
   push:
     branches:
       - develop
@@ -39,8 +44,11 @@ jobs:
         run: |
           echo "==== Target Unity Versions ===="
           LATEST_VERSIONS=`npx unity-changeset list --versions --latest-patch --min ${MINIMUM_VERSION} --json --all`
-          # ADDITIONAL_VERSIONS=`npx unity-changeset list --versions --grep '0f' --min ${MINIMUM_VERSION} --json`
-          ADDITIONAL_VERSIONS=[]
+          if [ "${{ inputs.usePeriodVersions }}" = "true" ]; then
+            ADDITIONAL_VERSIONS=`npx unity-changeset list --versions --grep '0f' --min ${MINIMUM_VERSION} --json`
+          else
+            ADDITIONAL_VERSIONS=[]
+          fi
 
           VERSIONS=`echo "[${LATEST_VERSIONS}, ${ADDITIONAL_VERSIONS}]" \
             | jq -c '[ flatten | sort | unique | .[] | select( test("${{ env.EXCLUDE_FILTER }}") | not ) ]'`
@@ -59,7 +67,7 @@ jobs:
     needs: setup
     strategy:
       fail-fast: false
-      max-parallel: 4
+      max-parallel: 6
       matrix:
         unityVersion: ${{ fromJson(needs.setup.outputs.unityVersions) }}
     steps:
