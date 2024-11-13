@@ -62,7 +62,7 @@ namespace Coffee.UISoftMask
         public Graphic graphic => _graphic || TryGetComponent(out _graphic) ? _graphic : null;
 
         public bool hasTransformChanged =>
-            transform.HasChanged(ref _prevTransformMatrix, UISoftMaskProjectSettings.sensitivity);
+            transform.HasChanged(ref _prevTransformMatrix, UISoftMaskProjectSettings.transformSensitivity);
 
         public MaskingMethod maskingMethod
         {

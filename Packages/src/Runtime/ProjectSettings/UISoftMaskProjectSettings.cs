@@ -22,13 +22,6 @@ namespace Coffee.UISoftMask
             None
         }
 
-        public enum TransformSensitivity
-        {
-            Low,
-            Medium,
-            High
-        }
-
         private static bool s_UseStereoMock;
 
         [Header("Setting")]
@@ -99,20 +92,6 @@ namespace Coffee.UISoftMask
         {
             get => instance.m_TransformSensitivity;
             set => instance.m_TransformSensitivity = value;
-        }
-
-        public static float sensitivity
-        {
-            get
-            {
-                switch (instance.m_TransformSensitivity)
-                {
-                    case TransformSensitivity.Low: return 1f / (1 << 2);
-                    case TransformSensitivity.Medium: return 1f / (1 << 5);
-                    case TransformSensitivity.High: return 1f / (1 << 12);
-                    default: return 1f / (1 << (int)instance.m_TransformSensitivity);
-                }
-            }
         }
 
         public static bool useStereoMock

@@ -26,9 +26,7 @@ namespace Coffee.UISoftMask.Demos
 
         public void SetTransformSensitivity(int index)
         {
-            var values =
-                (UISoftMaskProjectSettings.TransformSensitivity[])Enum.GetValues(
-                    typeof(UISoftMaskProjectSettings.TransformSensitivity));
+            var values = (TransformSensitivity[])Enum.GetValues(typeof(TransformSensitivity));
             UISoftMaskProjectSettings.transformSensitivity = values[index];
         }
 
