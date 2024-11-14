@@ -280,15 +280,19 @@ namespace Coffee.UISoftMask
             var colorMask = m_ShowMaskGraphic ? ColorWriteMask.All : 0;
             {
                 Profiler.BeginSample("(SM4UI)[MaskingShape)] GetModifiedMaterial > StencilMaterial.Add");
+                var writeMask = Utils.GetHighestBit(_stencilBits);
+                var readMask = _stencilBits & ~writeMask;
                 switch (maskingMethod)
                 {
                     case MaskingMethod.Additive:
                         maskMat = StencilMaterial.Add(baseMaterial, _stencilBits, StencilOp.Replace,
-                            CompareFunction.NotEqual, colorMask, _stencilBits, _stencilBits);
+                            CompareFunction.Equal, colorMask, readMask, writeMask);
                         break;
                     case MaskingMethod.Subtract:
-                        maskMat = StencilMaterial.Add(baseMaterial, _stencilBits, StencilOp.Invert,
-                            CompareFunction.Equal, colorMask, _stencilBits, _stencilBits);
+                        var op = SoftMaskEnabled() ? StencilOp.Keep : StencilOp.Zero;
+                        var comp = writeMask == 1 ? CompareFunction.Always : CompareFunction.Equal;
+                        maskMat = StencilMaterial.Add(baseMaterial, _stencilBits, op,
+                            comp, colorMask, readMask, writeMask);
                         break;
                 }
 
@@ -329,6 +333,11 @@ namespace Coffee.UISoftMask
         internal bool AntiAliasingEnabled()
         {
             return isActiveAndEnabled && _mask is SoftMask softMask && softMask.AntiAliasingEnabled();
+        }
+
+        internal bool SoftMaskEnabled()
+        {
+            return isActiveAndEnabled && _mask is SoftMask softMask && softMask.SoftMaskingEnabled();
         }
 
         private void RecalculateStencilIfNeeded()

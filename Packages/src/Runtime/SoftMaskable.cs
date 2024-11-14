@@ -112,6 +112,7 @@ namespace Coffee.UISoftMask
         private MaskableGraphic _graphic;
         private Material _maskableMaterial;
         private bool _shouldRecalculateStencil;
+        private Mask _mask;
         private SoftMask _softMask;
         private int _softMaskDepth;
         private int _stencilBits;
@@ -147,6 +148,7 @@ namespace Coffee.UISoftMask
             }
 
             _graphic = null;
+            _mask = null;
             _softMask = null;
             MaterialRepository.Release(ref _maskableMaterial);
 
@@ -160,6 +162,7 @@ namespace Coffee.UISoftMask
         {
             _graphic = null;
             _maskableMaterial = null;
+            _mask = null;
             _softMask = null;
             _checkGraphic = null;
 
@@ -199,12 +202,23 @@ namespace Coffee.UISoftMask
             }
 
             RecalculateStencilIfNeeded();
-            _softMaskDepth = _softMask ? _softMask.softMaskDepth : -1;
-
-            if (!_softMask || _softMaskDepth < 0 || 4 <= _softMaskDepth)
+            var softMaskDepth = _softMask ? _softMask.softMaskDepth : -1;
+            if (softMaskDepth < 0 || 4 <= softMaskDepth)
             {
+                _softMaskDepth = -1;
                 MaterialRepository.Release(ref _maskableMaterial);
                 return baseMaterial;
+            }
+
+            _softMaskDepth = softMaskDepth;
+            if (0 <= _softMaskDepth
+                && _softMask == _mask
+                && _softMask.SoftMaskingEnabled()
+                && TryGetComponent<MaskingShape>(out var shape)
+                && shape.isActiveAndEnabled
+                && shape.maskingMethod == MaskingShape.MaskingMethod.Subtract)
+            {
+                _softMaskDepth -= 1;
             }
 
             Profiler.BeginSample("(SM4UI)[SoftMaskable] GetModifiedMaterial");
@@ -263,7 +277,7 @@ namespace Coffee.UISoftMask
             if (!_shouldRecalculateStencil) return;
             _shouldRecalculateStencil = false;
             var useStencil = UISoftMaskProjectSettings.useStencilOutsideScreen;
-            _stencilBits = Utils.GetStencilBits(transform, false, useStencil, out var _, out _softMask);
+            _stencilBits = Utils.GetStencilBits(transform, false, useStencil, out _mask, out _softMask);
         }
 
         private void CheckGraphic()

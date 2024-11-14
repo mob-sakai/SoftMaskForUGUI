@@ -45,7 +45,6 @@ namespace Coffee.UISoftMask
         private static readonly int s_MainTex = Shader.PropertyToID("_MainTex");
         private static readonly int s_ColorMask = Shader.PropertyToID("_ColorMask");
         private static readonly int s_BlendOp = Shader.PropertyToID("_BlendOp");
-        private static readonly int s_StencilReadMask = Shader.PropertyToID("_StencilReadMask");
         private static readonly int s_ThresholdMin = Shader.PropertyToID("_ThresholdMin");
         private static readonly int s_ThresholdMax = Shader.PropertyToID("_ThresholdMax");
         private static readonly int s_RenderScale = Shader.PropertyToID("_RenderScale");
@@ -203,7 +202,6 @@ namespace Coffee.UISoftMask
             mat.SetTexture(s_SoftMaskTex, softMaskBuffer);
             mat.SetInt(s_SoftMaskableStereo, isStereo ? 1 : 0);
             mat.SetInt(s_SoftMaskableEnable, 1);
-            mat.SetInt(s_StencilReadMask, stencilBits);
             mat.SetVector(s_SoftMaskColor, new Vector4(
                 0 <= softMaskDepth ? 1 : 0,
                 1 <= softMaskDepth ? 1 : 0,

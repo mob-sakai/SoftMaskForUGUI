@@ -27,11 +27,6 @@ namespace Coffee.UISoftMask
         private TransformSensitivity m_TransformSensitivity = TransformSensitivity.Medium;
 
         [Header("Editor")]
-        [Tooltip(
-            "In the Scene view, objects outside the screen are displayed as stencil masks, allowing for more intuitive editing.")]
-        [SerializeField]
-        private bool m_UseStencilOutsideScreen = true;
-
         [Tooltip("Hide the automatically generated components.\n" +
                  "  - MaskingShapeContainer\n" +
                  "  - TerminalMaskingShape")]
@@ -48,12 +43,7 @@ namespace Coffee.UISoftMask
 
         public static bool softMaskEnabled => instance.m_SoftMaskEnabled;
 
-        public static bool useStencilOutsideScreen =>
-#if UNITY_EDITOR
-            instance.m_UseStencilOutsideScreen;
-#else
-            false;
-#endif
+        public static bool useStencilOutsideScreen => true;
 
 #if UNITY_MODULE_VR
         public static bool stereoEnabled =>

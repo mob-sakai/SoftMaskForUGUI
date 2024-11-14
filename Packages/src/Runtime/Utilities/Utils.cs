@@ -64,13 +64,6 @@ namespace Coffee.UISoftMask
                     if (!nearestMask)
                     {
                         nearestMask = mask;
-                        if (FrameCache.TryGet(nearestMask, nameof(GetStencilBits), out stencilBits))
-                        {
-                            FrameCache.TryGet(nearestMask, nameof(GetStencilBits), out nearestSoftMask);
-
-                            Profiler.EndSample();
-                            return stencilBits;
-                        }
                     }
 
                     stencilBits = 0 < depth++ ? stencilBits << 1 : 0;
@@ -98,11 +91,6 @@ namespace Coffee.UISoftMask
 
             stencilBits = Mathf.Min(stencilBits, 255);
             Profiler.EndSample();
-            if (nearestMask)
-            {
-                FrameCache.Set(nearestMask, nameof(GetStencilBits), stencilBits);
-                FrameCache.Set(nearestMask, nameof(GetStencilBits), nearestSoftMask);
-            }
 
             return stencilBits;
         }
@@ -179,6 +167,16 @@ namespace Coffee.UISoftMask
             {
                 Profiler.EndSample();
             }
+        }
+
+        public static int GetHighestBit(int i)
+        {
+            i |= i >> 1;
+            i |= i >> 2;
+            i |= i >> 4;
+            i |= i >> 8;
+            // i |= (i >> 16);
+            return i - (i >> 1);
         }
 
 #if UNITY_EDITOR

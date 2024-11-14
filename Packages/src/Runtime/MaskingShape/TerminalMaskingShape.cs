@@ -102,7 +102,7 @@ namespace Coffee.UISoftMask
             }
 
             var maskMat = StencilMaterial.Add(baseMaterial, _stencilBits, StencilOp.Zero, CompareFunction.Equal, 0,
-                _stencilBits, _stencilBits);
+                _stencilBits, Utils.GetHighestBit(_stencilBits));
 
             StencilMaterial.Remove(m_MaskMaterial);
             m_MaskMaterial = maskMat;
