@@ -1,3 +1,10 @@
+## [2.4.2](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.4.1...v2.4.2) (2024-11-14)
+
+
+### Bug Fixes
+
+* softmask elements stop drawing on resolution change sometimes in editor ([380fdc6](https://github.com/mob-sakai/SoftMaskForUGUI/commit/380fdc6c4378fe284457451e77139552a83ff438))
+
 ## [2.4.1](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.4.0...v2.4.1) (2024-11-14)
 
 
