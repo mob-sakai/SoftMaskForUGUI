@@ -1,3 +1,13 @@
+## [2.4.1](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.4.0...v2.4.1) (2024-11-14)
+
+
+### Bug Fixes
+
+* alpha hit test not working in demo scene ([135b123](https://github.com/mob-sakai/SoftMaskForUGUI/commit/135b12313b977750e0797dceb1ad08cf87ce607a)), closes [#210](https://github.com/mob-sakai/SoftMaskForUGUI/issues/210)
+* If not configured as a preloaded asset, the project settings asset will be regenerated ([cca61d7](https://github.com/mob-sakai/SoftMaskForUGUI/commit/cca61d7143d47ebb5190d7bfdce870e5043cd5e9)), closes [#200](https://github.com/mob-sakai/SoftMaskForUGUI/issues/200) [#212](https://github.com/mob-sakai/SoftMaskForUGUI/issues/212)
+* SoftMaskable is not editable ([f9937a9](https://github.com/mob-sakai/SoftMaskForUGUI/commit/f9937a9d610b559e9dbc227e9a29b30fe0c7f483))
+* TerminalMaskingShape is hidden even with `HideGeneratedComponents=false` ([8ddb586](https://github.com/mob-sakai/SoftMaskForUGUI/commit/8ddb58638ebd0a08ce0dc9287854ffcad1d7746b))
+
 # [2.4.0](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.3.8...v2.4.0) (2024-11-01)
 
 
