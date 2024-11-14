@@ -533,7 +533,7 @@ namespace Coffee.UISoftMask
         {
             if (!isActiveAndEnabled || !SoftMaskingEnabled()) return;
 
-            this.AddComponentOnChildren<SoftMaskable>(UISoftMaskProjectSettings.hideFlagsForTemp, true);
+            this.AddComponentOnChildren<SoftMaskable>(true);
         }
 
         private void OnBeforeCanvasRebuild()

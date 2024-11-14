@@ -152,7 +152,6 @@ namespace Coffee.UISoftMask
         private void OnValidate()
         {
             ResetAllSoftMasks();
-            ResetAllHideFlags<SoftMaskable>(hideFlagsForTemp);
             ResetAllHideFlags<MaskingShapeContainer>(hideFlagsForTemp);
             ResetAllHideFlags<TerminalMaskingShape>(hideFlagsForTemp);
         }
