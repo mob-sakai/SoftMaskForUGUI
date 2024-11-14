@@ -252,7 +252,7 @@ namespace Coffee.UISoftMask
 
             var go = new GameObject("[generated] TerminalMaskingShape");
             go.transform.SetParent(transform, false);
-            go.hideFlags = HideFlags.HideAndDontSave;
+            go.hideFlags = UISoftMaskProjectSettings.hideFlagsForTemp;
 
             return go.AddComponent<TerminalMaskingShape>();
         }
