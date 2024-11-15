@@ -661,13 +661,6 @@ namespace Coffee.UISoftMask
             {
                 EditorApplication.QueuePlayerLoopUpdate();
             }
-
-            EditorApplication.delayCall += () =>
-            {
-                if (!this || !isActiveAndEnabled) return;
-                _hasResolutionChanged = true;
-                SetDirtyAndNotify();
-            };
 #endif
         }
 
