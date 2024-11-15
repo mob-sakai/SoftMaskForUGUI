@@ -170,6 +170,7 @@ namespace Coffee.UISoftMask
             }
 
             RegisterAntiAliasingIfNeeded();
+            UpdateAntiAliasing();
             _shouldRecalculateStencil = true;
         }
 
@@ -277,7 +278,7 @@ namespace Coffee.UISoftMask
             // Mask material
             var toUse = baseMaterial;
             Material maskMat = null;
-            var colorMask = m_ShowMaskGraphic ? ColorWriteMask.All : 0;
+            var colorMask = m_ShowMaskGraphic && !AntiAliasingEnabled() ? ColorWriteMask.All : 0;
             {
                 Profiler.BeginSample("(SM4UI)[MaskingShape)] GetModifiedMaterial > StencilMaterial.Add");
                 var writeMask = Utils.GetHighestBit(_stencilBits);
@@ -292,7 +293,7 @@ namespace Coffee.UISoftMask
                         var op = SoftMaskEnabled() ? StencilOp.Keep : StencilOp.Zero;
                         var comp = writeMask == 1 ? CompareFunction.Always : CompareFunction.Equal;
                         maskMat = StencilMaterial.Add(baseMaterial, _stencilBits, op,
-                            comp, colorMask, readMask, writeMask);
+                            comp, colorMask, _stencilBits, writeMask);
                         break;
                 }
 
