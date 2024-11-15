@@ -38,7 +38,6 @@ namespace Coffee.UISoftMask
         private static Material s_SoftMaskingMaterialAdd;
         private static Material s_SoftMaskingMaterialSub;
         private static readonly int s_SoftMaskableStereo = Shader.PropertyToID("_SoftMaskableStereo");
-        private static readonly int s_SoftMaskableEnable = Shader.PropertyToID("_SoftMaskableEnable");
         private static readonly int s_SoftMaskOutsideColor = Shader.PropertyToID("_SoftMaskOutsideColor");
         private static readonly int s_SoftMaskTex = Shader.PropertyToID("_SoftMaskTex");
         private static readonly int s_SoftMaskColor = Shader.PropertyToID("_SoftMaskColor");
@@ -115,7 +114,6 @@ namespace Coffee.UISoftMask
                 }
             });
 #endif
-
         }
 
 #if TMP_ENABLE
@@ -192,7 +190,7 @@ namespace Coffee.UISoftMask
             Profiler.BeginSample("(SM4UI)[SoftMaskableMaterial] Create > Create New Material");
             var mat = new Material(baseMat)
             {
-                shader = UISoftMaskProjectSettings.shaderRegistry.FindAliasShader(baseMat.shader,
+                shader = UISoftMaskProjectSettings.shaderRegistry.FindOptionalShader(baseMat.shader,
                     "Hidden/{0} (SoftMaskable)", "Hidden/UI/Default (SoftMaskable)"),
                 hideFlags = HideFlags.HideAndDontSave
             };
@@ -201,13 +199,13 @@ namespace Coffee.UISoftMask
             Profiler.BeginSample("(SM4UI)[SoftMaskableMaterial] Create > Set Properties");
             mat.SetTexture(s_SoftMaskTex, softMaskBuffer);
             mat.SetInt(s_SoftMaskableStereo, isStereo ? 1 : 0);
-            mat.SetInt(s_SoftMaskableEnable, 1);
             mat.SetVector(s_SoftMaskColor, new Vector4(
                 0 <= softMaskDepth ? 1 : 0,
                 1 <= softMaskDepth ? 1 : 0,
                 2 <= softMaskDepth ? 1 : 0,
                 3 <= softMaskDepth ? 1 : 0
             ));
+            mat.EnableKeyword("SOFTMASKABLE");
             Profiler.EndSample();
 
 #if UNITY_EDITOR

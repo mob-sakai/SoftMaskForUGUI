@@ -93,7 +93,8 @@ SubShader {
 		#include "UnityUI.cginc"
 		#include "Assets/TextMesh Pro/Shaders/TMPro_Properties.cginc"
         #include "Packages/com.coffee.softmask-for-ugui/Shaders/SoftMask.cginc" // Add for soft mask
-		#pragma shader_feature_local _ SOFTMASK_EDITOR // Add for soft mask
+        #pragma shader_feature_local _ SOFTMASK_EDITOR // Add for soft mask
+        #pragma shader_feature_local _ SOFTMASKABLE // Add for soft mask
 
 		struct vertex_t {
 			UNITY_VERTEX_INPUT_INSTANCE_ID

@@ -57,7 +57,8 @@ Shader "Hidden/UI/Additive (SoftMaskable)"
             #include "UnityUI.cginc"
 
             #include "Packages/com.coffee.softmask-for-ugui/Shaders/SoftMask.cginc" // Add for soft mask
-		    #pragma multi_compile_local __ SOFTMASK_EDITOR // Add for soft mask
+            #pragma shader_feature_local _ SOFTMASK_EDITOR // Add for soft mask
+            #pragma shader_feature_local _ SOFTMASKABLE // Add for soft mask
             #pragma multi_compile_local _ UNITY_UI_CLIP_RECT
             #pragma multi_compile_local _ UNITY_UI_ALPHACLIP
 

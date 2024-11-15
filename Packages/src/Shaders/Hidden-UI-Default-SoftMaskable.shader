@@ -59,6 +59,7 @@ Shader "Hidden/UI/Default (SoftMaskable)"
 
             #include "Packages/com.coffee.softmask-for-ugui/Shaders/SoftMask.cginc" // Add for soft mask
             #pragma shader_feature_local _ SOFTMASK_EDITOR // Add for soft mask
+            #pragma shader_feature_local _ SOFTMASKABLE // Add for soft mask
 
             struct appdata_t
             {
