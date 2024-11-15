@@ -7,16 +7,16 @@ using Debug = UnityEngine.Debug;
 
 internal static class ImportSample
 {
-    [MenuItem("Development/Import TMP Support V1", false, 2001)]
+    [MenuItem("Development/Import TextMeshPro Support", false, 2001)]
     private static void ImportTMPSupportV1()
     {
         Run("TextMeshPro Support");
     }
 
-    [MenuItem("Development/Import TMP Support V2", false, 2002)]
+    [MenuItem("Development/Import TextMeshPro Support (Unity 6)", false, 2002)]
     private static void ImportTMPSupportV2()
     {
-        Run("TextMeshPro Support (ugui 2.0)");
+        Run("TextMeshPro Support (Unity 6)");
     }
 
     [InitializeOnLoadMethod]
