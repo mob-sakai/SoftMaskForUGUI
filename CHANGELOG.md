@@ -1,3 +1,10 @@
+## [2.4.3](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.4.2...v2.4.3) (2024-11-15)
+
+
+### Reverts
+
+* Revert "fix: softmask elements stop drawing on resolution change sometimes in editor" ([6c864ac](https://github.com/mob-sakai/SoftMaskForUGUI/commit/6c864ac89e42338ec7cc9271682d01e2015a5ae6))
+
 ## [2.4.2](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.4.1...v2.4.2) (2024-11-14)
 
 
