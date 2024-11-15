@@ -8,7 +8,11 @@ namespace Coffee.UISoftMask
     {
         protected override bool ModifyComponent(SoftMaskable c, bool dryRun)
         {
+            // Skip if the component is hidden.
             if ((c.hideFlags & HideFlags.DontSave) != 0) return false;
+
+            // Skip if the component is ignored.
+            if (c.ignoreSelf || c.ignoreChildren) return false;
 
             if (!dryRun)
             {
