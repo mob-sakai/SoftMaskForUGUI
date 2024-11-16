@@ -1,3 +1,11 @@
+## [2.4.4](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.4.3...v2.4.4) (2024-11-16)
+
+
+### Bug Fixes
+
+* accessing game object transform hierarchy before loading of scene has completed ([9dfacbf](https://github.com/mob-sakai/SoftMaskForUGUI/commit/9dfacbfe14668b6d409cdaf8c1ae20d520e70d8f)), closes [#208](https://github.com/mob-sakai/SoftMaskForUGUI/issues/208)
+* softmask elements stop drawing on resolution change sometimes in editor ([f67d025](https://github.com/mob-sakai/SoftMaskForUGUI/commit/f67d025683116934bf4946a7b13605519140882c)), closes [#208](https://github.com/mob-sakai/SoftMaskForUGUI/issues/208)
+
 ## [2.4.3](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.4.2...v2.4.3) (2024-11-15)
 
 
