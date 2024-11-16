@@ -137,6 +137,9 @@ namespace Coffee.UISoftMask
             foreach (var softMask in FindObjectsOfType<SoftMask>())
 #endif
             {
+                // #208: Accessing game object transform hierarchy before loading of scene has completed.
+                if (!softMask.gameObject.scene.isLoaded) continue;
+
                 softMask.GetComponentsInParent(true, softMasks);
                 if (1 < softMasks.Count) continue;
 
