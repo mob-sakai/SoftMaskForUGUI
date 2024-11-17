@@ -26,10 +26,10 @@ namespace Coffee.UISoftMask
             _shaderVariantRegistryEditor.Draw();
             serializedObject.ApplyModifiedProperties();
 
-            // Upgrade v1 to v2.
+            // Upgrade All Assets For V3.
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Upgrade", EditorStyles.boldLabel);
-            if (GUILayout.Button("Upgrade All Assets V1 to V2"))
+            if (GUILayout.Button("Upgrade All Assets For V3"))
             {
                 EditorApplication.delayCall += () => new UISoftMaskModifierRunner().RunIfUserWantsTo();
             }

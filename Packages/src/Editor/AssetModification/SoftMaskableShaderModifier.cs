@@ -20,12 +20,14 @@ namespace Coffee.UISoftMask
                     var space = Regex.Match(text, @"^\s*").Value;
                     sb.AppendLine(text);
                     sb.Append(space).AppendLine("#pragma shader_feature_local _ SOFTMASK_EDITOR // Add for soft mask");
+                    sb.Append(space).AppendLine("#pragma shader_feature_local _ SOFTMASKABLE // Add for soft mask");
                     return true;
                 }
 
                 // Remove the following line:
                 // #pragma shader_feature_local _ SOFTMASK_EDITOR // Add for soft mask
-                if (Regex.IsMatch(text, @"#pragma.*\s*(SOFTMASK_EDITOR)"))
+                // #pragma shader_feature_local _ SOFTMASKABLE // Add for soft mask
+                if (Regex.IsMatch(text, @"#pragma.*\s*(SOFTMASK_EDITOR|SOFTMASKABLE)"))
                 {
                     return true;
                 }
