@@ -13,21 +13,17 @@ namespace Coffee.UISoftMaskInternal.AssetModification
 
         protected override bool RunModify(bool dryRun)
         {
-            var changed = false;
             using (var scope = new EditScope(path, savePath))
             {
                 foreach (var line in scope.lines)
                 {
-                    if (ModifyLine(scope.sb, line))
-                    {
-                        changed = true;
-                    }
-                    else
+                    if (!ModifyLine(scope.sb, line))
                     {
                         scope.sb.AppendLine(line);
                     }
                 }
 
+                var changed = File.ReadAllText(path) != scope.sb.ToString();
                 if (!dryRun && changed)
                 {
                     scope.Save();

@@ -45,15 +45,16 @@ Shader "Hidden/UI/TerminalMaskingShape"
             #pragma fragment frag
 
             #include "UnityCG.cginc"
+
             struct appdata_t
             {
-                float4 vertex   : POSITION;
+                float4 vertex : POSITION;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
             struct v2f
             {
-                float4 vertex   : SV_POSITION;
+                float4 vertex : SV_POSITION;
                 UNITY_VERTEX_OUTPUT_STEREO
             };
 
