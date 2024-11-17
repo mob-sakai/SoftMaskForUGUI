@@ -1,3 +1,11 @@
+## [2.4.5](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.4.4...v2.4.5) (2024-11-17)
+
+
+### Bug Fixes
+
+* all SoftMaskable components will be removed on upgrade ([c0593d4](https://github.com/mob-sakai/SoftMaskForUGUI/commit/c0593d4d704198c69d5666478b1f25cb78de5dda))
+* set component icons ([7cf7336](https://github.com/mob-sakai/SoftMaskForUGUI/commit/7cf73367227e421b8e2894ff3cefafec4c673a13))
+
 ## [2.4.4](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.4.3...v2.4.4) (2024-11-16)
 
 
