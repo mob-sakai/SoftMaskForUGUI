@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using Coffee.UISoftMaskInternal.AssetModification;
 using UnityEditor;
 
@@ -32,7 +34,13 @@ namespace Coffee.UISoftMask
                         new SoftMaskableComponentModifier()
                     }
                 }),
-                (".shader", SoftMaskableShaderModifier.Create)
+                (".shader", SoftMaskableShaderModifier.Create),
+                (".shader", x => new AlwaysIncludedShadersModifier()
+                {
+                    path = x,
+                    excludePattern =
+                        new Regex(@"(Hidden/UI/SoftMask|Hidden/UI/TerminalMaskingShape|\(SoftMaskable\))")
+                })
             })
         {
         }

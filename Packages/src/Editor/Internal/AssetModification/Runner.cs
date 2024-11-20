@@ -20,19 +20,18 @@ namespace Coffee.UISoftMaskInternal.AssetModification
             _factory = factory;
         }
 
-        private Modifier CreateFromPath(string assetPath)
+        private IEnumerable<Modifier> CreateFromPath(string assetPath)
         {
             var ext = Path.GetExtension(assetPath);
             return _factory
-                .FirstOrDefault(x => x.ext == ext)
-                .create?.Invoke(assetPath);
+                .Where(x => x.ext == ext)
+                .Select(f => f.create?.Invoke(assetPath));
         }
 
-        private Modifier[] GetModifiers(string[] assetPaths)
+        protected virtual Modifier[] GetModifiers(string[] assetPaths)
         {
             return assetPaths
-                .Where(x => x.StartsWith("Assets/", StringComparison.Ordinal))
-                .Select(CreateFromPath)
+                .SelectMany(CreateFromPath)
                 .Where(x => x != null)
                 .OrderBy(x => Path.GetExtension(x.path))
                 .ToArray();
@@ -84,7 +83,7 @@ namespace Coffee.UISoftMaskInternal.AssetModification
             finally
             {
                 var sb = new StringBuilder();
-                sb.Append(dryRun ? "<b>[DryRun]</b> " : "");
+                sb.Append(dryRun ? "<b><color=orange>[DryRun]</color></b> " : "");
                 sb.AppendLine($"<b>Modify '{_name}' is {(canceled ? "canceled" : "completed")}.</b>");
                 sb.AppendLine("==== Modifications ====");
                 Debug.Log(modifiers.Aggregate(sb, (x, m) => x.Append(m.GetModificationReport())));
