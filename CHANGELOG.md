@@ -1,3 +1,10 @@
+## [2.4.6](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.4.5...v2.4.6) (2024-11-22)
+
+
+### Bug Fixes
+
+* build AssetBundle error ([005a91d](https://github.com/mob-sakai/SoftMaskForUGUI/commit/005a91d493da9c8677b469b39dac4f45111ce841)), closes [#213](https://github.com/mob-sakai/SoftMaskForUGUI/issues/213)
+
 ## [2.4.5](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.4.4...v2.4.5) (2024-11-17)
 
 
