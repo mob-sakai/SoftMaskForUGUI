@@ -15,10 +15,22 @@ ShaderVariantCollection:
         passType: 0
       - keywords: SOFTMASKABLE UNITY_UI_ALPHACLIP
         passType: 0
+      - keywords: SOFTMASKABLE UNITY_UI_CLIP_RECT
+        passType: 0
   - first: {fileID: 4800000, guid: 2933b413a51fc4ff3a83c7ef4177ae84, type: 3}
     second:
       variants:
       - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: 33e06cd3c50064f30a691b600fc62f3f, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: 935b7be1c88464d2eb87204fdfab5a38, type: 3}
+    second:
+      variants:
+      - keywords: GLOW_ON SOFTMASKABLE
         passType: 0
 --- !u!114 &11400000
 MonoBehaviour:
@@ -37,7 +49,7 @@ MonoBehaviour:
   m_TransformSensitivity: 1
   m_HideGeneratedComponents: 1
   m_ShaderVariantRegistry:
-    m_ErrorOnUnregisteredVariant: 0
     m_OptionalShaders: []
-    m_UnregisteredVariants: []
     m_Asset: {fileID: -3771181682974605552}
+    m_ErrorOnUnregisteredVariant: 0
+    m_UnregisteredVariants: []

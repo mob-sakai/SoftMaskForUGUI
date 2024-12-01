@@ -5,7 +5,14 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "805474a9e49f534ff01bf75405bcd415ed57083c"
+      "hash": "066c8d232f76517762e8d0332353588eb0ca93d9"
+    },
+    "com.coffee.minimal-resource": {
+      "version": "https://github.com/mob-sakai/Coffee.Internal.git?path=Packages/MinimalResource",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "066c8d232f76517762e8d0332353588eb0ca93d9"
     },
     "com.coffee.nano-monitor": {
       "version": "https://github.com/mob-sakai/Coffee.Internal.git?path=Packages/NanoMonitor",
@@ -14,7 +21,7 @@
       "dependencies": {
         "com.unity.ugui": "1.0.0"
       },
-      "hash": "2efcc6a8fc4dda8e6d4cf8492ca952cd0542641d"
+      "hash": "066c8d232f76517762e8d0332353588eb0ca93d9"
     },
     "com.coffee.softmask-for-ugui": {
       "version": "file:src",

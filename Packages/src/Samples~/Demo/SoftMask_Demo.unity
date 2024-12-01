@@ -24079,7 +24079,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: SoftMask For uGUI v2.0.0
+  m_Text: SoftMask For uGUI v3.0.0
 --- !u!222 &1590748270
 CanvasRenderer:
   m_ObjectHideFlags: 0
