@@ -1,3 +1,25 @@
+# [3.0.0](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.4.6...3.0.0) (2024-12-01)
+
+
+### Bug Fixes
+
+* fix anti-aliasing issues ([e68ee7b](https://github.com/mob-sakai/SoftMaskForUGUI/commit/e68ee7bf16a8a2d43bcf0fc74500fc9d5e355be8))
+
+
+### Features
+
+* add 'SOFTMASKABLE' shader feature to improve shader build ([eec3212](https://github.com/mob-sakai/SoftMaskForUGUI/commit/eec3212a2d3d93e87ae191230a99f8d9c5937190))
+* asset upgrade system 'SOFTMASKABLE' shader feature ([d36f932](https://github.com/mob-sakai/SoftMaskForUGUI/commit/d36f9323bacc13df79aff80777ecac66678fc97c))
+* MaskingShape components always use stencil mask ([6c6ac59](https://github.com/mob-sakai/SoftMaskForUGUI/commit/6c6ac590d2f4bb35548358c73f5c16458adeb0fa)), closes [#203](https://github.com/mob-sakai/SoftMaskForUGUI/issues/203) [#209](https://github.com/mob-sakai/SoftMaskForUGUI/issues/209)
+* strip shaders using ShaderVariantCollection instead of 'Always Include Shaders' ([5f4c435](https://github.com/mob-sakai/SoftMaskForUGUI/commit/5f4c43550e664aad50cd159777bd857f9ec15a69)), closes [#211](https://github.com/mob-sakai/SoftMaskForUGUI/issues/211)
+* update asset upgrade system to unregister always included shaders ([906bdb6](https://github.com/mob-sakai/SoftMaskForUGUI/commit/906bdb69ceae5aee25b12b6fc6de4243a4845ebf))
+
+
+### BREAKING CHANGES
+
+* SoftMaskable shaders now require the `SOFTMASKABLE` shader feature.
+Please upgrade assets from `Project Settings > UI > Soft Mask` or refer to the 'README > Usage with Your Custom Shaders' section to manually update your shaders.
+
 ## [2.4.6](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.4.5...v2.4.6) (2024-11-22)
 
 
