@@ -191,7 +191,9 @@ namespace Coffee.UISoftMask
             var mat = new Material(baseMat)
             {
                 shader = UISoftMaskProjectSettings.shaderRegistry.FindOptionalShader(baseMat.shader,
-                    "Hidden/{0} (SoftMaskable)", "Hidden/UI/Default (SoftMaskable)"),
+                    "(SoftMaskable)",
+                    "Hidden/{0} (SoftMaskable)",
+                    "Hidden/UI/Default (SoftMaskable)"),
                 hideFlags = HideFlags.HideAndDontSave
             };
             Profiler.EndSample();
