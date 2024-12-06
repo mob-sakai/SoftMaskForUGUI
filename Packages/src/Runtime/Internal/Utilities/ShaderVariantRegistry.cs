@@ -61,7 +61,10 @@ namespace Coffee.UISoftMaskInternal
 
         public ShaderVariantCollection shaderVariantCollection => m_Asset;
 
-        public Shader FindOptionalShader(Shader shader, string format, string defaultOptionalShaderName)
+        public Shader FindOptionalShader(Shader shader,
+            string requiredName,
+            string format,
+            string defaultOptionalShaderName)
         {
             if (!shader) return null;
 
@@ -70,6 +73,13 @@ namespace Coffee.UISoftMaskInternal
             if (_cachedOptionalShaders.TryGetValue(id, out var optionalShaderName))
             {
                 return Shader.Find(optionalShaderName);
+            }
+
+            // Required shader.
+            if (shader.name.Contains(requiredName))
+            {
+                _cachedOptionalShaders[id] = shader.name;
+                return shader;
             }
 
             // Find optional shader.
@@ -116,7 +126,8 @@ namespace Coffee.UISoftMaskInternal
                     {
                         return File.ReadLines(x.path)
                             .Take(10)
-                            .Select(line => Regex.Match(line, @"//\s*OptionalShaderFor:\s*(.*)$"))
+                            .Where(line => line.Contains($"OptionalShader@{optionalName}"))
+                            .Select(line => Regex.Match(line, @":\s*(.*)$"))
                             .Where(match => match.Success)
                             .Select(match => new StringPair() { key = match.Groups[1].Value, value = x.name });
                     })
@@ -375,12 +386,12 @@ namespace Coffee.UISoftMaskInternal
             return expand;
         }
 
-        private static void ShowShaderDropdown(SerializedProperty property, string option, bool included)
+        private static void ShowShaderDropdown(SerializedProperty property, string option, bool required)
         {
             var menu = new GenericMenu();
             var current = property.stringValue;
             var allShaderNames = ShaderUtil.GetAllShaderInfo()
-                .Where(s => s.name.Contains(option) == included)
+                .Where(s => !required || s.name.Contains(option))
                 .Select(s => s.name);
 
             foreach (var shaderName in allShaderNames)
