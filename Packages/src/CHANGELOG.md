@@ -1,3 +1,10 @@
+## [3.0.1](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.0.0...3.0.1) (2024-12-10)
+
+
+### Bug Fixes
+
+* shaders with `(SoftMaskable)` in their names are ignored ([6e5eaa5](https://github.com/mob-sakai/SoftMaskForUGUI/commit/6e5eaa50ef8dc3c8748e9b83b8254bd400395c06))
+
 # [3.0.0](https://github.com/mob-sakai/SoftMaskForUGUI/compare/v2.4.6...3.0.0) (2024-12-01)
 
 
