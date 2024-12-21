@@ -6,6 +6,9 @@ using UnityEngine.EventSystems;
 using UnityEngine.Profiling;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
+#if TMP_ENABLE
+using TMPro;
+#endif
 
 namespace Coffee.UISoftMask
 {
@@ -73,10 +76,7 @@ namespace Coffee.UISoftMask
                 m_MaskingMethod = value;
 
                 SetContainerDirty();
-                if (graphic)
-                {
-                    graphic.SetMaterialDirty();
-                }
+                SetMaterialDirty();
             }
         }
 
@@ -90,10 +90,7 @@ namespace Coffee.UISoftMask
             {
                 if (m_ShowMaskGraphic == value) return;
                 m_ShowMaskGraphic = value;
-                if (graphic)
-                {
-                    graphic.SetMaterialDirty();
-                }
+                SetMaterialDirty();
             }
         }
 
@@ -165,7 +162,7 @@ namespace Coffee.UISoftMask
                 graphic.RegisterDirtyVerticesCallback(_setContainerDirty ?? (_setContainerDirty = SetContainerDirty));
                 graphic.RegisterDirtyLayoutCallback(_setContainerDirty ?? (_setContainerDirty = SetContainerDirty));
 
-                graphic.SetMaterialDirty();
+                SetMaterialDirty();
                 graphic.SetVerticesDirty();
             }
 
@@ -193,7 +190,7 @@ namespace Coffee.UISoftMask
                 graphic.UnregisterDirtyVerticesCallback(_setContainerDirty ?? (_setContainerDirty = SetContainerDirty));
                 graphic.UnregisterDirtyLayoutCallback(_setContainerDirty ?? (_setContainerDirty = SetContainerDirty));
 
-                graphic.SetMaterialDirty();
+                SetMaterialDirty();
                 graphic.SetVerticesDirty();
             }
         }
@@ -224,11 +221,7 @@ namespace Coffee.UISoftMask
             SetContainerDirty();
             RegisterAntiAliasingIfNeeded();
             UpdateAntiAliasing();
-
-            if (graphic)
-            {
-                graphic.SetMaterialDirty();
-            }
+            SetMaterialDirty();
         }
 #endif
 
@@ -331,6 +324,21 @@ namespace Coffee.UISoftMask
             Logging.Log(this, " >>>> Graphic mesh is modified.");
         }
 
+        public void UpdateMesh(Mesh mesh)
+        {
+            if (!mesh || !isActiveAndEnabled) return;
+
+            Profiler.BeginSample("(SM4UI)[MaskingShape)] UpdateMesh");
+            if (!_mesh)
+            {
+                _mesh = MeshExtensions.Rent();
+            }
+
+            mesh.CopyTo(_mesh);
+            Profiler.EndSample();
+            Logging.Log(this, " >>>> Graphic mesh is modified.");
+        }
+
         internal bool AntiAliasingEnabled()
         {
             return isActiveAndEnabled && _mask is SoftMask softMask && softMask.AntiAliasingEnabled();
@@ -361,6 +369,15 @@ namespace Coffee.UISoftMask
             if (_container)
             {
                 _container.SetContainerDirty();
+            }
+        }
+
+        private void SetMaterialDirty()
+        {
+            if (graphic)
+            {
+                graphic.SetMaterialDirty();
+                SoftMaskUtils.UpdateMeshUI(graphic);
             }
         }
 
@@ -414,9 +431,23 @@ namespace Coffee.UISoftMask
             return true;
         }
 
+        protected virtual Texture GetMainTexture(Graphic graphic)
+        {
+#if TMP_ENABLE
+            if (graphic is TextMeshProUGUI || graphic is TMP_SubMeshUI)
+            {
+                var cr = graphic.canvasRenderer;
+                if (!cr || cr.materialCount == 0) return null;
+
+                return cr.GetMaterial(0).mainTexture;
+            }
+#endif
+            return graphic.mainTexture;
+        }
+
         internal void DrawSoftMaskBuffer(CommandBuffer cb, int depth)
         {
-            var texture = graphic.mainTexture;
+            var texture = GetMainTexture(graphic);
             var mesh = _mesh;
             if (!mesh) return;
             if (!graphic.IsInScreen()) return;
