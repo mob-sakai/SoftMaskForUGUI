@@ -126,6 +126,19 @@ namespace Coffee.UISoftMask
             _shouldRecalculateStencil = true;
             if (TryGetComponent(out _graphic))
             {
+                // Check if the graphic is before this component.
+                var components = InternalListPool<Component>.Rent();
+                GetComponents(components);
+                var gIndex = components.IndexOf(_graphic);
+                var sIndex = components.IndexOf(this);
+                InternalListPool<Component>.Return(ref components);
+                if (sIndex < gIndex)
+                {
+                    gameObject.AddComponent<SoftMaskable>();
+                    Misc.Destroy(this);
+                    return;
+                }
+
                 _graphic.SetMaterialDirty();
             }
             else
