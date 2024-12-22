@@ -20,8 +20,8 @@ namespace Coffee.UISoftMaskInternal
             if (self == other) return 0;
 
             Profiler.BeginSample("(COF)[TransformExt] CompareHierarchyIndex > GetTransforms");
-            var lTrs = self.GetTransforms(stopAt, ListPool<Transform>.Rent());
-            var rTrs = other.GetTransforms(stopAt, ListPool<Transform>.Rent());
+            var lTrs = self.GetTransforms(stopAt, InternalListPool<Transform>.Rent());
+            var rTrs = other.GetTransforms(stopAt, InternalListPool<Transform>.Rent());
             Profiler.EndSample();
 
             Profiler.BeginSample("(COF)[TransformExt] CompareHierarchyIndex > Calc");
@@ -40,8 +40,8 @@ namespace Coffee.UISoftMaskInternal
             Profiler.EndSample();
 
             Profiler.BeginSample("(COF)[TransformExt] CompareHierarchyIndex > Return");
-            ListPool<Transform>.Return(ref lTrs);
-            ListPool<Transform>.Return(ref rTrs);
+            InternalListPool<Transform>.Return(ref lTrs);
+            InternalListPool<Transform>.Return(ref rTrs);
             Profiler.EndSample();
 
             return result;
@@ -112,11 +112,11 @@ namespace Coffee.UISoftMaskInternal
                 return new Bounds(Vector3.zero, Vector3.zero);
             }
 
-            var list = ListPool<RectTransform>.Rent();
+            var list = InternalListPool<RectTransform>.Rent();
             child.GetComponentsInChildren(false, list);
             if (list.Count == 0)
             {
-                ListPool<RectTransform>.Return(ref list);
+                InternalListPool<RectTransform>.Return(ref list);
                 return new Bounds(Vector3.zero, Vector3.zero);
             }
 
@@ -134,7 +134,7 @@ namespace Coffee.UISoftMaskInternal
                 }
             }
 
-            ListPool<RectTransform>.Return(ref list);
+            InternalListPool<RectTransform>.Return(ref list);
 
             var rectTransformBounds = new Bounds(max, Vector3.zero);
             rectTransformBounds.Encapsulate(min);

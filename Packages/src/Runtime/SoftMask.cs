@@ -111,7 +111,7 @@ namespace Coffee.UISoftMask
         private CanvasViewChangeTrigger _viewChangeTrigger;
 
         private List<SoftMask> children =>
-            _children != null ? _children : _children = UISoftMaskInternal.ListPool<SoftMask>.Rent();
+            _children != null ? _children : _children = InternalListPool<SoftMask>.Rent();
 
         /// <summary>
         /// Masking mode.<br />
@@ -404,7 +404,7 @@ namespace Coffee.UISoftMask
 
         protected override void OnDestroy()
         {
-            UISoftMaskInternal.ListPool<SoftMask>.Return(ref _children);
+            InternalListPool<SoftMask>.Return(ref _children);
             _onBeforeCanvasRebuild = null;
             _renderSoftMaskBuffer = null;
             _setSoftMaskDirty = null;
@@ -463,7 +463,7 @@ namespace Coffee.UISoftMask
                 graphic.SetVerticesDirty();
             }
 
-            var list = UISoftMaskInternal.ListPool<IMaskable>.Rent();
+            var list = InternalListPool<IMaskable>.Rent();
             GetComponents(list);
             for (var i = 0; i < list.Count; i++)
             {
@@ -472,7 +472,7 @@ namespace Coffee.UISoftMask
                 list[i].RecalculateMasking();
             }
 
-            UISoftMaskInternal.ListPool<IMaskable>.Return(ref list);
+            InternalListPool<IMaskable>.Return(ref list);
         }
 #endif
 

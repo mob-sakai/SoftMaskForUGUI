@@ -78,8 +78,8 @@ namespace Coffee.UISoftMask
 
         private static void ResetAllSoftMasks()
         {
-            var softMasks = ListPool<SoftMask>.Rent();
-            var components = ListPool<IMaskable>.Rent();
+            var softMasks = InternalListPool<SoftMask>.Rent();
+            var components = InternalListPool<IMaskable>.Rent();
 
             foreach (var softMask in Misc.FindObjectsOfType<SoftMask>())
             {
@@ -93,8 +93,8 @@ namespace Coffee.UISoftMask
                 components.ForEach(c => c.RecalculateMasking());
             }
 
-            ListPool<IMaskable>.Return(ref components);
-            ListPool<SoftMask>.Return(ref softMasks);
+            InternalListPool<IMaskable>.Return(ref components);
+            InternalListPool<SoftMask>.Return(ref softMasks);
         }
 
 #if UNITY_EDITOR
