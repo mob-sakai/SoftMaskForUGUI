@@ -1,3 +1,15 @@
+# [3.1.0](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.0.1...3.1.0) (2024-12-22)
+
+
+### Bug Fixes
+
+* soft masking for SubMesheUI (TextMeshProUGUI) may not display correctly ([d417c06](https://github.com/mob-sakai/SoftMaskForUGUI/commit/d417c060596ab58179d6b3e622bd40309b49a3b8)), closes [#216](https://github.com/mob-sakai/SoftMaskForUGUI/issues/216)
+
+
+### Features
+
+* maskingShape with TextMeshPro ([858655f](https://github.com/mob-sakai/SoftMaskForUGUI/commit/858655f24be33aff8b5188fde4bd0362b391a129)), closes [#217](https://github.com/mob-sakai/SoftMaskForUGUI/issues/217)
+
 ## [3.0.1](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.0.0...3.0.1) (2024-12-10)
 
 
