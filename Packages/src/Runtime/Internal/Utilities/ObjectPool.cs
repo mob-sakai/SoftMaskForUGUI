@@ -121,7 +121,11 @@ namespace Coffee.UISoftMaskInternal
         /// </summary>
         public static void Return(ref List<T> toRelease)
         {
-            UnityEngine.Pool.ListPool<T>.Release(toRelease);
+            if (toRelease != null)
+            {
+                UnityEngine.Pool.ListPool<T>.Release(toRelease);
+            }
+
             toRelease = null;
         }
 #else
