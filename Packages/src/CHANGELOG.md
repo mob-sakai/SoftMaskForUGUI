@@ -1,3 +1,10 @@
+## [3.1.1](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.1.0...3.1.1) (2024-12-23)
+
+
+### Bug Fixes
+
+* fix NRE ([190e149](https://github.com/mob-sakai/SoftMaskForUGUI/commit/190e149956abe33838abbc94edb7f8180f955e26))
+
 # [3.1.0](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.0.1...3.1.0) (2024-12-22)
 
 
