@@ -1,3 +1,10 @@
+## [3.1.2](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.1.1...3.1.2) (2024-12-25)
+
+
+### Bug Fixes
+
+* The `SoftMask` component was blocking raycasts to the `MaskingShape (Subtract)` area. ([828c869](https://github.com/mob-sakai/SoftMaskForUGUI/commit/828c8690900bb80103c846196dcbd1ae525739ce)), closes [#220](https://github.com/mob-sakai/SoftMaskForUGUI/issues/220)
+
 ## [3.1.1](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.1.0...3.1.1) (2024-12-23)
 
 
