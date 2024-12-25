@@ -628,7 +628,7 @@ namespace Coffee.UISoftMask
             if (_shapeContainer)
             {
                 Profiler.BeginSample("(SM4UI)[SoftMask] IsRaycastLocationValid > Shapes");
-                valid |= _shapeContainer.IsInside(sp, eventCamera, false, 0.5f);
+                valid = _shapeContainer.IsInside(sp, eventCamera, valid, 0.5f);
                 Profiler.EndSample();
             }
 
