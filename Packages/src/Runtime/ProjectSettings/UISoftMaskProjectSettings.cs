@@ -1,4 +1,5 @@
 #pragma warning disable CS0414
+using System.Linq;
 using Coffee.UISoftMaskInternal;
 using UnityEditor;
 using UnityEngine;
@@ -76,6 +77,15 @@ namespace Coffee.UISoftMask
             }
         }
 
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+#if UNITY_EDITOR
+            SetupSamplesForShaderVariantRegistry();
+            m_ShaderVariantRegistry.ClearCache();
+#endif
+        }
+
         private static void ResetAllSoftMasks()
         {
             var softMasks = InternalListPool<SoftMask>.Rent();
@@ -115,6 +125,42 @@ namespace Coffee.UISoftMask
             ResetAllHideFlags<TerminalMaskingShape>(hideFlagsForTemp);
         }
 
+        private void SetupSamplesForShaderVariantRegistry()
+        {
+#if UNITY_2023_2_OR_NEWER
+            const string tmpSupport = "TextMeshPro Support (Unity 6)";
+#else
+            const string tmpSupport = "TextMeshPro Support";
+#endif
+            m_ShaderVariantRegistry.RegisterSamples(new[]
+            {
+                // TextMeshPro Support
+                ("Hidden/TextMeshPro/Bitmap (SoftMaskable)", tmpSupport),
+                ("Hidden/TextMeshPro/Mobile/Bitmap (SoftMaskable)", tmpSupport),
+                ("Hidden/TextMeshPro/Distance Field (SoftMaskable)", tmpSupport),
+                ("Hidden/TextMeshPro/Mobile/Distance Field (SoftMaskable)", tmpSupport),
+                // Spine Support
+                ("Hidden/Spine/SkeletonGraphic (SoftMaskable)", "Spine Support"),
+                ("Hidden/Spine/SkeletonGraphic Fill (SoftMaskable)", "Spine Support"),
+                ("Hidden/Spine/SkeletonGraphic Grayscale (SoftMaskable)", "Spine Support"),
+                ("Hidden/Spine/SkeletonGraphic Multiply (SoftMaskable)", "Spine Support"),
+                ("Hidden/Spine/SkeletonGraphic Screen (SoftMaskable)", "Spine Support")
+            });
+        }
+
+        private void Refresh()
+        {
+            m_ShaderVariantRegistry.ClearCache();
+            MaterialRepository.Clear();
+            foreach (var c in Misc.FindObjectsOfType<SoftMaskable>()
+                         .Concat(Misc.GetAllComponentsInPrefabStage<SoftMaskable>()))
+            {
+                c.SetMaterialDirty();
+            }
+
+            EditorApplication.QueuePlayerLoopUpdate();
+        }
+
         private void Reset()
         {
             m_ShaderVariantRegistry.InitializeIfNeeded(this, "(SoftMaskable)");
@@ -133,6 +179,16 @@ namespace Coffee.UISoftMask
         private static SettingsProvider CreateSettingsProvider()
         {
             return new PreloadedProjectSettingsProvider("Project/UI/Soft Mask");
+        }
+
+        private class Postprocessor : AssetPostprocessor
+        {
+            private static void OnPostprocessAllAssets(string[] _, string[] __, string[] ___, string[] ____)
+            {
+                if (Misc.isBatchOrBuilding) return;
+
+                instance.Refresh();
+            }
         }
 #endif
     }
