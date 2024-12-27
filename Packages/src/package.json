@@ -41,6 +41,11 @@
       "displayName": "ShaderGraph Support",
       "description": "ShaderGraph Support",
       "path": "Samples~/ShaderGraph Support"
+    },
+    {
+      "displayName": "Spine Support",
+      "description": "Spine Support",
+      "path": "Samples~/Spine Support"
     }
   ]
 }
