@@ -16,7 +16,7 @@ namespace Coffee.UISoftMask
         private static readonly int s_AllowDynamicResolution = Shader.PropertyToID("_AllowDynamicResolution");
         private static readonly int s_AllowRenderScale = Shader.PropertyToID("_AllowRenderScale");
         private static readonly int s_SoftMaskingPower = Shader.PropertyToID("_SoftMaskingPower");
-        private const float k_PowerMin = 1f;
+        private const float k_PowerMin = 0.5f;
         private const float k_PowerMax = 5f;
 
         [Tooltip("The graphic is ignored when soft-masking.")]
@@ -31,7 +31,7 @@ namespace Coffee.UISoftMask
                  "The higher this value, the faster it becomes transparent.\n" +
                  "If overlapping objects appear see-through, please adjust this value.")]
         [SerializeField]
-        [Range(k_PowerMin, k_PowerMax)]
+        [PowerRange(k_PowerMin, k_PowerMax, 10)]
         private float m_Power = 1f;
 
         /// <summary>
