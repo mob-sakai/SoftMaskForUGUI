@@ -39,7 +39,7 @@ Enhance Unity UI (uGUI) with advanced soft-masking features to create more visua
     - [Component: RectTransformFitter](#component-recttransformfitter)
     - [Project Settings](#project-settings)
     - [Usage with Scripts](#usage-with-scripts)
-    - [Usage with TextMeshPro](#usage-with-textmeshpro)
+    - [Usage with TextMeshPro or Spine](#usage-with-textmeshpro-or-spine)
     - [Usage with Your Custom Shaders](#usage-with-your-custom-shaders)
     - [Usage with Canvas ShaderGraph](#usage-with-canvas-shadergraph)
     - [:warning: Limitations](#warning-limitations)
@@ -89,7 +89,7 @@ Enhance Unity UI (uGUI) with advanced soft-masking features to create more visua
   ![](https://github.com/user-attachments/assets/8ae038cd-b8da-4b83-ac48-15083fb2e3a6)
 - **TextMeshProUGUI Support**: Support `TextMeshProUGUI` by importing additional shaders.  
   It also supports TextMeshPro v3.2/4.0 (pre-release) and uGUI 2.0 (Unity 2023.2+/6.0+).
-  For details, please see [Support TextMeshPro](#usage-with-textmeshpro).  
+  For details, please see [Support TextMeshPro or Spine](#usage-with-textmeshpro-or-spine).  
   ![](https://github.com/user-attachments/assets/6e33fce4-526c-41af-9894-36da1ccb2f51)
 - **Better Editor Experience**: In the Scene view, objects outside the screen are displayed as stencil masks, allowing
   for more intuitive editing.  
@@ -97,6 +97,10 @@ Enhance Unity UI (uGUI) with advanced soft-masking features to create more visua
 - **Soft Maskable Shader Variant Stripping**: SoftMaskable shaders are automatically included at build time. You can
   remove unused shader variants.  
   ![](https://github.com/user-attachments/assets/e413a5a1-424e-4edb-9e5e-8639c0f3a967)
+- **Spine Support**: Support [Spine (SkeletonGraphic)](https://esotericsoftware.com/spine-in-depth) by importing
+  additional shaders.  
+  For details, please see [Support TextMeshPro or Spine](#usage-with-textmeshpro-or-spine).  
+  ![](https://github.com/user-attachments/assets/37f54634-0b52-4ba3-a322-22e0f45f60ee)
 
 <br><br>
 
@@ -122,7 +126,7 @@ _This package requires **Unity 2019.4 or later**._
 - To update the package, use Package Manager UI (`Window > Package Manager`) or run the following command with
   `@{version}`:
   ```
-  openupm add com.coffee.softmask-for-ugui@3.0.0
+  openupm add com.coffee.softmask-for-ugui@3.2.0
   ```
 
 ### Install via UPM (with Package Manager UI)
@@ -132,7 +136,7 @@ _This package requires **Unity 2019.4 or later**._
   `https://github.com/mob-sakai/SoftMaskForUGUI.git?path=Packages/src`  
   ![](https://github.com/user-attachments/assets/f88f47ad-c606-44bd-9e86-ee3f72eac548)
 - To update the package, change suffix `#{version}` to the target version.
-    - e.g. `https://github.com/mob-sakai/SoftMaskForUGUI.git?path=Packages/src#3.0.0`
+    - e.g. `https://github.com/mob-sakai/SoftMaskForUGUI.git?path=Packages/src#3.2.0`
 
 ### Install via UPM (Manually)
 
@@ -147,7 +151,7 @@ _This package requires **Unity 2019.4 or later**._
   ```
 
 - To update the package, change suffix `#{version}` to the target version.
-    - e.g. `"com.coffee.softmask-for-ugui": "https://github.com/mob-sakai/SoftMaskForUGUI.git?path=Packages/src#3.0.0",`
+    - e.g. `"com.coffee.softmask-for-ugui": "https://github.com/mob-sakai/SoftMaskForUGUI.git?path=Packages/src#3.2.0",`
 
 ### Install as Embedded Package
 
@@ -163,7 +167,8 @@ _This package requires **Unity 2019.4 or later**._
 
 Additional resources can be imported to extend functionality.
 
-- [Usage with TextMeshPro](#usage-with-textmeshpro).
+- [Usage with TextMeshPro or Spine](#usage-with-textmeshpro-or-spine).
+- [Usage with Canvas ShaderGraph](#usage-with-canvas-shadergraph).
 
 <br><br>
 
@@ -395,7 +400,7 @@ You can adjust the project-wide settings for SoftMaskForUGUI. (`Edit > Project S
     - The shader variant will be automatically added to the `Unregistered Variants` list.
 - **Upgrade All Assets For V3**: Upgrade all assets for v3.
     - ⚠️ This will apply the changes to all assets in the project.
-    - For details, please see [Upgrade All Assets For V3](#upgrade-all-assets-for-v3).
+    - For details, please see [Upgrade All Assets For V3](#-upgrade-all-assets-for-v3).
 
 <br><br>
 
@@ -410,18 +415,22 @@ softMask.softnessRange = new MinMax01(0.5f, 0.75f);
 
 <br><br>
 
-### Usage with TextMeshPro
+### Usage with TextMeshPro or Spine
 
-1. First, you must
-   import [TMP Essential Resources](https://docs.unity3d.com/Packages/com.unity.textmeshpro@3.0/manual/index.html#installation)
-   before using.  
-   ![](https://github.com/user-attachments/assets/70653ccf-0b5e-4352-ac62-76bdd49c5f92)
+To use SoftMask with TextMeshPro or Spine, you need to import additional resources.  
+When a shader included in the samples is requested, an import dialog will automatically appear.  
+Click the `Import` button.
 
-2. Open the `Package Manager` window and select the `UI Soft Mask` package in the package list and click the
-   `TextMeshPro Support > Import` button.  
-   ⚠️ If you are using `Unity 2023.2/6000.0+` or `TextMeshPro 3.2/4.0+`, click the
-   `TextMeshPro Support (Unity 6) > Import` button instead.  
-   ![](https://github.com/user-attachments/assets/1fc9d0d8-e7be-4a67-b0f0-0529b29855d2)
+![](https://github.com/user-attachments/assets/9d4c5f71-1d1a-4f2c-a04e-4549e384fa36)
+
+Alternatively, you can manually import the resources by following these steps:
+
+1. Open the `Package Manager` window and select the `UI Soft Mask` package from the package list.
+2. Click the `Import` button for each sample to import the required resources.  
+    ![](https://github.com/user-attachments/assets/d3f83102-4617-4993-9f00-c0c7641633cd)
+    - TextMeshPro (Unity 2023.1 or earlier): `TextMeshPro Support`
+    - TextMeshPro (Unity 2023.2, 6000.0 or later): `TextMeshPro Support (Unity 6)`
+    - Spine: `Spine Support`
 
 3. The assets will be imported under `Assets/Samples/UI Soft Mask/{version}`.
 
@@ -522,7 +531,7 @@ Issues are incredibly valuable to this project:
 
 Pull requests offer a fantastic way to contribute your ideas to this repository.  
 Please refer to [CONTRIBUTING.md](https://github.com/mob-sakai/SoftMaskForUGUI/tree/develop/CONTRIBUTING.md)
-and [develop branch](https://github.com/mob-sakai/SoftMaskForUGUI/tree/develop) for guidelines.
+and [develop branch](https://github.com/mob-sakai/SoftMaskForUGUI/tree/develop).
 
 ### Support
 
@@ -548,4 +557,4 @@ Your support allows me to dedicate more time to development. 😊
 * GitHub page : https://github.com/mob-sakai/SoftMaskForUGUI
 * Releases : https://github.com/mob-sakai/SoftMaskForUGUI/releases
 * Issue tracker : https://github.com/mob-sakai/SoftMaskForUGUI/issues
-* Change log : https://github.com/mob-sakai/SoftMaskForUGUI/blob/main/CHANGELOG.md
+* Change log : https://github.com/mob-sakai/SoftMaskForUGUI/blob/main/Packages/src/CHANGELOG.md
