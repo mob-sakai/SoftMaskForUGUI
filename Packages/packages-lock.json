@@ -31,6 +31,26 @@
         "com.unity.ugui": "1.0.0"
       }
     },
+    "com.esotericsoftware.spine.spine-csharp": {
+      "version": "https://github.com/EsotericSoftware/spine-runtimes.git?path=spine-csharp/src#4.2",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "2864e323c308fc66348f890260d654611c64130f"
+    },
+    "com.esotericsoftware.spine.spine-unity": {
+      "version": "https://github.com/EsotericSoftware/spine-runtimes.git?path=spine-unity/Assets/Spine#4.2",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.ugui": "1.0.0",
+        "com.unity.modules.animation": "1.0.0",
+        "com.unity.modules.physics": "1.0.0",
+        "com.unity.modules.physics2d": "1.0.0",
+        "com.esotericsoftware.spine.spine-csharp": "4.2.0"
+      },
+      "hash": "2864e323c308fc66348f890260d654611c64130f"
+    },
     "com.unity.ext.nunit": {
       "version": "1.0.6",
       "depth": 1,
@@ -89,6 +109,18 @@
       "dependencies": {}
     },
     "com.unity.modules.jsonserialize": {
+      "version": "1.0.0",
+      "depth": 1,
+      "source": "builtin",
+      "dependencies": {}
+    },
+    "com.unity.modules.physics": {
+      "version": "1.0.0",
+      "depth": 1,
+      "source": "builtin",
+      "dependencies": {}
+    },
+    "com.unity.modules.physics2d": {
       "version": "1.0.0",
       "depth": 1,
       "source": "builtin",
