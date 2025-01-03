@@ -1,3 +1,13 @@
+# [3.2.0](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.1.2...3.2.0) (2025-01-03)
+
+
+### Features
+
+* automatically display a dialog to import samples for TextMeshPro or Spine ([a122057](https://github.com/mob-sakai/SoftMaskForUGUI/commit/a122057ea878d844599e81f8b602d26a3cb9f5fe)), closes [#219](https://github.com/mob-sakai/SoftMaskForUGUI/issues/219)
+* change the minimum value of `SoftMaskable.power` from 1 to 0.5, allowing for smoother softness transitions ([3d59755](https://github.com/mob-sakai/SoftMaskForUGUI/commit/3d597554b71e1b4517a663835908efe4996717d1))
+* Spine support ([7677a49](https://github.com/mob-sakai/SoftMaskForUGUI/commit/7677a49ea2ef42689d171a3006f2e0316bf8226a)), closes [#218](https://github.com/mob-sakai/SoftMaskForUGUI/issues/218) [#221](https://github.com/mob-sakai/SoftMaskForUGUI/issues/221)
+* support `TextMeshPro/Bitmap` and `TextMeshPro/Mobile/Bitmap` shaders. ([6d4900c](https://github.com/mob-sakai/SoftMaskForUGUI/commit/6d4900ce640ec83a2d5aa478bc97720c5fb005d0))
+
 ## [3.1.2](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.1.1...3.1.2) (2024-12-25)
 
 
