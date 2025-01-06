@@ -1,3 +1,10 @@
+## [3.2.1](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.2.0...3.2.1) (2025-01-06)
+
+
+### Bug Fixes
+
+* fix SoftMask with TextMeshPro ([abe9388](https://github.com/mob-sakai/SoftMaskForUGUI/commit/abe9388c38778f5e4a47fc9a0e38c84fad3afe6f)), closes [#223](https://github.com/mob-sakai/SoftMaskForUGUI/issues/223)
+
 # [3.2.0](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.1.2...3.2.0) (2025-01-03)
 
 
