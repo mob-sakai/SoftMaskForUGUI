@@ -112,12 +112,13 @@ namespace Coffee.UISoftMask
 
             if (text.TryGetComponent<SoftMask>(out var sm))
             {
+                (sm as IMeshModifier).ModifyMesh(text.mesh);
                 UpdateSubMeshUI(text, sm.enabled, sm.showMaskGraphic, sm.antiAliasingThreshold, sm.softnessRange,
                     MaskingShape.MaskingMethod.Additive);
             }
             else if (text.TryGetComponent<MaskingShape>(out var ms))
             {
-                ms.UpdateMesh(text.mesh);
+                (ms as IMeshModifier).ModifyMesh(text.mesh);
                 UpdateSubMeshUI(text, ms.enabled, ms.showMaskGraphic, ms.antiAliasingThreshold, ms.softnessRange,
                     ms.maskingMethod);
             }
@@ -138,7 +139,7 @@ namespace Coffee.UISoftMask
                 maskingShape.antiAliasingThreshold = aa;
                 maskingShape.softnessRange = softness;
                 maskingShape.showMaskGraphic = show;
-                maskingShape.UpdateMesh(subMeshes[i].mesh);
+                (maskingShape as IMeshModifier).ModifyMesh(subMeshes[i].mesh);
             }
 
             InternalListPool<TMP_SubMeshUI>.Return(ref subMeshes);

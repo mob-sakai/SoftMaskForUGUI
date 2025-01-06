@@ -6,9 +6,6 @@ using UnityEngine.EventSystems;
 using UnityEngine.Profiling;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
-#if TMP_ENABLE
-using TMPro;
-#endif
 
 namespace Coffee.UISoftMask
 {
@@ -304,39 +301,24 @@ namespace Coffee.UISoftMask
 
         void IMeshModifier.ModifyMesh(Mesh mesh)
         {
+            if (!isActiveAndEnabled)
+            {
+                MeshExtensions.Return(ref _mesh);
+                return;
+            }
+
+            GraphicDuplicator.CopyMesh(mesh, _mesh ? _mesh : _mesh = MeshExtensions.Rent());
         }
 
         void IMeshModifier.ModifyMesh(VertexHelper verts)
         {
-            if (!isActiveAndEnabled) return;
-
-            Profiler.BeginSample("(SM4UI)[MaskingShape)] ModifyMesh");
-            if (!_mesh)
+            if (!isActiveAndEnabled)
             {
-                _mesh = MeshExtensions.Rent();
+                MeshExtensions.Return(ref _mesh);
+                return;
             }
 
-            _mesh.Clear(false);
-            verts.FillMesh(_mesh);
-            _mesh.RecalculateBounds();
-
-            Profiler.EndSample();
-            Logging.Log(this, " >>>> Graphic mesh is modified.");
-        }
-
-        public void UpdateMesh(Mesh mesh)
-        {
-            if (!mesh || !isActiveAndEnabled) return;
-
-            Profiler.BeginSample("(SM4UI)[MaskingShape)] UpdateMesh");
-            if (!_mesh)
-            {
-                _mesh = MeshExtensions.Rent();
-            }
-
-            mesh.CopyTo(_mesh);
-            Profiler.EndSample();
-            Logging.Log(this, " >>>> Graphic mesh is modified.");
+            GraphicDuplicator.CopyMesh(verts, _mesh ? _mesh : _mesh = MeshExtensions.Rent());
         }
 
         internal bool AntiAliasingEnabled()
@@ -431,23 +413,9 @@ namespace Coffee.UISoftMask
             return true;
         }
 
-        protected virtual Texture GetMainTexture(Graphic graphic)
-        {
-#if TMP_ENABLE
-            if (graphic is TextMeshProUGUI || graphic is TMP_SubMeshUI)
-            {
-                var cr = graphic.canvasRenderer;
-                if (!cr || cr.materialCount == 0) return null;
-
-                return cr.GetMaterial(0).mainTexture;
-            }
-#endif
-            return graphic.mainTexture;
-        }
-
         internal void DrawSoftMaskBuffer(CommandBuffer cb, int depth)
         {
-            var texture = GetMainTexture(graphic);
+            var texture = GraphicDuplicator.GetMainTexture(graphic);
             var mesh = _mesh;
             if (!mesh) return;
             if (!graphic.IsInScreen()) return;

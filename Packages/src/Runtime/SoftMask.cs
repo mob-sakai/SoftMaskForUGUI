@@ -6,10 +6,10 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Profiling;
 using UnityEngine.Rendering;
+using UnityEngine.UI;
 #if URP_ENABLE
 using UnityEngine.Rendering.Universal;
 #endif
-using UnityEngine.UI;
 
 namespace Coffee.UISoftMask
 {
@@ -492,6 +492,13 @@ namespace Coffee.UISoftMask
 
         void IMeshModifier.ModifyMesh(Mesh mesh)
         {
+            if (!mesh || !SoftMaskingEnabled())
+            {
+                MeshExtensions.Return(ref _mesh);
+                return;
+            }
+
+            GraphicDuplicator.CopyMesh(mesh, _mesh ? _mesh : _mesh = MeshExtensions.Rent());
         }
 
         void IMeshModifier.ModifyMesh(VertexHelper verts)
@@ -502,18 +509,7 @@ namespace Coffee.UISoftMask
                 return;
             }
 
-            Profiler.BeginSample("(SM4UI)[SoftMask] ModifyMesh");
-            if (!_mesh)
-            {
-                _mesh = MeshExtensions.Rent();
-            }
-
-            _mesh.Clear(false);
-            verts.FillMesh(_mesh);
-            _mesh.RecalculateBounds();
-
-            Profiler.EndSample();
-            Logging.Log(this, " >>>> Graphic mesh is modified.");
+            GraphicDuplicator.CopyMesh(verts, _mesh ? _mesh : _mesh = MeshExtensions.Rent());
         }
 
         private void SetDirtyAndNotifyIfBufferSizeChanged()
@@ -865,7 +861,7 @@ namespace Coffee.UISoftMask
                 Profiler.EndSample();
 
                 Profiler.BeginSample("(SM4UI)[SoftMask] RenderSoftMaskBuffer > ApplyMaterialPropertyBlock");
-                var texture = graphic.mainTexture;
+                var texture = GraphicDuplicator.GetMainTexture(graphic);
                 SoftMaskUtils.ApplyMaterialPropertyBlock(_mpb, softMaskDepth, texture, softnessRange, alpha);
                 Profiler.EndSample();
             }
