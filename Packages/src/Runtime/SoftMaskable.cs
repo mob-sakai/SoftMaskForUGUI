@@ -327,7 +327,7 @@ namespace Coffee.UISoftMask
         {
             hideFlags = ignoreSelf || ignoreChildren || !Mathf.Approximately(power, 1f)
                 ? HideFlags.None
-                : HideFlags.DontSave;
+                : HideFlags.DontSaveInEditor;
         }
 
 #if UNITY_EDITOR

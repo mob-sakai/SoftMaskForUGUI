@@ -57,8 +57,8 @@ namespace Coffee.UISoftMask
 #endif
 
         public static HideFlags hideFlagsForTemp => instance.m_HideGeneratedComponents
-            ? HideFlags.DontSave | HideFlags.NotEditable | HideFlags.HideInHierarchy | HideFlags.HideInInspector
-            : HideFlags.DontSave | HideFlags.NotEditable;
+            ? HideFlags.DontSaveInEditor | HideFlags.NotEditable | HideFlags.HideInHierarchy | HideFlags.HideInInspector
+            : HideFlags.DontSaveInEditor | HideFlags.NotEditable;
 
         public static TransformSensitivity transformSensitivity
         {
