@@ -1,3 +1,10 @@
+## [3.2.2](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.2.1...3.2.2) (2025-01-18)
+
+
+### Bug Fixes
+
+* addressable build error in Unity 6 ([0f25706](https://github.com/mob-sakai/SoftMaskForUGUI/commit/0f257062a664f9d34b4d4782a44c642abecac798)), closes [#224](https://github.com/mob-sakai/SoftMaskForUGUI/issues/224)
+
 ## [3.2.1](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.2.0...3.2.1) (2025-01-06)
 
 
