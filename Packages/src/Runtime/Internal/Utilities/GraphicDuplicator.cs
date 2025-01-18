@@ -8,7 +8,7 @@ using TMPro;
 namespace Coffee.UISoftMaskInternal
 {
     /// <summary>
-    /// Provides additional callbacks related to canvas and UI system.
+    /// Utility class to duplicate the mesh and texture of the graphic for reuse in another system
     /// </summary>
     internal static class GraphicDuplicator
     {
