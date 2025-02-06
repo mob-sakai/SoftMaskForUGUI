@@ -514,6 +514,8 @@ The following are the limitations of SoftMaskForUGUI.
 - Alpha hit test is not supported when the texture is in crunch format or non-readable.
 - `Hidden/UI/SoftMask`, `Hidden/UI/TerminalMaskingShape` and `SoftMaskable` shader variants used at runtime must be
   registered in the [Project Settings](#project-settings).
+- If you are using `DynamicResolution` or `RenderScale (URP)`, the display may not work correctly.  
+    - For details, see [the issue](https://github.com/mob-sakai/SoftMaskForUGUI/issues/227).
 
 <br><br>
 
