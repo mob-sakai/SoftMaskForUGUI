@@ -53,12 +53,15 @@ SubShader {
 		#pragma multi_compile __ UNITY_UI_CLIP_RECT
 		#pragma multi_compile __ UNITY_UI_ALPHACLIP
 
-
 		#include "UnityCG.cginc"
 
-		#include "Packages/com.coffee.softmask-for-ugui/Shaders/SoftMask.cginc" // Add for soft mask
-		#pragma shader_feature_local _ SOFTMASK_EDITOR // Add for soft mask
-		#pragma shader_feature_local _ SOFTMASKABLE // Add for soft mask
+        // ==== SOFTMASKABLE START ====
+        #pragma shader_feature _ SOFTMASK_EDITOR
+        #pragma shader_feature_local_fragment _ SOFTMASKABLE
+        #if SOFTMASKABLE
+        #include "Packages/com.coffee.softmask-for-ugui/Shaders/SoftMask.cginc"
+        #endif
+        // ==== SOFTMASKABLE END ====
 
 		struct appdata_t {
 			float4 vertex : POSITION;
@@ -72,7 +75,11 @@ SubShader {
 			fixed4 color		: COLOR;
 			float2 texcoord0	: TEXCOORD0;
 			float4 mask			: TEXCOORD2;
-			EDITOR_ONLY(float4 worldPosition : TEXCOORD3;) // Add for soft mask
+			// ==== SOFTMASKABLE START ====
+			#if SOFTMASK_EDITOR
+			float4 worldPosition : TEXCOORD3;
+			#endif
+			// ==== SOFTMASKABLE END ====
 		};
 
 		sampler2D 	_MainTex;
@@ -84,6 +91,8 @@ SubShader {
 		uniform float4		_ClipRect;
 		uniform float		_MaskSoftnessX;
 		uniform float		_MaskSoftnessY;
+		uniform float		_UIMaskSoftnessX;
+		uniform float		_UIMaskSoftnessY;
 
 		v2f vert (appdata_t v)
 		{
@@ -105,9 +114,14 @@ SubShader {
 
 			// Clamp _ClipRect to 16bit.
 			float4 clampedRect = clamp(_ClipRect, -2e10, 2e10);
-			OUT.mask = float4(vert.xy * 2 - clampedRect.xy - clampedRect.zw, 0.25 / (0.25 * half2(_MaskSoftnessX, _MaskSoftnessY) + pixelSize.xy));
+			const half2 maskSoftness = half2(max(_UIMaskSoftnessX, _MaskSoftnessX), max(_UIMaskSoftnessY, _MaskSoftnessY));
+			OUT.mask = float4(vert.xy * 2 - clampedRect.xy - clampedRect.zw, 0.25 / (0.25 * maskSoftness + pixelSize.xy));
 
-			EDITOR_ONLY(OUT.worldPosition = v.vertex); // Add for soft mask
+			// ==== SOFTMASKABLE START ====
+			#if SOFTMASK_EDITOR
+			OUT.worldPosition = v.vertex;
+			#endif
+			// ==== SOFTMASKABLE END ====
 
 			return OUT;
 		}
@@ -122,7 +136,11 @@ SubShader {
 				color *= m.x * m.y;
 			#endif
 
-			color *= SoftMask(IN.vertex, IN.worldPosition, color.a); // Add for soft mask
+            // ==== SOFTMASKABLE START ====
+            #if SOFTMASKABLE
+            color *= SoftMask(IN.vertex, IN.worldPosition, color.a);
+            #endif
+            // ==== SOFTMASKABLE END ====
 
 			#if UNITY_UI_ALPHACLIP
 				clip(color.a - 0.001);

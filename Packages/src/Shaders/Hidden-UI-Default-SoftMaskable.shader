@@ -54,12 +54,16 @@ Shader "Hidden/UI/Default (SoftMaskable)"
             #include "UnityCG.cginc"
             #include "UnityUI.cginc"
 
-            #pragma multi_compile_local _ UNITY_UI_CLIP_RECT
-            #pragma multi_compile_local _ UNITY_UI_ALPHACLIP
+            #pragma multi_compile _ UNITY_UI_CLIP_RECT
+            #pragma multi_compile _ UNITY_UI_ALPHACLIP
 
-            #include "Packages/com.coffee.softmask-for-ugui/Shaders/SoftMask.cginc" // Add for soft mask
-            #pragma shader_feature_local _ SOFTMASK_EDITOR // Add for soft mask
-            #pragma shader_feature_local _ SOFTMASKABLE // Add for soft mask
+            // ==== SOFTMASKABLE START ====
+            #pragma shader_feature _ SOFTMASK_EDITOR
+            #pragma shader_feature_local_fragment _ SOFTMASKABLE
+            #if SOFTMASKABLE
+            #include "Packages/com.coffee.softmask-for-ugui/Shaders/SoftMask.cginc"
+            #endif
+            // ==== SOFTMASKABLE END ====
 
             struct appdata_t
             {
@@ -143,7 +147,11 @@ Shader "Hidden/UI/Default (SoftMaskable)"
                 color.a *= m.x * m.y;
                 #endif
 
-                color.a *= SoftMask(IN.vertex, IN.worldPosition, color.a); // Add for soft mask
+                // ==== SOFTMASKABLE START ====
+                #if SOFTMASKABLE
+                color.a *= SoftMask(IN.vertex, IN.worldPosition, color.a);
+                #endif
+                // ==== SOFTMASKABLE END ====
 
                 #ifdef UNITY_UI_ALPHACLIP
                 clip(color.a - 0.001);

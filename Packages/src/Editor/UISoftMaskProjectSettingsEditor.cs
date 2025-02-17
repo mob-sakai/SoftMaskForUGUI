@@ -20,7 +20,12 @@ namespace Coffee.UISoftMask
             if (_shaderVariantRegistryEditor == null)
             {
                 var property = serializedObject.FindProperty("m_ShaderVariantRegistry");
-                _shaderVariantRegistryEditor = new ShaderVariantRegistryEditor(property, "(SoftMaskable)");
+                _shaderVariantRegistryEditor = new ShaderVariantRegistryEditor(property, "(SoftMaskable)",
+                    () =>
+                    {
+                        UISoftMaskProjectSettings.shaderRegistry
+                            .RegisterOptionalShaders(UISoftMaskProjectSettings.instance);
+                    });
             }
 
             _shaderVariantRegistryEditor.Draw();

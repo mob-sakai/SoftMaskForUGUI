@@ -38,10 +38,6 @@ namespace Coffee.UISoftMask
 
         private static Material s_SoftMaskingMaterialAdd;
         private static Material s_SoftMaskingMaterialSub;
-        private static readonly int s_SoftMaskableStereo = Shader.PropertyToID("_SoftMaskableStereo");
-        private static readonly int s_SoftMaskOutsideColor = Shader.PropertyToID("_SoftMaskOutsideColor");
-        private static readonly int s_SoftMaskTex = Shader.PropertyToID("_SoftMaskTex");
-        private static readonly int s_SoftMaskColor = Shader.PropertyToID("_SoftMaskColor");
         private static readonly int s_MainTex = Shader.PropertyToID("_MainTex");
         private static readonly int s_ColorMask = Shader.PropertyToID("_ColorMask");
         private static readonly int s_BlendOp = Shader.PropertyToID("_BlendOp");
@@ -221,45 +217,6 @@ namespace Coffee.UISoftMask
 
 #if UNITY_EDITOR
             UISoftMaskProjectSettings.shaderRegistry.RegisterVariant(mat, "UI > Soft Mask");
-#endif
-            return mat;
-        }
-
-        public static Material CreateSoftMaskable(
-            Material baseMat,
-            Texture softMaskBuffer,
-            int softMaskDepth,
-            int stencilBits,
-            bool isStereo)
-        {
-            Profiler.BeginSample("(SM4UI)[SoftMaskableMaterial] Create > Create New Material");
-            var mat = new Material(baseMat)
-            {
-                shader = UISoftMaskProjectSettings.shaderRegistry.FindOptionalShader(baseMat.shader,
-                    "(SoftMaskable)",
-                    "Hidden/{0} (SoftMaskable)",
-                    "Hidden/UI/Default (SoftMaskable)"),
-                hideFlags = HideFlags.HideAndDontSave
-            };
-            Profiler.EndSample();
-
-            Profiler.BeginSample("(SM4UI)[SoftMaskableMaterial] Create > Set Properties");
-            mat.CopyPropertiesFromMaterial(baseMat);
-            mat.SetTexture(s_SoftMaskTex, softMaskBuffer);
-            mat.SetInt(s_SoftMaskableStereo, isStereo ? 1 : 0);
-            mat.SetVector(s_SoftMaskColor, new Vector4(
-                0 <= softMaskDepth ? 1 : 0,
-                1 <= softMaskDepth ? 1 : 0,
-                2 <= softMaskDepth ? 1 : 0,
-                3 <= softMaskDepth ? 1 : 0
-            ));
-            mat.EnableKeyword("SOFTMASKABLE");
-            Profiler.EndSample();
-
-#if UNITY_EDITOR
-            UISoftMaskProjectSettings.shaderRegistry.RegisterVariant(mat, "UI > Soft Mask");
-            mat.SetVector(s_SoftMaskOutsideColor,
-                UISoftMaskProjectSettings.useStencilOutsideScreen ? Vector4.one : Vector4.zero);
 #endif
             return mat;
         }

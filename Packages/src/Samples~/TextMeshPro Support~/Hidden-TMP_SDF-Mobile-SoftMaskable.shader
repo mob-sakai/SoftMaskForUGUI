@@ -92,9 +92,14 @@ SubShader {
 		#include "UnityCG.cginc"
 		#include "UnityUI.cginc"
 		#include "Assets/TextMesh Pro/Shaders/TMPro_Properties.cginc"
-        #include "Packages/com.coffee.softmask-for-ugui/Shaders/SoftMask.cginc" // Add for soft mask
-        #pragma shader_feature_local _ SOFTMASK_EDITOR // Add for soft mask
-        #pragma shader_feature_local _ SOFTMASKABLE // Add for soft mask
+
+        // ==== SOFTMASKABLE START ====
+        #pragma shader_feature _ SOFTMASK_EDITOR
+        #pragma shader_feature_local_fragment _ SOFTMASKABLE
+        #if SOFTMASKABLE
+        #include "Packages/com.coffee.softmask-for-ugui/Shaders/SoftMask.cginc"
+        #endif
+        // ==== SOFTMASKABLE END ====
 
 		struct vertex_t {
 			UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -118,7 +123,11 @@ SubShader {
 			float4	texcoord1		: TEXCOORD3;			// Texture UV, alpha, reserved
 			half2	underlayParam	: TEXCOORD4;			// Scale(x), Bias(y)
 			#endif
-			EDITOR_ONLY(float4 worldPosition : TEXCOORD5;)
+			// ==== SOFTMASKABLE START ====
+			#if SOFTMASK_EDITOR
+			float4 worldPosition : TEXCOORD5;
+			#endif
+			// ==== SOFTMASKABLE END ====
 		};
 
 		float _UIMaskSoftnessX;
@@ -194,7 +203,11 @@ SubShader {
 			output.texcoord1 = float4(input.texcoord0 + layerOffset, input.color.a, 0);
 			output.underlayParam = half2(layerScale, layerBias);
 			#endif
-			EDITOR_ONLY(output.worldPosition = input.vertex);
+			// ==== SOFTMASKABLE START ====
+			#if SOFTMASK_EDITOR
+			output.worldPosition = input.vertex;
+			#endif
+			// ==== SOFTMASKABLE END ====
 
 			return output;
 		}
@@ -234,7 +247,11 @@ SubShader {
 			c *= input.texcoord1.z;
 			#endif
 
-			c *= SoftMask(input.vertex, input.worldPosition, c.a); // Add for soft mask
+            // ==== SOFTMASKABLE START ====
+            #if SOFTMASKABLE
+            c *= SoftMask(input.vertex, input.worldPosition, c.a);
+            #endif
+            // ==== SOFTMASKABLE END ====
 
 			#if UNITY_UI_ALPHACLIP
 			clip(c.a - 0.001);
