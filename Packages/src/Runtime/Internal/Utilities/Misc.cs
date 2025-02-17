@@ -77,6 +77,17 @@ namespace Coffee.UISoftMaskInternal
 
         public static bool isBatchOrBuilding => Application.isBatchMode || BuildPipeline.isBuildingPlayer;
 #endif
+
+        [Conditional("UNITY_EDITOR")]
+        public static void QueuePlayerLoopUpdate()
+        {
+#if UNITY_EDITOR
+            if (!EditorApplication.isPlaying)
+            {
+                EditorApplication.QueuePlayerLoopUpdate();
+            }
+#endif
+        }
     }
 
 #if !UNITY_2021_2_OR_NEWER

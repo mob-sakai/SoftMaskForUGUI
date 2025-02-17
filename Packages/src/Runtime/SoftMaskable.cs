@@ -1,5 +1,6 @@
 using System;
 using Coffee.UISoftMaskInternal;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
 using UnityEngine.UI;
@@ -249,7 +250,7 @@ namespace Coffee.UISoftMask
                     threshold = s.softnessRange.average;
                     subtract = true;
                 }
-                else if (_softMask)
+                else
                 {
                     threshold = _softMask.softnessRange.average;
                 }
@@ -257,7 +258,6 @@ namespace Coffee.UISoftMask
 
             localId = (uint)(Mathf.Clamp01(threshold) * (1 << 8) + (subtract ? 1 << 9 : 0) + (localId << 10));
 #endif
-
             var hash = new Hash128(
                 (uint)baseMaterial.GetInstanceID(),
                 (uint)_softMask.softMaskBuffer.GetInstanceID(),
@@ -307,6 +307,7 @@ namespace Coffee.UISoftMask
         {
             if (!isActiveAndEnabled || !_graphic) return;
             _graphic.SetMaterialDirty();
+            Misc.QueuePlayerLoopUpdate();
         }
 
         public void SetMaterialDirtyForChildren()
@@ -345,7 +346,9 @@ namespace Coffee.UISoftMask
         private void UpdateSceneViewMatrix()
         {
             if (!_graphic || !_graphic.canvas || !_maskableMaterial) return;
-            if (FrameCache.TryGet(_maskableMaterial, nameof(UpdateSceneViewMatrix), out bool _))
+
+            var mat = _graphic.GetMaterialForRendering();
+            if (!mat || FrameCache.TryGet(mat, nameof(UpdateSceneViewMatrix), out bool _))
             {
                 return;
             }
@@ -386,8 +389,8 @@ namespace Coffee.UISoftMask
 
             // Set view and projection matrices.
             Profiler.BeginSample("(SM4UI)[SoftMaskable] (Editor) UpdateSceneViewMatrix > Set matrices");
-            _maskableMaterial.SetMatrix(s_GameVp, gameVp);
-            _maskableMaterial.SetMatrix(s_GameTvp, gameTvp);
+            mat.SetMatrix(s_GameVp, gameVp);
+            mat.SetMatrix(s_GameTvp, gameTvp);
             Profiler.EndSample();
 
             // Calc Right eye matrices.
@@ -404,11 +407,11 @@ namespace Coffee.UISoftMask
                     Profiler.EndSample();
                 }
 
-                _maskableMaterial.SetMatrix(s_GameVp2, gameVp);
-                _maskableMaterial.SetMatrix(s_GameTvp2, gameVp);
+                mat.SetMatrix(s_GameVp2, gameVp);
+                mat.SetMatrix(s_GameTvp2, gameVp);
             }
 
-            FrameCache.Set(_maskableMaterial, nameof(UpdateSceneViewMatrix), true);
+            FrameCache.Set(mat, nameof(UpdateSceneViewMatrix), true);
         }
 #endif
     }

@@ -15,7 +15,20 @@ namespace Coffee.UISoftMaskInternal
         private static readonly Bounds s_ScreenBounds = new Bounds(new Vector3(0.5f, 0.5f, 0.5f), new Vector3(1, 1, 1));
 
         /// <summary>
-        /// Check if a Graphic component is currently in the screen view.
+        /// Get material for rendering.
+        /// </summary>
+        public static Material GetMaterialForRendering(this Graphic self)
+        {
+            if (!self || !self.isActiveAndEnabled) return null;
+
+            var cr = self.canvasRenderer;
+            if (!cr || cr.materialCount == 0) return null;
+
+            return cr.GetMaterial();
+        }
+
+        /// <summary>
+        /// Get materials for rendering.
         /// </summary>
         public static void GetMaterialsForRendering(this Graphic self, List<Material> result)
         {

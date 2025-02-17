@@ -218,6 +218,7 @@ namespace Coffee.UISoftMask
             Profiler.EndSample();
 
             Profiler.BeginSample("(SM4UI)[SoftMaskableMaterial] Create > Set Properties");
+            mat.CopyPropertiesFromMaterial(baseMat);
             mat.SetTexture(s_SoftMaskTex, softMaskBuffer);
             mat.SetInt(s_SoftMaskableStereo, isStereo ? 1 : 0);
             mat.SetVector(s_SoftMaskColor, new Vector4(

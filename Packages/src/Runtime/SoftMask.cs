@@ -652,13 +652,8 @@ namespace Coffee.UISoftMask
         {
             _hasResolutionChanged = true;
             SetDirtyAndNotify();
-
+            Misc.QueuePlayerLoopUpdate();
 #if UNITY_EDITOR
-            if (!Application.isPlaying)
-            {
-                EditorApplication.QueuePlayerLoopUpdate();
-            }
-
             EditorApplication.delayCall += () =>
             {
                 if (!this || !isActiveAndEnabled) return;
@@ -833,13 +828,7 @@ namespace Coffee.UISoftMask
                 Profiler.EndSample();
             }
 
-#if UNITY_EDITOR
-            if (!Application.isPlaying)
-            {
-                EditorApplication.QueuePlayerLoopUpdate();
-            }
-#endif
-
+            Misc.QueuePlayerLoopUpdate();
             onRenderSoftMaskBuffer?.Invoke(this);
         }
 
