@@ -10,6 +10,7 @@ using UnityEngine.XR;
 
 namespace Coffee.UISoftMask
 {
+    [Icon("Packages/com.coffee.softmask-for-ugui/Icons/SoftMaskIcon.png")]
     public class UISoftMaskProjectSettings : PreloadedProjectSettings<UISoftMaskProjectSettings>
     {
         private static bool s_UseStereoMock;

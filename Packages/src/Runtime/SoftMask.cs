@@ -18,6 +18,7 @@ namespace Coffee.UISoftMask
     /// </summary>
     [DisallowMultipleComponent]
     [ExecuteAlways]
+    [Icon("Packages/com.coffee.softmask-for-ugui/Icons/SoftMaskIcon.png")]
     public class SoftMask : Mask, IMeshModifier, IMaskable, IMaskingShapeContainerOwner, ISerializationCallbackReceiver
     {
         /// <summary>

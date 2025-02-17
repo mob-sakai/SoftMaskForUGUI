@@ -12,6 +12,7 @@ namespace Coffee.UISoftMask
     [ExecuteAlways]
     [RequireComponent(typeof(Graphic))]
     [DisallowMultipleComponent]
+    [Icon("Packages/com.coffee.softmask-for-ugui/Icons/SoftMaskIcon.png")]
     public class MaskingShape : UIBehaviour, IMeshModifier, IMaterialModifier, IComparable<MaskingShape>, IMaskable
     {
         public enum MaskingMethod

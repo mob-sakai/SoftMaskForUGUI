@@ -10,6 +10,7 @@ namespace Coffee.UISoftMask
     [RequireComponent(typeof(Canvas))]
     [ExecuteAlways]
     [AddComponentMenu("")]
+    [Icon("Packages/com.coffee.softmask-for-ugui/Icons/SoftMaskIcon.png")]
     public class CanvasViewChangeTrigger : MonoBehaviour
     {
         private Canvas _canvas;

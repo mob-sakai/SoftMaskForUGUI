@@ -12,6 +12,7 @@ namespace Coffee.UISoftMask
     /// </summary>
     [ExecuteAlways]
     [RequireComponent(typeof(RectTransform))]
+    [Icon("Packages/com.coffee.softmask-for-ugui/Icons/SoftMaskIcon.png")]
     [DisallowMultipleComponent]
     public sealed class RectTransformFitter : MonoBehaviour, ILayoutElement, ILayoutIgnorer
     {

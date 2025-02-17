@@ -14,6 +14,7 @@ namespace Coffee.UISoftMask
     [HelpURL("https://github.com/mob-sakai/SoftMaskForUGUI")]
     [DisallowMultipleRendererFeature("SoftMaskable ShaderGraph Support (Editor)")]
     [Tooltip("Enable SoftMaskable ShaderGraph support in the editor. This will not affect runtime behavior.")]
+    [Icon("Packages/com.coffee.softmask-for-ugui/Icons/SoftMaskIcon.png")]
     public class SoftMaskableShaderGraphSupportFeature : ScriptableRendererFeature
     {
 #if UNITY_EDITOR

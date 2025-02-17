@@ -16,6 +16,7 @@ namespace Coffee.UISoftMask
     [ExecuteAlways]
     [DisallowMultipleComponent]
     [AddComponentMenu("")]
+    [Icon("Packages/com.coffee.softmask-for-ugui/Icons/SoftMaskIcon.png")]
     public class MaskingShapeContainer : MonoBehaviour, ICanvasRaycastFilter, IMaterialModifier
     {
         [SerializeField]

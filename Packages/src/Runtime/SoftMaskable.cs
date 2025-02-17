@@ -7,6 +7,7 @@ using UnityEngine.UI;
 namespace Coffee.UISoftMask
 {
     [ExecuteAlways]
+    [Icon("Packages/com.coffee.softmask-for-ugui/Icons/SoftMaskIcon.png")]
     public class SoftMaskable : MonoBehaviour, IMaterialModifier, IMaskable
     {
 #if UNITY_EDITOR

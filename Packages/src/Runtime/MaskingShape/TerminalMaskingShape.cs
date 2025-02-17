@@ -11,6 +11,7 @@ namespace Coffee.UISoftMask
     [RequireComponent(typeof(CanvasRenderer))]
     [DisallowMultipleComponent]
     [AddComponentMenu("")]
+    [Icon("Packages/com.coffee.softmask-for-ugui/Icons/SoftMaskIcon.png")]
     public class TerminalMaskingShape : MaskableGraphic, ILayoutElement, ILayoutIgnorer, IMaskable
     {
         private static Material s_SharedTerminalMaterial;
