@@ -15,6 +15,10 @@ namespace Coffee.UISoftMask
         private static readonly int s_AlphaClipThreshold = Shader.PropertyToID("_AlphaClipThreshold");
         private static readonly int s_MaskingShapeSubtract = Shader.PropertyToID("_MaskingShapeSubtract");
 #endif
+        private static readonly int s_SoftMaskableStereo = Shader.PropertyToID("_SoftMaskableStereo");
+        private static readonly int s_SoftMaskOutsideColor = Shader.PropertyToID("_SoftMaskOutsideColor");
+        private static readonly int s_SoftMaskTex = Shader.PropertyToID("_SoftMaskTex");
+        private static readonly int s_SoftMaskColor = Shader.PropertyToID("_SoftMaskColor");
         private static readonly int s_AllowDynamicResolution = Shader.PropertyToID("_AllowDynamicResolution");
         private static readonly int s_AllowRenderScale = Shader.PropertyToID("_AllowRenderScale");
         private static readonly int s_SoftMaskingPower = Shader.PropertyToID("_SoftMaskingPower");
@@ -263,19 +267,44 @@ namespace Coffee.UISoftMask
                 (uint)_softMask.softMaskBuffer.GetInstanceID(),
                 (uint)(_stencilBits + (isStereo ? 1 << 8 : 0) + (useStencil ? 1 << 9 : 0) + (_softMaskDepth << 10)),
                 localId);
-            MaterialRepository.Get(hash, ref _maskableMaterial,
-                x => SoftMaskUtils.CreateSoftMaskable(x.baseMaterial, x.softMaskBuffer, x._softMaskDepth,
-                    x._stencilBits, x.isStereo),
-                (baseMaterial, _softMask.softMaskBuffer, _softMaskDepth, _stencilBits, isStereo));
+            if (!MaterialRepository.Valid(hash, _maskableMaterial))
+            {
+                Profiler.BeginSample("(SM4UI)[SoftMaskableMaterial] GetModifiedMaterial > Get or create material");
+                MaterialRepository.Get(hash, ref _maskableMaterial, x => new Material(x)
+                {
+                    shader = UISoftMaskProjectSettings.shaderRegistry.FindOptionalShader(x.shader,
+                        "(SoftMaskable)",
+                        "Hidden/{0} (SoftMaskable)",
+                        "Hidden/UI/Default (SoftMaskable)"),
+                    hideFlags = HideFlags.HideAndDontSave
+                }, baseMaterial);
+                Profiler.EndSample();
+            }
             Profiler.EndSample();
+
+            Profiler.BeginSample("(SM4UI)[SoftMaskableMaterial] Create > Set Properties");
+            _maskableMaterial.CopyPropertiesFromMaterial(baseMaterial);
+            _maskableMaterial.SetInt(s_AllowDynamicResolution, _softMask.allowDynamicResolution ? 1 : 0);
+            _maskableMaterial.SetInt(s_AllowRenderScale, _softMask.allowRenderScale ? 1 : 0);
+            _maskableMaterial.SetFloat(s_SoftMaskingPower, power);
+            _maskableMaterial.SetTexture(s_SoftMaskTex, _softMask.softMaskBuffer);
+            _maskableMaterial.SetInt(s_SoftMaskableStereo, isStereo ? 1 : 0);
+            _maskableMaterial.SetVector(s_SoftMaskColor, new Vector4(
+                0 <= _softMaskDepth ? 1 : 0,
+                1 <= _softMaskDepth ? 1 : 0,
+                2 <= _softMaskDepth ? 1 : 0,
+                3 <= _softMaskDepth ? 1 : 0
+            ));
+            _maskableMaterial.EnableKeyword("SOFTMASKABLE");
 
 #if UNITY_EDITOR
             _maskableMaterial.SetFloat(s_AlphaClipThreshold, threshold);
             _maskableMaterial.SetInt(s_MaskingShapeSubtract, subtract ? 1 : 0);
+            UISoftMaskProjectSettings.shaderRegistry.RegisterVariant(_maskableMaterial, "UI > Soft Mask");
+            _maskableMaterial.SetVector(s_SoftMaskOutsideColor,
+                UISoftMaskProjectSettings.useStencilOutsideScreen ? Vector4.one : Vector4.zero);
 #endif
-            _maskableMaterial.SetInt(s_AllowDynamicResolution, _softMask.allowDynamicResolution ? 1 : 0);
-            _maskableMaterial.SetInt(s_AllowRenderScale, _softMask.allowRenderScale ? 1 : 0);
-            _maskableMaterial.SetFloat(s_SoftMaskingPower, power);
+            Profiler.EndSample();
             return _maskableMaterial;
         }
 
@@ -323,6 +352,11 @@ namespace Coffee.UISoftMask
                     child.SetMaterialDirtyForChildren();
                 }
             }
+        }
+
+        internal void ReleaseMaterial()
+        {
+            MaterialRepository.Release(ref _maskableMaterial);
         }
 
         private void UpdateHideFlags()

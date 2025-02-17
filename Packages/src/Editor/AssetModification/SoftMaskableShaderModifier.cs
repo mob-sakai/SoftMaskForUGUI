@@ -13,19 +13,19 @@ namespace Coffee.UISoftMask
             public bool ModifyText(StringBuilder sb, string text)
             {
                 // #include "Packages/com.coffee.softmask-for-ugui/Shaders/SoftMask.cginc" // Add for soft mask
-                // #pragma shader_feature_local _ SOFTMASK_EDITOR // Add for soft mask
+                // #pragma shader_feature _ SOFTMASK_EDITOR // Add for soft mask
                 // #pragma shader_feature_local _ SOFTMASKABLE // Add for soft mask
                 if (text.Contains("/SoftMask.cginc\""))
                 {
                     var space = Regex.Match(text, @"^\s*").Value;
                     sb.AppendLine(text);
-                    sb.Append(space).AppendLine("#pragma shader_feature_local _ SOFTMASK_EDITOR // Add for soft mask");
+                    sb.Append(space).AppendLine("#pragma shader_feature _ SOFTMASK_EDITOR // Add for soft mask");
                     sb.Append(space).AppendLine("#pragma shader_feature_local _ SOFTMASKABLE // Add for soft mask");
                     return true;
                 }
 
                 // Remove the following line:
-                // #pragma shader_feature_local _ SOFTMASK_EDITOR // Add for soft mask
+                // #pragma shader_feature _ SOFTMASK_EDITOR // Add for soft mask
                 // #pragma shader_feature_local _ SOFTMASKABLE // Add for soft mask
                 if (Regex.IsMatch(text, @"#pragma.*\s*(SOFTMASK_EDITOR|SOFTMASKABLE)"))
                 {

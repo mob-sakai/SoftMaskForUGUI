@@ -1,8 +1,7 @@
-#include "Packages/com.esotericsoftware.spine.spine-unity/Runtime/spine-unity/Shaders/SkeletonGraphic/CGIncludes/Spine-SkeletonGraphic-NormalPass.cginc"
-#include "Packages/com.coffee.softmask-for-ugui/Shaders/SoftMask.cginc" // Add for soft mask
-
 #ifndef UI_SOFT_MASK_SPINE_INCLUDED
 #define UI_SOFT_MASK_SPINE_INCLUDED
+#include "Packages/com.esotericsoftware.spine.spine-unity/Runtime/spine-unity/Shaders/SkeletonGraphic/CGIncludes/Spine-SkeletonGraphic-NormalPass.cginc"
+#include "Packages/com.coffee.softmask-for-ugui/Shaders/SoftMask.cginc" // Add for soft mask
 
 fixed4 frag_softmask (VertexOutput IN) : SV_Target
 {
