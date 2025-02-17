@@ -74,8 +74,8 @@ Shader "Hidden/Spine/SkeletonGraphic Fill (SoftMaskable)"
 
 			#define ENABLE_FILL
             #include "Spine-SoftMask.cginc" // Add for soft mask (Spine)
-            #pragma shader_feature_local _ SOFTMASK_EDITOR // Add for soft mask
-            #pragma shader_feature_local _ SOFTMASKABLE // Add for soft mask
+            #pragma shader_feature _ SOFTMASK_EDITOR // Add for soft mask
+            #pragma shader_feature_local_fragment _ SOFTMASKABLE // Add for soft mask
 		ENDCG
 		}
 	}
