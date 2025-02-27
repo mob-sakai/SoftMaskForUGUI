@@ -112,13 +112,17 @@ namespace Coffee.UISoftMask
 
             if (text.TryGetComponent<SoftMask>(out var sm))
             {
+#pragma warning disable CS0618
                 (sm as IMeshModifier).ModifyMesh(text.mesh);
+#pragma warning restore CS0618
                 UpdateSubMeshUI(text, sm.enabled, sm.showMaskGraphic, sm.antiAliasingThreshold, sm.softnessRange,
                     MaskingShape.MaskingMethod.Additive);
             }
             else if (text.TryGetComponent<MaskingShape>(out var ms))
             {
+#pragma warning disable CS0618
                 (ms as IMeshModifier).ModifyMesh(text.mesh);
+#pragma warning restore CS0618
                 UpdateSubMeshUI(text, ms.enabled, ms.showMaskGraphic, ms.antiAliasingThreshold, ms.softnessRange,
                     ms.maskingMethod);
             }
@@ -139,7 +143,9 @@ namespace Coffee.UISoftMask
                 maskingShape.antiAliasingThreshold = aa;
                 maskingShape.softnessRange = softness;
                 maskingShape.showMaskGraphic = show;
+#pragma warning disable CS0618
                 (maskingShape as IMeshModifier).ModifyMesh(subMeshes[i].mesh);
+#pragma warning restore CS0618
             }
 
             InternalListPool<TMP_SubMeshUI>.Return(ref subMeshes);
