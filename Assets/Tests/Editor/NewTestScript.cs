@@ -2,7 +2,7 @@ using System.Collections;
 using NUnit.Framework;
 using UnityEngine.TestTools;
 
-namespace Coffee.UIParticle.Editor.Tests
+namespace EditorTests
 {
     public class NewTestScript
     {
