@@ -1,3 +1,12 @@
+## [3.2.3](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.2.2...3.2.3) (2025-02-28)
+
+
+### Bug Fixes
+
+* component icons will no longer be displayed in the scene view (Unity 2021.2 or later) ([b38dd4c](https://github.com/mob-sakai/SoftMaskForUGUI/commit/b38dd4c46b386e7780e60752b8bd39203cd8d811))
+* fix potential issues ([3377af2](https://github.com/mob-sakai/SoftMaskForUGUI/commit/3377af2d2a62dfe790e92d76b91f04b43c8ae763))
+* remove warn CS0618 ([04f587c](https://github.com/mob-sakai/SoftMaskForUGUI/commit/04f587c5d54462e43074629225662d18e007c1be))
+
 ## [3.2.2](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.2.1...3.2.2) (2025-01-18)
 
 
