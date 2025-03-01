@@ -9,6 +9,9 @@
     ],
     "m_Keywords": [
         {
+            "m_Id": "78173c0192d54e5287f1d0ce93c1216e"
+        },
+        {
             "m_Id": "2e7b11b34a294dbe97a30c43bfc97cd8"
         }
     ],
@@ -141,7 +144,6 @@
     "m_OutputNode": {
         "m_Id": ""
     },
-    "m_SubDatas": [],
     "m_ActiveTargets": [
         {
             "m_Id": "cffbf08685be4c00a2c673c2a9170fe3"
@@ -270,7 +272,7 @@
     "m_DismissedVersion": 0,
     "m_KeywordType": 0,
     "m_KeywordDefinition": 0,
-    "m_KeywordScope": 0,
+    "m_KeywordScope": 1,
     "m_KeywordStages": 2,
     "m_Entries": [],
     "m_Value": 0,
@@ -502,6 +504,31 @@
 }
 
 {
+    "m_SGVersion": 1,
+    "m_Type": "UnityEditor.ShaderGraph.ShaderKeyword",
+    "m_ObjectId": "78173c0192d54e5287f1d0ce93c1216e",
+    "m_Guid": {
+        "m_GuidSerialized": "9c2d1134-da74-4aa1-9421-b4f51c3db638"
+    },
+    "m_Name": "SOFTMASKABLE",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "SOFTMASKABLE",
+    "m_DefaultReferenceName": "_SOFTMASKABLE",
+    "m_OverrideReferenceName": "SOFTMASKABLE",
+    "m_GeneratePropertyBlock": false,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_DismissedVersion": 0,
+    "m_KeywordType": 0,
+    "m_KeywordDefinition": 0,
+    "m_KeywordScope": 0,
+    "m_KeywordStages": 2,
+    "m_Entries": [],
+    "m_Value": 0,
+    "m_IsEditable": true
+}
+
+{
     "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.BlockNode",
     "m_ObjectId": "800e325b020142558fa5c36bd735668d",
@@ -562,7 +589,6 @@
     "m_AlphaClip": false,
     "m_CastShadows": true,
     "m_ReceiveShadows": true,
-    "m_DisableTint": false,
     "m_AdditionalMotionVectorMode": 0,
     "m_AlembicMotionVectors": false,
     "m_SupportsLODCrossFade": false,
@@ -581,6 +607,9 @@
         },
         {
             "m_Id": "2e7b11b34a294dbe97a30c43bfc97cd8"
+        },
+        {
+            "m_Id": "78173c0192d54e5287f1d0ce93c1216e"
         }
     ]
 }
@@ -724,23 +753,9 @@
 }
 
 {
-    "m_SGVersion": 0,
-    "m_Type": "UnityEditor.Rendering.Canvas.ShaderGraph.CanvasData",
-    "m_ObjectId": "ca2d76fc23ef4ec388b894366939edf5",
-    "m_Version": 0,
-    "m_AlphaClip": false,
-    "m_DisableTint": false
-}
-
-{
     "m_SGVersion": 2,
     "m_Type": "UnityEditor.Rendering.BuiltIn.ShaderGraph.BuiltInTarget",
     "m_ObjectId": "cffbf08685be4c00a2c673c2a9170fe3",
-    "m_Datas": [
-        {
-            "m_Id": "ca2d76fc23ef4ec388b894366939edf5"
-        }
-    ],
     "m_ActiveSubTarget": {
         "m_Id": "892d917161c546dfa43e51ff7bd5bf12"
     },
@@ -819,8 +834,7 @@
     "m_Type": "UnityEditor.Rendering.Canvas.ShaderGraph.CanvasData",
     "m_ObjectId": "f618f11cb24a4ad69001da72b6f0348c",
     "m_Version": 0,
-    "m_AlphaClip": true,
-    "m_DisableTint": false
+    "m_AlphaClip": true
 }
 
 {
