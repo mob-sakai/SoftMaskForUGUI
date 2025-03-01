@@ -7,11 +7,7 @@ uniform float _AlphaClipThreshold;
 uniform float4 _SoftMaskOutsideColor;
 uniform int _SoftMaskableStereo;
 uniform float4x4 _GameVP;
-uniform float4x4 _GameTVP;
 uniform float4x4 _GameVP_2;
-uniform float4x4 _GameTVP_2;
-uniform int _SoftMaskInGameView;
-uniform int _SoftMaskInSceneView;
 uniform int _MaskingShapeSubtract;
 uniform float _RenderScale;
 uniform float2 _DynamicResolutionScale;
@@ -19,30 +15,12 @@ uniform int _AllowRenderScale;
 uniform int _AllowDynamicResolution;
 uniform float _SoftMaskingPower;
 
-float Approximately(float4x4 a, float4x4 b)
-{
-    const float4x4 d = abs(a - b);
-    const float max0 = max(d._m00, max(d._m01, max(d._m02, d._m03)));
-    const float max1 = max(d._m10, max(d._m11, max(d._m12, d._m13)));
-    const float max2 = max(d._m20, max(d._m21, max(d._m22, d._m23)));
-    const float max3 = max(d._m30, max(d._m31, max(d._m32, d._m33)));
-    return step(max(max0, max(max1, max(max2, max3))), 0.1);
-}
-
-float2 WorldToUv(float4 worldPos, float offset)
+float2 WorldToUv(float4 worldPos)
 {
     worldPos = mul(unity_ObjectToWorld, worldPos);
-    float4x4 gameVp = lerp(_GameVP, _GameVP_2, unity_StereoEyeIndex);
-    float4x4 gameTvp = lerp(_GameTVP, _GameTVP_2, unity_StereoEyeIndex);
-
-    float isSceneView = 1 - Approximately(UNITY_MATRIX_VP, gameVp);
-
-    float4 clipPos = mul(UNITY_MATRIX_VP, worldPos);
-    float4 clipPosG = mul(gameTvp, worldPos);
-    return lerp(
-        clipPos.xy / clipPos.w * 0.5 + 0.5,
-        clipPosG.xy / clipPosG.w * 0.5 + offset,
-        isSceneView);
+    float4x4 gameVp = unity_StereoEyeIndex ? _GameVP_2 : _GameVP;
+    float4 clipPos = mul(gameVp, worldPos);
+    return clipPos.xy / clipPos.w * 0.5 + 0.5;
 }
 
 float2 ScreenToUv(const float2 screenPos)
@@ -101,11 +79,6 @@ float SoftMaskSample(float2 uv, float a)
     #ifdef UNITY_UI_ALPHACLIP
     if (_MaskingShapeSubtract == 1)
     {
-        if (_SoftMaskInSceneView == 1)
-        {
-            clip (a - _AlphaClipThreshold - 0.001);
-            return 1;
-        }
         clip (a * alpha.x * alpha.y * alpha.z * alpha.w - _AlphaClipThreshold - 0.001);
     }
     #endif
@@ -117,18 +90,7 @@ float SoftMaskSample(float2 uv, float a)
 void SoftMaskForGraph_float(float4 ScreenPos, float4 WorldPos, float InAlpha, out float A)
 {
     #if SOFTMASK_EDITOR
-    if (_SoftMaskInGameView == 1)
-    {
-        A = SoftMaskSample(ScreenToUv(ScreenPos.xy), 1) * InAlpha;
-    }
-    else if (_SoftMaskInSceneView == 1)
-    {
-        A = InAlpha;
-    }
-    else
-    {
-        A = SoftMaskSample(WorldToUv(WorldPos, 0.5), InAlpha) * InAlpha;
-    }
+    A = SoftMaskSample(WorldToUv(WorldPos), InAlpha) * InAlpha;
     #else
     A = SoftMaskSample(ScreenToUv(ScreenPos.xy), 1) * InAlpha;
     #endif
@@ -141,7 +103,7 @@ void SoftMaskForGraph_float(float4 ScreenPos, float4 WorldPos, float InAlpha, ou
 #elif SOFTMASK_EDITOR
 #define EDITOR_ONLY(x) x
 #define SOFTMASK_EDITOR_ONLY(x) x
-#define SoftMask(_, worldPos, alpha) SoftMaskSample(WorldToUv(worldPos, 0.5), alpha)
+#define SoftMask(_, worldPos, alpha) SoftMaskSample(WorldToUv(worldPos), alpha)
 #else
 #define EDITOR_ONLY(_)
 #define SOFTMASK_EDITOR_ONLY(_)

@@ -340,9 +340,7 @@ namespace Coffee.UISoftMask
 
         private Action _updateSceneViewMatrix;
         private static readonly int s_GameVp = Shader.PropertyToID("_GameVP");
-        private static readonly int s_GameTvp = Shader.PropertyToID("_GameTVP");
         private static readonly int s_GameVp2 = Shader.PropertyToID("_GameVP_2");
-        private static readonly int s_GameTvp2 = Shader.PropertyToID("_GameTVP_2");
         private void UpdateSceneViewMatrix()
         {
             if (!_graphic || !_graphic.canvas || !_maskableMaterial) return;
@@ -355,42 +353,35 @@ namespace Coffee.UISoftMask
 
             var canvas = _graphic.canvas.rootCanvas;
             var isStereo = UISoftMaskProjectSettings.stereoEnabled && canvas.IsStereoCanvas();
-            if (!FrameCache.TryGet(canvas, "GameVp", out Matrix4x4 gameVp) ||
-                !FrameCache.TryGet(canvas, "GameTvp", out Matrix4x4 gameTvp))
+            if (!FrameCache.TryGet(canvas, "GameVp", out Matrix4x4 gameVp))
             {
-                Profiler.BeginSample("(SM4UI)[SoftMaskable] (Editor) UpdateSceneViewMatrix > Calc GameVp & GameTvp");
+                Profiler.BeginSample("(SM4UI)[SoftMaskable] (Editor) UpdateSceneViewMatrix > Calc GameVp");
                 var rt = canvas.transform as RectTransform;
                 var cam = canvas.worldCamera;
                 if (canvas && canvas.renderMode != RenderMode.ScreenSpaceOverlay && cam)
                 {
                     var eye = isStereo ? Camera.MonoOrStereoscopicEye.Left : Camera.MonoOrStereoscopicEye.Mono;
                     canvas.GetViewProjectionMatrix(eye, out var vMatrix, out var pMatrix);
-                    gameVp = gameTvp = pMatrix * vMatrix;
+                    gameVp = pMatrix * vMatrix;
                 }
                 else if (rt != null)
                 {
                     var pos = rt.position;
-                    var scale = rt.localScale.x;
-                    var size = rt.sizeDelta;
-                    gameVp = Matrix4x4.TRS(new Vector3(0, 0, 0.5f), Quaternion.identity,
-                        new Vector3(2 / size.x, 2 / size.y, 0.0005f * scale));
-                    gameTvp = Matrix4x4.TRS(new Vector3(0, 0, 0), Quaternion.identity,
+                    gameVp = Matrix4x4.TRS(new Vector3(0, 0, 0), Quaternion.identity,
                         new Vector3(1 / pos.x, 1 / pos.y, -2 / 2000f)) * Matrix4x4.Translate(-pos);
                 }
                 else
                 {
-                    gameVp = gameTvp = Matrix4x4.identity;
+                    gameVp = Matrix4x4.identity;
                 }
 
                 FrameCache.Set(canvas, "GameVp", gameVp);
-                FrameCache.Set(canvas, "GameTvp", gameTvp);
                 Profiler.EndSample();
             }
 
             // Set view and projection matrices.
             Profiler.BeginSample("(SM4UI)[SoftMaskable] (Editor) UpdateSceneViewMatrix > Set matrices");
             mat.SetMatrix(s_GameVp, gameVp);
-            mat.SetMatrix(s_GameTvp, gameTvp);
             Profiler.EndSample();
 
             // Calc Right eye matrices.
@@ -408,7 +399,6 @@ namespace Coffee.UISoftMask
                 }
 
                 mat.SetMatrix(s_GameVp2, gameVp);
-                mat.SetMatrix(s_GameTvp2, gameVp);
             }
 
             FrameCache.Set(mat, nameof(UpdateSceneViewMatrix), true);
