@@ -42,6 +42,7 @@ Enhance Unity UI (uGUI) with advanced soft-masking features to create more visua
     - [Usage with TextMeshPro or Spine](#usage-with-textmeshpro-or-spine)
     - [Usage with Your Custom Shaders](#usage-with-your-custom-shaders)
     - [Usage with Canvas ShaderGraph](#usage-with-canvas-shadergraph)
+    - [Usage with UIEffect](#usage-with-uieffect)
     - [:warning: Limitations](#warning-limitations)
 - [🤝 Contributing](#-contributing)
     - [Issues](#issues)
@@ -402,6 +403,10 @@ You can adjust the project-wide settings for SoftMaskForUGUI. (`Edit > Project S
     - ⚠️ This will apply the changes to all assets in the project.
     - For details, please see [Upgrade All Assets For V3](#-upgrade-all-assets-for-v3).
 
+> [!IMPORTANT]
+> - The setting file is usually saved in `Assets/ProjectSettings/UISoftMaskProjectSettings.asset`. Include this file in your version control system.
+> - The setting file is automatically added as a preloaded asset in `ProjectSettings/ProjectSettings.asset`.
+
 <br><br>
 
 ### Usage with Scripts
@@ -434,6 +439,11 @@ Alternatively, you can manually import the resources by following these steps:
 
 3. The assets will be imported under `Assets/Samples/UI Soft Mask/{version}`.
 
+> [!TIP]
+> If you have moved `TMPro_Properties.cginc` and `TMPro.cginc` from their default install path
+> (`Assets/TextMesh Pro/Shaders/...`), you will need to manually update the paths in the shaders under
+> `TextMeshPro Support` or `TextMeshPro Support (Unity 6)`.
+
 <br><br>
 
 ### Usage with Your Custom Shaders
@@ -450,9 +460,9 @@ There are two ways to support SoftMask with custom shaders.
     // Add the ` (SoftMaskable)` suffix to the shader name.
     Shader "UI/Additive (SoftMaskable)"
     
-    // Import "UISoftMask.cginc" and add shader features.
+    // Import "SoftMask.cginc" and add shader features.
     #include "Packages/com.coffee.softmask-for-ugui/Shaders/SoftMask.cginc"
-    #pragma shader_feature_local _ SOFTMASK_EDITOR
+    #pragma shader_feature _ SOFTMASK_EDITOR
     #pragma shader_feature_local _ SOFTMASKABLE
     
     // "SoftMask" function returns [0-1]. Multiply this by the final output.
@@ -466,9 +476,9 @@ There are two ways to support SoftMask with custom shaders.
     // Add the `Hidden/` prefix and ` (SoftMaskable)` suffix to the shader name.
     Shader "Hidden/UI/Additive (SoftMaskable)"
     
-    // Import "UISoftMask.cginc" and add shader features.
+    // Import "SoftMask.cginc" and add shader features.
     #include "Packages/com.coffee.softmask-for-ugui/Shaders/SoftMask.cginc"
-    #pragma shader_feature_local _ SOFTMASK_EDITOR
+    #pragma shader_feature _ SOFTMASK_EDITOR
     #pragma shader_feature_local _ SOFTMASKABLE
     
     // "SoftMask" function returns [0-1]. Multiply this by the final output.
@@ -487,18 +497,22 @@ NOTE: Unity 2023.2/6000.0+ is required.
 
 2. The sample includes `UIDefault (SoftMaskable).shadergraph` and `SoftMask.subshadergraph`.  
    You can use the sample as references to make your own shader graph compatible with `SoftMask`.
-    1. Add `(SoftMaskable)` at the end of the shader name.
+    1. Add ` (SoftMaskable)` at the end of the shader name.
     2. Add `SOFTMASK_EDITOR` and `SOFTMASKABLE` as a `Boolean Keyword (Shader Feature)`.
     3. Add the `Sub Graphs > SoftMask` node and connect it to the final alpha output.  
-       ![](https://github.com/user-attachments/assets/8da64af8-a4e2-4477-a253-c45fe11d3eec)
+       ![](https://github.com/user-attachments/assets/67f77656-2541-4573-8875-e8053c946da6)
 
-3. To use the soft-maskable ShaderGraph in the editor, the `SoftMaskable ShaderGraph Support (Editor)` renderer feature
-   is required.  
-   This feature is specifically for previewing SoftMaskable ShaderGraph in the editor and will be automatically removed
-   during the build process.  
-   ![SoftMaskable ShaderGraph Support](https://github.com/user-attachments/assets/43dd860d-11dc-4fb5-9cf8-619019a378eb)
+<br><br>
 
-⚠️ Currently, the soft-maskable ShaderGraph does not display correctly in the SceneView.
+### Usage with UIEffect
+
+![](https://github.com/user-attachments/assets/7701e765-896a-49a8-b1ed-22adb0ecce12)
+
+[UIEffect](https://github.com/mob-sakai/UIEffect) is a package that allows you to intuitively apply rich Unity UI effects.
+
+`SoftMaskForUGUI (v3.3.0+)` supports `UIEffect (v5.6.0+)`.  
+When a shader included in the samples is requested, an import dialog will automatically appear.  
+Click the `Import` button.
 
 <br><br>
 
