@@ -2,6 +2,6 @@
   "dependencies": {
     "com.coffee.softmask-for-ugui": "file:../../Packages/src",
     "com.unity.ide.rider": "3.0.34",
-    "com.unity.render-pipelines.universal": "15.0.7"
+    "com.unity.render-pipelines.universal": "16.0.6"
   }
 }

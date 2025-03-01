@@ -1,5 +1,34 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!200 &-7110577169919636129
+ShaderVariantCollection:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ShaderVariants
+  m_Shaders:
+  - first: {fileID: 4800000, guid: 9839189d918374a318d397a86e90aa73, type: 3}
+    second:
+      variants:
+      - keywords: SOFTMASKABLE
+        passType: 0
+  - first: {fileID: 4800000, guid: 33e06cd3c50064f30a691b600fc62f3f, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: 2933b413a51fc4ff3a83c7ef4177ae84, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: -6465566751694194690, guid: 2173f7db90a35495bbc9c7affcd96d2e,
+      type: 3}
+    second:
+      variants:
+      - keywords: SOFTMASKABLE
+        passType: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14,9 +43,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_SoftMaskEnabled: 1
   m_StereoEnabled: 1
-  m_FallbackBehavior: 0
   m_TransformSensitivity: 1
-  m_UseStencilOutsideScreen: 1
   m_HideGeneratedComponents: 1
-  m_AutoIncludeShaders: 1
-  m_StripShaderVariants: 1
+  m_ShaderVariantRegistry:
+    m_OptionalShaders: []
+    m_Asset: {fileID: -7110577169919636129}
+    m_ErrorOnUnregisteredVariant: 0
+    m_UnregisteredVariants: []

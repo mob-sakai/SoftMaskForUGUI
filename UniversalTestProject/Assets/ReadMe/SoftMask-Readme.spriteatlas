@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: SoftMask-Readme
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 1
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_IgnorePlatformSupport: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 1
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 32e8c01cf89b14333a3aa9e3f87eee90, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+    packedSpriteRenderDataKeys: []
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 3ad57d818b4f448a190e524e494130b0, type: 3}
+  - {fileID: 21300000, guid: 0f125745ff7d640519fb2300ed8a96c7, type: 3}
+  - {fileID: 21300000, guid: 78829675447bb4ba4a853071569d0f32, type: 3}
+  - {fileID: 21300000, guid: 1a3c8d188ce7047e98cfa1efdb2a23b3, type: 3}
+  - {fileID: 21300000, guid: e5a8e8d861f62472d8f99611cf9d12c5, type: 3}
+  - {fileID: 21300000, guid: f3749669408984358921fc148ed3aa83, type: 3}
+  - {fileID: 21300000, guid: 16682c5a7f22f4b1184bfe2d2e692506, type: 3}
+  - {fileID: 21300000, guid: 45e0aecab6f814b63b8c8185100f703b, type: 3}
+  - {fileID: 21300000, guid: dee1cb6c2ee294c6087ea9d89d368417, type: 3}
+  - {fileID: 21300000, guid: 801e306fcae92475592a6d3511bf58d7, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - Light_Frame
+  - SoftMask-Vertictal
+  - Light_Frame x32
+  - SoftMask-Move
+  - Unity-chan
+  - SoftMask-Horizontal
+  - Light_Frame x64
+  - Art
+  - SoftMask-Circle
+  - SoftMask-Star
+  m_RenderDataMap: {}
+  m_Tag: SoftMask-Readme
+  m_IsVariant: 0
