@@ -100,6 +100,32 @@ namespace Coffee.UISoftMask
                 }
             };
 
+#if UNITY_EDITOR
+            if (!Misc.isBatchOrBuilding)
+            {
+                // Enable the 'SOFTMASK_EDITOR' keyword only when drawing in the scene view camera.
+                RenderPipelineManager.beginCameraRendering += (_, c) => EnableSoftMaskEditor(true, c);
+                RenderPipelineManager.endCameraRendering += (_, c) => EnableSoftMaskEditor(false, c);
+                Camera.onPreRender += c => EnableSoftMaskEditor(true, c);
+                Camera.onPostRender += c => EnableSoftMaskEditor(false, c);
+
+                void EnableSoftMaskEditor(bool begin, Camera cam)
+                {
+                    if (cam.cameraType == CameraType.SceneView)
+                    {
+                        if (begin)
+                        {
+                            Shader.EnableKeyword("SOFTMASK_EDITOR");
+                        }
+                        else
+                        {
+                            Shader.DisableKeyword("SOFTMASK_EDITOR");
+                        }
+                    }
+                }
+            }
+#endif
+
 #if TMP_ENABLE
             TMPro_EventManager.TEXT_CHANGED_EVENT.Add(UpdateMeshUI);
 #endif
@@ -232,7 +258,6 @@ namespace Coffee.UISoftMask
 
 #if UNITY_EDITOR
             UISoftMaskProjectSettings.shaderRegistry.RegisterVariant(mat, "UI > Soft Mask");
-            mat.EnableKeyword("SOFTMASK_EDITOR");
             mat.SetVector(s_SoftMaskOutsideColor,
                 UISoftMaskProjectSettings.useStencilOutsideScreen ? Vector4.one : Vector4.zero);
 #endif
