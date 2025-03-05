@@ -113,6 +113,10 @@ namespace Coffee.UISoftMask
             ShaderSampleImporter.RegisterShaderSamples(new[]
             {
                 // TextMeshPro Support/TextMeshPro Support (Unity 6)
+                ("Hidden/TextMeshPro/Distance Field SSD (SoftMaskable)", tmpSupport, version),
+                ("Hidden/TextMeshPro/Mobile/Distance Field SSD (SoftMaskable)", tmpSupport, version),
+                ("Hidden/TextMeshPro/Distance Field Overlay (SoftMaskable)", tmpSupport, version),
+                ("Hidden/TextMeshPro/Mobile/Distance Field Overlay (SoftMaskable)", tmpSupport, version),
                 ("Hidden/TextMeshPro/Bitmap (SoftMaskable)", tmpSupport, version),
                 ("Hidden/TextMeshPro/Mobile/Bitmap (SoftMaskable)", tmpSupport, version),
                 ("Hidden/TextMeshPro/Distance Field (SoftMaskable)", tmpSupport, version),

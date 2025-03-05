@@ -41,7 +41,7 @@ SubShader{
 	ZTest [unity_GUIZTestMode]
 	ZWrite Off
 	Fog { Mode Off }
-	Blend SrcAlpha OneMinusSrcAlpha
+	Blend One OneMinusSrcAlpha
 	ColorMask[_ColorMask]
 
 	Pass {
@@ -143,6 +143,7 @@ SubShader{
 		{
 			fixed4 color = tex2D(_MainTex, IN.texcoord0);
 			color = fixed4 (tex2D(_FaceTex, IN.texcoord1).rgb * IN.color.rgb, IN.color.a * color.a);
+			color.rgb *= color.a;
 
 			// Alternative implementation to UnityGet2DClipping with support for softness.
 			#if UNITY_UI_CLIP_RECT
