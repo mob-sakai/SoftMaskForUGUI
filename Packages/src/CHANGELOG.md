@@ -1,3 +1,11 @@
+## [3.2.4](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.2.3...3.2.4) (2025-03-06)
+
+
+### Bug Fixes
+
+* 'IconAttribute' is inaccessible due to its protection level on older versions of Unity ([4ad0c6b](https://github.com/mob-sakai/SoftMaskForUGUI/commit/4ad0c6b5a7d8b8887b5b555cf6183fbbd6e70808)), closes [#234](https://github.com/mob-sakai/SoftMaskForUGUI/issues/234)
+* IL2CPP build fails on older versions of Unity ([8a9a1a1](https://github.com/mob-sakai/SoftMaskForUGUI/commit/8a9a1a11f6f28befdce2dcdec5cc8d779df492ac))
+
 ## [3.2.3](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.2.2...3.2.3) (2025-02-28)
 
 
