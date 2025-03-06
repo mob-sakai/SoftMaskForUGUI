@@ -1,3 +1,4 @@
+using Coffee.UISoftMaskInternal;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
