@@ -130,6 +130,20 @@ namespace Coffee.UISoftMask
                 ("935b7be1c88464d2eb87204fdfab5a38", "Hidden-TMP_SDF-SoftMaskable-Unity6.shader")
             });
             EditorApplication.update += ShaderSampleImporter.Update;
+
+            CgincPathSync.RegisterShaders("/(TMPro|TMPro_Properties).cginc", new[]
+            {
+                "Hidden/TextMeshPro/Distance Field (SoftMaskable)",
+                "Hidden/TextMeshPro/Mobile/Distance Field (SoftMaskable)",
+                "Hidden/TextMeshPro/Distance Field SSD (SoftMaskable)",
+                "Hidden/TextMeshPro/Mobile/Distance Field SSD (SoftMaskable)",
+                "Hidden/TextMeshPro/Distance Field Overlay (SoftMaskable)",
+                "Hidden/TextMeshPro/Mobile/Distance Field Overlay (SoftMaskable)",
+                "Hidden/TextMeshPro/Bitmap (SoftMaskable)",
+                "Hidden/TextMeshPro/Mobile/Bitmap (SoftMaskable)",
+                "Hidden/TextMeshPro/Distance Field (SoftMaskable)",
+                "Hidden/TextMeshPro/Mobile/Distance Field (SoftMaskable)"
+            });
         }
 
         protected override void OnEnable()
