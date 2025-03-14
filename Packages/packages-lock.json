@@ -31,6 +31,13 @@
         "com.unity.ugui": "1.0.0"
       }
     },
+    "com.coffee.symbolic-linker": {
+      "version": "https://github.com/mob-sakai/Coffee.Internal.git?path=Packages/SymbolicLinker",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "3c280f1a8f4db5038b881ff07f270efd9638fa31"
+    },
     "com.esotericsoftware.spine.spine-csharp": {
       "version": "https://github.com/EsotericSoftware/spine-runtimes.git?path=spine-csharp/src#4.2",
       "depth": 0,
