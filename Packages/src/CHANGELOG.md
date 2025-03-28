@@ -1,3 +1,18 @@
+# [3.3.0](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.2.4...3.3.0) (2025-03-28)
+
+
+### Bug Fixes
+
+* soft-masked graphics are not displayed correctly in the game view (editor, OpenGLES3) ([2bf00fc](https://github.com/mob-sakai/SoftMaskForUGUI/commit/2bf00fccde0ec2aea68852833bf31c23b30c4df7)), closes [#232](https://github.com/mob-sakai/SoftMaskForUGUI/issues/232)
+
+
+### Features
+
+* add a tool that automatically fixes shaders when 'TextMeshPro Essential Resources' are located in a non-default path ([03b5e47](https://github.com/mob-sakai/SoftMaskForUGUI/commit/03b5e47e08e000adcef3246edc320a6ff9d62e81)), closes [#233](https://github.com/mob-sakai/SoftMaskForUGUI/issues/233)
+* add shaders for TextMeshPro Overlay/SSD ([e4d974e](https://github.com/mob-sakai/SoftMaskForUGUI/commit/e4d974e76d7f8766739afb40af9f77dfff4bd8f9)), closes [#230](https://github.com/mob-sakai/SoftMaskForUGUI/issues/230)
+* shader graph support no longer requires an additional render feature ([bb057af](https://github.com/mob-sakai/SoftMaskForUGUI/commit/bb057af80fb239d5b76e66dc7b28e65c5eab45db))
+* support `UIEffect` package with `SoftMaskable` ([47dcacb](https://github.com/mob-sakai/SoftMaskForUGUI/commit/47dcacb1d322e7b5327c929a48c61fff360894ac)), closes [#229](https://github.com/mob-sakai/SoftMaskForUGUI/issues/229)
+
 ## [3.2.4](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.2.3...3.2.4) (2025-03-06)
 
 
