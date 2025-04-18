@@ -271,7 +271,8 @@ namespace Coffee.UISoftMaskInternal
         private readonly ReorderableList _rlOptionalShaders;
         private readonly ReorderableList _rlUnregisteredVariants;
         private Editor _editor;
-        private bool _expand;
+        private bool _expandOptionalShaders;
+        private bool _expandUnregisteredVariants;
 
         public ShaderVariantRegistryEditor(SerializedProperty property, string optionName, Action onFindOptions)
         {
@@ -281,11 +282,11 @@ namespace Coffee.UISoftMaskInternal
             _errorOnUnregisteredVariant = property.FindPropertyRelative("m_ErrorOnUnregisteredVariant");
             _asset = property.FindPropertyRelative("m_Asset");
 
-            _rlOptionalShaders = new ReorderableList(so, optionalShaders, false, true, true, true);
+            _rlOptionalShaders = new ReorderableList(so, optionalShaders, true, true, true, true);
             _rlOptionalShaders.drawHeaderCallback = rect =>
             {
                 var rLabel = new Rect(rect.x, rect.y, rect.width - 80, rect.height);
-                EditorGUI.LabelField(rLabel,
+                _expandOptionalShaders = EditorGUI.Foldout(rLabel, _expandOptionalShaders,
                     EditorGUIUtility.TrTextContent($"Optional Shaders {optionName}",
                         "Specify optional shaders explicitly."));
 
@@ -315,16 +316,16 @@ namespace Coffee.UISoftMaskInternal
                 var rKey = new Rect(r.x, r.y + 2, r.width, h);
                 if (GUI.Button(rKey, key.stringValue, EditorStyles.popup))
                 {
-                    ShowShaderDropdown(key, optionName, false);
+                    ShowShaderDropdown(key);
                 }
 
                 var rArrow = new Rect(r.x, r.y + h + 4, 20, h);
-                EditorGUI.LabelField(rArrow, "->");
+                EditorGUI.LabelField(rArrow, GUIContent.none, "ArrowNavigationRight");
 
                 var rValue = new Rect(r.x + 20, r.y + h + 4, r.width - 20, h);
                 if (GUI.Button(rValue, value.stringValue, EditorStyles.popup))
                 {
-                    ShowShaderDropdown(value, optionName, true);
+                    ShowShaderDropdown(value);
                 }
             };
 
@@ -376,8 +377,8 @@ namespace Coffee.UISoftMaskInternal
 
         public void Draw()
         {
-            _rlOptionalShaders.DoLayoutList();
-            _expand = DrawRegisteredShaderVariants(_expand, _asset, ref _editor);
+            DrawOptionalShaders(ref _expandOptionalShaders, _rlOptionalShaders);
+            DrawRegisteredShaderVariants(ref _expandUnregisteredVariants, _asset, ref _editor);
             if (0 < _rlUnregisteredVariants.serializedProperty.arraySize)
             {
                 EditorGUILayout.Space(4);
@@ -406,20 +407,40 @@ namespace Coffee.UISoftMaskInternal
             EditorUtility.SetDirty(collection);
         }
 
-        private static bool DrawRegisteredShaderVariants(bool expand, SerializedProperty property, ref Editor editor)
+        private static void DrawOptionalShaders(ref bool expand, ReorderableList list)
+        {
+            if (expand)
+            {
+                list.DoLayoutList();
+            }
+            else
+            {
+                var r = EditorGUILayout.GetControlRect(false, 20);
+                var rBg = new Rect(r.x - 3, r.y, r.width + 6, r.height);
+                EditorGUI.LabelField(rBg, GUIContent.none, "RL Header");
+
+                r.x += 3;
+                r.width -= 3;
+                r.y += 0;
+                list.drawHeaderCallback.Invoke(r);
+            }
+        }
+
+        private static void DrawRegisteredShaderVariants(ref bool expand, SerializedProperty property,
+            ref Editor editor)
         {
             var collection = property.objectReferenceValue as ShaderVariantCollection;
-            if (collection == null) return expand;
+            if (collection == null) return;
 
             EditorGUILayout.Space();
             var r = EditorGUILayout.GetControlRect(false, 20);
             var rBg = new Rect(r.x - 3, r.y, r.width + 6, r.height);
             EditorGUI.LabelField(rBg, GUIContent.none, "RL Header");
 
-            var rLabel = new Rect(r.x + 5, r.y, 200, r.height);
+            var rLabel = new Rect(r.x + 3, r.y, 200, r.height);
             expand = EditorGUI.Foldout(rLabel, expand, "Registered Shader Variants");
 
-            var rButton = new Rect(r.x + r.width - 82, r.y + 1, 80, r.height - 4);
+            var rButton = new Rect(r.x + r.width - 62, r.y + 1, 60, r.height - 4);
             if (GUI.Button(rButton, "Clear All", EditorStyles.miniButton))
             {
                 collection.Clear();
@@ -440,16 +461,13 @@ namespace Coffee.UISoftMaskInternal
                 EditorGUILayout.EndVertical();
                 editor.serializedObject.ApplyModifiedProperties();
             }
-
-            return expand;
         }
 
-        private static void ShowShaderDropdown(SerializedProperty property, string option, bool required)
+        private static void ShowShaderDropdown(SerializedProperty property)
         {
             var menu = new GenericMenu();
             var current = property.stringValue;
             var allShaderNames = ShaderUtil.GetAllShaderInfo()
-                .Where(s => !required || s.name.Contains(option))
                 .Select(s => s.name);
 
             foreach (var shaderName in allShaderNames)

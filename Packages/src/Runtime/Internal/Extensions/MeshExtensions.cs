@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -110,10 +111,12 @@ namespace Coffee.UISoftMaskInternal
             dst.Clear();
             for (var i = 0; i < vertexCount; i++)
             {
-                dst.AddVert(positions[i], colors[i], uv0[i], uv1[i], normals[i], tangents[i]);
+                dst.AddVert(positions.GetOrDefault(i), colors.GetOrDefault(i), uv0.GetOrDefault(i), uv1.GetOrDefault(i),
+                    normals.GetOrDefault(i), tangents.GetOrDefault(i));
             }
 
-            for (var i = 0; i < indexCount; i += 3)
+            var count = Mathf.Clamp(indexCount, 0, indices.Count);
+            for (var i = 0; i < count - 2; i += 3)
             {
                 dst.AddTriangle(indices[i], indices[i + 1], indices[i + 2]);
             }
@@ -125,6 +128,13 @@ namespace Coffee.UISoftMaskInternal
             InternalListPool<Vector4>.Return(ref tangents);
             InternalListPool<Color32>.Return(ref colors);
             InternalListPool<int>.Return(ref indices);
+        }
+
+        private static T GetOrDefault<T>(this List<T> self, int index)
+        {
+            return 0 <= index && index < self.Count
+                ? self[index]
+                : default;
         }
     }
 }
