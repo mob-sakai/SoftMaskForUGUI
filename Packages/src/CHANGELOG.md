@@ -1,3 +1,10 @@
+## [3.3.1](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.3.0...3.3.1) (2025-04-18)
+
+
+### Bug Fixes
+
+* ShaderGraphs invisible when not masked in scene view ([105713b](https://github.com/mob-sakai/SoftMaskForUGUI/commit/105713b0e82cdf4cb434892469f2200310ed0561)), closes [#238](https://github.com/mob-sakai/SoftMaskForUGUI/issues/238)
+
 # [3.3.0](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.2.4...3.3.0) (2025-03-28)
 
 
