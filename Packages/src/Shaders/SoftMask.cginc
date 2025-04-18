@@ -89,7 +89,9 @@ float SoftMaskSample(float2 uv, float a)
 
 void SoftMaskForGraph_float(float4 ScreenPos, float4 WorldPos, float InAlpha, out float A)
 {
-    #if SOFTMASK_EDITOR
+    #if !SOFTMASKABLE
+    A = InAlpha;
+    #elif SOFTMASK_EDITOR
     A = SoftMaskSample(WorldToUv(WorldPos), InAlpha) * InAlpha;
     #else
     A = SoftMaskSample(ScreenToUv(ScreenPos.xy), 1) * InAlpha;
