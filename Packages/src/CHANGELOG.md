@@ -1,3 +1,10 @@
+## [3.3.2](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.3.1...3.3.2) (2025-04-23)
+
+
+### Bug Fixes
+
+* NullReferenceException in MaskingShape component when in prefab mode (editor) ([9cc6e68](https://github.com/mob-sakai/SoftMaskForUGUI/commit/9cc6e68ca748bc6ab20a055a348f68f29f03ce37)), closes [#240](https://github.com/mob-sakai/SoftMaskForUGUI/issues/240)
+
 ## [3.3.1](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.3.0...3.3.1) (2025-04-18)
 
 
