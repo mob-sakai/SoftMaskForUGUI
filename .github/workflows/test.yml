@@ -10,6 +10,7 @@ env:
   MINIMUM_VERSION: 2019.4
   # EXCLUDE_FILTER: The excluded versions of Unity.
   EXCLUDE_FILTER: "(2020.2.0|2021.1|2023.3)"
+  PROJECT_PATH: .
 
 on:
   workflow_dispatch:
@@ -21,7 +22,7 @@ on:
   push:
     branches:
       - develop
-      - develop-preview
+      - "develop-*"
     tags:
       - "!*"
     paths-ignore:
@@ -45,7 +46,7 @@ jobs:
         id: setup
         run: |
           echo "==== Target Unity Versions ===="
-          LATEST_VERSIONS=`npx unity-changeset@latest list --versions --latest-patch --min ${MINIMUM_VERSION} --json --all`
+          LATEST_VERSIONS=`npx unity-changeset list --versions --latest-patch --min ${MINIMUM_VERSION} --json --all`
           if [ "${{ inputs.usePeriodVersions }}" = "true" ]; then
             ADDITIONAL_VERSIONS=`npx unity-changeset list --versions --grep '0f' --min ${MINIMUM_VERSION} --json`
           else
@@ -85,16 +86,17 @@ jobs:
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git merge origin/${{ github.event.pull_request.base.ref }} --no-edit
+          git rebase ${{ github.event.pull_request.base.sha }}
+          git log --oneline -n 10
 
       - name: 📥 Cache library
         uses: actions/cache@v4
         with:
-          path: Library
-          key: Library-${{ matrix.unityVersion }}-${{ github.event.pull_request.head.sha || github.sha }}
+          path: ${{ env.PROJECT_PATH }}/Library
+          key: ${{ env.PROJECT_PATH }}-Library-${{ matrix.unityVersion }}-${{ github.event.pull_request.head.sha || github.sha }}
           restore-keys: |
-            Library-${{ matrix.unityVersion }}-
-            Library-
+            ${{ env.PROJECT_PATH }}-Library-${{ matrix.unityVersion }}-
+            ${{ env.PROJECT_PATH }}-Library-
 
       - name: 🛠️ Build Unity Project (Test)
         uses: game-ci/unity-builder@v4
@@ -104,6 +106,7 @@ jobs:
           targetPlatform: StandaloneLinux64
           allowDirtyBuild: true
           customParameters: -nographics
+          projectPath: ${{ env.PROJECT_PATH }}
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
@@ -118,6 +121,7 @@ jobs:
           customParameters: -nographics
           checkName: ${{ matrix.unityVersion }} Test Results
           githubToken: ${{ github.token }}
+          projectPath: ${{ env.PROJECT_PATH }}
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
