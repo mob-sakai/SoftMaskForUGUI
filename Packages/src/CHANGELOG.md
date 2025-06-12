@@ -1,3 +1,11 @@
+## [3.3.3](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.3.2...3.3.3) (2025-06-12)
+
+
+### Bug Fixes
+
+* LICENSE.md conflicts with another package's LICENSE.md ([bba38ad](https://github.com/mob-sakai/SoftMaskForUGUI/commit/bba38adeee36c2d64f2399d3daf18a397d0eae8d)), closes [#248](https://github.com/mob-sakai/SoftMaskForUGUI/issues/248)
+* TextMeshPro 3.2.0-pre support ([56c3d0e](https://github.com/mob-sakai/SoftMaskForUGUI/commit/56c3d0e1765b90b991663babb8a2a1ec9a48792c)), closes [#245](https://github.com/mob-sakai/SoftMaskForUGUI/issues/245) [#247](https://github.com/mob-sakai/SoftMaskForUGUI/issues/247)
+
 ## [3.3.2](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.3.1...3.3.2) (2025-04-23)
 
 
