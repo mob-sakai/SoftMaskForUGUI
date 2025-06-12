@@ -102,7 +102,7 @@ namespace Coffee.UISoftMask
         [InitializeOnLoadMethod]
         private static void InitializeOnLoadMethod()
         {
-#if UNITY_2023_2_OR_NEWER
+#if !LEGACY_TMP_ENABLE
             const string tmpSupport = "TextMeshPro Support (Unity 6)";
             const string version = "v3.3.0 (Unity 6)";
 #else
