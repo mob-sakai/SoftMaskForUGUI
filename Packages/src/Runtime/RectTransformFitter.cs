@@ -221,7 +221,8 @@ namespace Coffee.UISoftMask
             // Pivot & Anchor
             if (0 < (m_TargetProperties & (RectTransformProperties.SizeDelta | RectTransformProperties.Position)))
             {
-                _rectTransform.pivot = _rectTransform.anchorMax = _rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
+                _rectTransform.anchorMax = _rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
+                _rectTransform.pivot = m_Target.pivot;
             }
 
             Profiler.EndSample();
