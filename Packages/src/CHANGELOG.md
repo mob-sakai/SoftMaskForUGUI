@@ -1,3 +1,10 @@
+## [3.3.4](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.3.3...3.3.4) (2025-06-13)
+
+
+### Bug Fixes
+
+* `RectTransformFitter` ignores target's pivot ([b2186ac](https://github.com/mob-sakai/SoftMaskForUGUI/commit/b2186ac51ebd2052c4167aef2a3a95fe78090294)), closes [#242](https://github.com/mob-sakai/SoftMaskForUGUI/issues/242)
+
 ## [3.3.3](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.3.2...3.3.3) (2025-06-12)
 
 
