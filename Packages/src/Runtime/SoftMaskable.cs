@@ -270,40 +270,45 @@ namespace Coffee.UISoftMask
             if (!MaterialRepository.Valid(hash, _maskableMaterial))
             {
                 Profiler.BeginSample("(SM4UI)[SoftMaskableMaterial] GetModifiedMaterial > Get or create material");
-                MaterialRepository.Get(hash, ref _maskableMaterial, x => new Material(x)
+                MaterialRepository.Get(hash, ref _maskableMaterial, x =>
                 {
-                    shader = UISoftMaskProjectSettings.shaderRegistry.FindOptionalShader(x.shader,
-                        "(SoftMaskable)",
-                        "Hidden/{0} (SoftMaskable)",
-                        "Hidden/UI/Default (SoftMaskable)"),
-                    hideFlags = HideFlags.HideAndDontSave
-                }, baseMaterial);
-                Profiler.EndSample();
-            }
-            Profiler.EndSample();
+                    var m = new Material(x.baseMaterial)
+                    {
+                        shader = UISoftMaskProjectSettings.shaderRegistry.FindOptionalShader(x.baseMaterial.shader,
+                            "(SoftMaskable)",
+                            "Hidden/{0} (SoftMaskable)",
+                            "Hidden/UI/Default (SoftMaskable)"),
+                        hideFlags = HideFlags.HideAndDontSave
+                    };
 
-            Profiler.BeginSample("(SM4UI)[SoftMaskableMaterial] Create > Set Properties");
-            _maskableMaterial.CopyPropertiesFromMaterial(baseMaterial);
-            _maskableMaterial.SetInt(s_AllowDynamicResolution, _softMask.allowDynamicResolution ? 1 : 0);
-            _maskableMaterial.SetInt(s_AllowRenderScale, _softMask.allowRenderScale ? 1 : 0);
-            _maskableMaterial.SetFloat(s_SoftMaskingPower, power);
-            _maskableMaterial.SetTexture(s_SoftMaskTex, _softMask.softMaskBuffer);
-            _maskableMaterial.SetInt(s_SoftMaskableStereo, isStereo ? 1 : 0);
-            _maskableMaterial.SetVector(s_SoftMaskColor, new Vector4(
-                0 <= _softMaskDepth ? 1 : 0,
-                1 <= _softMaskDepth ? 1 : 0,
-                2 <= _softMaskDepth ? 1 : 0,
-                3 <= _softMaskDepth ? 1 : 0
-            ));
-            _maskableMaterial.EnableKeyword("SOFTMASKABLE");
+                    Profiler.BeginSample("(SM4UI)[SoftMaskableMaterial] Create > Set Properties");
+                    m.CopyPropertiesFromMaterial(x.baseMaterial);
+                    m.SetInt(s_AllowDynamicResolution, x._softMask.allowDynamicResolution ? 1 : 0);
+                    m.SetInt(s_AllowRenderScale, x._softMask.allowRenderScale ? 1 : 0);
+                    m.SetFloat(s_SoftMaskingPower, x.power);
+                    m.SetTexture(s_SoftMaskTex, x._softMask.softMaskBuffer);
+                    m.SetInt(s_SoftMaskableStereo, x.isStereo ? 1 : 0);
+                    m.SetVector(s_SoftMaskColor, new Vector4(
+                        0 <= x._softMaskDepth ? 1 : 0,
+                        1 <= x._softMaskDepth ? 1 : 0,
+                        2 <= x._softMaskDepth ? 1 : 0,
+                        3 <= x._softMaskDepth ? 1 : 0
+                    ));
+                    m.EnableKeyword("SOFTMASKABLE");
 
 #if UNITY_EDITOR
-            _maskableMaterial.SetFloat(s_AlphaClipThreshold, threshold);
-            _maskableMaterial.SetInt(s_MaskingShapeSubtract, subtract ? 1 : 0);
-            UISoftMaskProjectSettings.shaderRegistry.RegisterVariant(_maskableMaterial, "UI > Soft Mask");
-            _maskableMaterial.SetVector(s_SoftMaskOutsideColor,
-                UISoftMaskProjectSettings.useStencilOutsideScreen ? Vector4.one : Vector4.zero);
+                    m.SetFloat(s_AlphaClipThreshold, x.threshold);
+                    m.SetInt(s_MaskingShapeSubtract, x.subtract ? 1 : 0);
+                    UISoftMaskProjectSettings.shaderRegistry.RegisterVariant(m, "UI > Soft Mask");
+                    m.SetVector(s_SoftMaskOutsideColor,
+                        UISoftMaskProjectSettings.useStencilOutsideScreen ? Vector4.one : Vector4.zero);
 #endif
+                    Profiler.EndSample();
+                    return m;
+                }, (baseMaterial, threshold, subtract, isStereo, _softMask, _softMaskDepth, power));
+                Profiler.EndSample();
+            }
+
             Profiler.EndSample();
             return _maskableMaterial;
         }
