@@ -375,7 +375,7 @@ tutorial.
 
 ### Project Settings
 
-![](https://github.com/user-attachments/assets/5e27df42-f117-421c-adc5-f6e53154ee4c)
+![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/1759018902322.png)
 
 You can adjust the project-wide settings for SoftMaskForUGUI. (`Edit > Project Settings > UI > Soft Mask`)
 
@@ -384,6 +384,9 @@ You can adjust the project-wide settings for SoftMaskForUGUI. (`Edit > Project S
 - **Transform Sensitivity**: `Low`, `Medium`, `High`
     - Adjust the transformation sensitivity for the soft mask buffer update.
     - The higher the sensitivity, the more frequently the soft mask buffer is updated.
+- **Soft Maskable**: Determines how to add `SoftMaskable` components under `SoftMask`.
+    - `Automatic`: `SoftMaskable` components are added automatically as needed.
+    - `Manual`: You need to add `SoftMaskable` components explicitly.
 - **Hide Generated Component**: Automatically hide the generated `MaskingShapeContainer` and `TerminalMaskingShape`
   components.
 - **Optional Shaders (SoftMaskable)**: A list of shaders that will be prioritized when a soft-maskable shader is

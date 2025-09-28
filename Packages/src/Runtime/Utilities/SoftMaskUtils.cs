@@ -220,5 +220,16 @@ namespace Coffee.UISoftMask
 #endif
             return mat;
         }
+
+        /// <summary>
+        /// Adds SoftMaskable components to all children of the specified MonoBehaviour.
+        /// </summary>
+        public static void AddSoftMaskableOnChildren(MonoBehaviour self, bool includeSelf)
+        {
+            if (!self || !self.isActiveAndEnabled) return;
+            if (!self.isActiveAndEnabled) return;
+
+            self.AddComponentOnChildren<SoftMaskable>(includeSelf);
+        }
     }
 }

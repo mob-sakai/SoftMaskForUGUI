@@ -12,6 +12,12 @@ namespace Coffee.UISoftMask
 {
     public class UISoftMaskProjectSettings : PreloadedProjectSettings<UISoftMaskProjectSettings>
     {
+        public enum SoftMaskableTracker
+        {
+            Automatic,
+            Manual
+        }
+
         private static bool s_UseStereoMock;
 
         [Header("Setting")]
@@ -26,6 +32,12 @@ namespace Coffee.UISoftMask
         [Tooltip("Sensitivity of transform that automatically rebuilds the soft mask buffer.")]
         [SerializeField]
         private TransformSensitivity m_TransformSensitivity = TransformSensitivity.Medium;
+
+        [Tooltip("Determines how to add SoftMaskable components under SoftMask.\n" +
+                 "Automatic: SoftMaskable components are added automatically as needed.\n" +
+                 "Manual: You need to add SoftMaskable components explicitly.")]
+        [SerializeField]
+        private SoftMaskableTracker m_SoftMaskable = SoftMaskableTracker.Automatic;
 
         [Header("Editor")]
         [Tooltip("Hide the automatically generated components.\n" +
@@ -64,6 +76,14 @@ namespace Coffee.UISoftMask
         {
             get => instance.m_TransformSensitivity;
             set => instance.m_TransformSensitivity = value;
+        }
+
+        public static bool addSoftMaskableAutomatically
+        {
+            get => instance.m_SoftMaskable == SoftMaskableTracker.Automatic;
+            set => instance.m_SoftMaskable = value
+                ? SoftMaskableTracker.Automatic
+                : SoftMaskableTracker.Manual;
         }
 
         public static bool useStereoMock

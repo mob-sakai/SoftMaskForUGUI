@@ -128,7 +128,8 @@ namespace Coffee.UISoftMask
         private void OnEnable()
         {
             UpdateHideFlags();
-            this.AddComponentOnChildren<SoftMaskable>(false);
+            SoftMaskUtils.AddSoftMaskableOnChildren(this, false);
+
             _shouldRecalculateStencil = true;
             if (TryGetComponent(out _graphic))
             {
@@ -192,7 +193,7 @@ namespace Coffee.UISoftMask
 
         private void OnTransformChildrenChanged()
         {
-            this.AddComponentOnChildren<SoftMaskable>(false);
+            SoftMaskUtils.AddSoftMaskableOnChildren(this, false);
         }
 
         private void OnTransformParentChanged()
@@ -280,6 +281,7 @@ namespace Coffee.UISoftMask
                 }, baseMaterial);
                 Profiler.EndSample();
             }
+
             Profiler.EndSample();
 
             Profiler.BeginSample("(SM4UI)[SoftMaskableMaterial] Create > Set Properties");

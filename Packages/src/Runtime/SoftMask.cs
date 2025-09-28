@@ -528,9 +528,9 @@ namespace Coffee.UISoftMask
 
         private void AddSoftMaskableOnChildren()
         {
-            if (!isActiveAndEnabled || !SoftMaskingEnabled()) return;
+            if (!SoftMaskingEnabled()) return;
 
-            this.AddComponentOnChildren<SoftMaskable>(true);
+            SoftMaskUtils.AddSoftMaskableOnChildren(this, true);
         }
 
         private void OnBeforeCanvasRebuild()
