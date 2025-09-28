@@ -1,3 +1,16 @@
+# [3.4.0](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.3.4...3.4.0) (2025-09-28)
+
+
+### Bug Fixes
+
+* error message sometimes after importing assets ([fcebd4a](https://github.com/mob-sakai/SoftMaskForUGUI/commit/fcebd4afaf5e23a3dbe58248b95517e5548e31fb)), closes [#256](https://github.com/mob-sakai/SoftMaskForUGUI/issues/256)
+* flickering issue when scale Y changes when used ShadowMode with TextMeshPro ([c7f39d0](https://github.com/mob-sakai/SoftMaskForUGUI/commit/c7f39d0a9cf7f582fce44203f66df38bb10f7966))
+
+
+### Features
+
+* mode to manually add SoftMaskable components ([61d483b](https://github.com/mob-sakai/SoftMaskForUGUI/commit/61d483b2eb3ded68a9424769d95591255ffa63ad)), closes [#253](https://github.com/mob-sakai/SoftMaskForUGUI/issues/253)
+
 ## [3.3.4](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.3.3...3.3.4) (2025-06-13)
 
 
