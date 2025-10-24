@@ -227,7 +227,7 @@ namespace Coffee.UISoftMask
         public static void AddSoftMaskableOnChildren(MonoBehaviour self, bool includeSelf)
         {
             if (!self || !self.isActiveAndEnabled) return;
-            if (!self.isActiveAndEnabled) return;
+            if (!UISoftMaskProjectSettings.addSoftMaskableAutomatically) return;
 
             self.AddComponentOnChildren<SoftMaskable>(includeSelf);
         }
