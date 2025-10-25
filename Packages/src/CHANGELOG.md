@@ -1,3 +1,10 @@
+## [3.4.1](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.4.0...3.4.1) (2025-10-25)
+
+
+### Bug Fixes
+
+* manual mode is not working ([cc1ee10](https://github.com/mob-sakai/SoftMaskForUGUI/commit/cc1ee10925e94ef943923f85e78be1759ea71afe)), closes [#258](https://github.com/mob-sakai/SoftMaskForUGUI/issues/258)
+
 # [3.4.0](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.3.4...3.4.0) (2025-09-28)
 
 
