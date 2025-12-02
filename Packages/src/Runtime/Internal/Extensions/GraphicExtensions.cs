@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
 using UnityEngine.UI;
@@ -75,10 +74,11 @@ namespace Coffee.UISoftMaskInternal
             var cam = self.canvas.renderMode != RenderMode.ScreenSpaceOverlay
                 ? self.canvas.worldCamera
                 : null;
+            var displayIndex = ScreenUtil.GetDisplayIndex(self);
             var min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
             var max = new Vector3(float.MinValue, float.MinValue, float.MinValue);
             self.rectTransform.GetWorldCorners(s_WorldCorners);
-            var screenSize = GetScreenSize();
+            var screenSize = ScreenUtil.GetScreenSize(displayIndex);
             for (var i = 0; i < 4; i++)
             {
                 if (cam != null)
@@ -118,18 +118,6 @@ namespace Coffee.UISoftMaskInternal
 
             var sprite = image.overrideSprite;
             return sprite != null ? sprite.GetActualTexture() : self.mainTexture;
-        }
-
-        private static Vector2Int GetScreenSize()
-        {
-#if UNITY_EDITOR
-            if (!Application.isPlaying && Camera.current == null)
-            {
-                var res = UnityStats.screenRes.Split('x');
-                return new Vector2Int(int.Parse(res[0]), int.Parse(res[1]));
-            }
-#endif
-            return new Vector2Int(Screen.width, Screen.height);
         }
 
         public static float GetParentGroupAlpha(this Graphic self)
