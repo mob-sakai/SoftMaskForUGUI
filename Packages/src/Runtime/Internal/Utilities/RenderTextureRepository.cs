@@ -1,5 +1,4 @@
 using System;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
 using UnityEngine.Profiling;
@@ -80,87 +79,6 @@ namespace Coffee.UISoftMaskInternal
             Profiler.BeginSample("(COF)[RTRepository] Release");
             s_Repository.Release(ref rt);
             Profiler.EndSample();
-        }
-
-        public static Vector2Int GetPreferSize(Vector2Int size, int downSamplingRate)
-        {
-            var aspect = (float)size.x / size.y;
-            var screenSize = GetScreenSize();
-
-            // Clamp to screen size.
-            size.x = Mathf.Clamp(size.x, 8, screenSize.x);
-            size.y = Mathf.Clamp(size.y, 8, screenSize.y);
-
-            if (downSamplingRate <= 0)
-            {
-                if (size.x < size.y)
-                {
-                    size.x = Mathf.CeilToInt(size.y * aspect);
-                }
-                else
-                {
-                    size.y = Mathf.CeilToInt(size.x / aspect);
-                }
-
-                return size;
-            }
-
-            if (size.x < size.y)
-            {
-                size.y = Mathf.NextPowerOfTwo(size.y / 2) / downSamplingRate;
-                size.x = Mathf.CeilToInt(size.y * aspect);
-            }
-            else
-            {
-                size.x = Mathf.NextPowerOfTwo(size.x / 2) / downSamplingRate;
-                size.y = Mathf.CeilToInt(size.x / aspect);
-            }
-
-            return size;
-        }
-
-        public static Vector2Int GetScreenSize(int downSamplingRate)
-        {
-            return GetPreferSize(GetScreenSize(), downSamplingRate);
-        }
-
-        public static Vector2Int GetScreenSize()
-        {
-#if UNITY_EDITOR
-            int ParseToInt(string s, int start, int end)
-            {
-                var result = 0;
-                for (var i = start; i < end; i++)
-                {
-                    result = result * 10 + (s[i] - '0');
-                }
-
-                return result;
-            }
-
-            Profiler.BeginSample("(COF)[RTRepository] GetScreenSize (Editor)");
-            var screenRes = UnityStats.screenRes;
-            if (string.IsNullOrEmpty(screenRes))
-            {
-                Profiler.EndSample();
-                return new Vector2Int(Mathf.Max(8, Screen.width), Mathf.Max(8, Screen.height));
-            }
-
-            var separator = screenRes.IndexOf('x');
-            if (separator <= 0 || separator >= screenRes.Length - 1)
-            {
-                Profiler.EndSample();
-                return new Vector2Int(Mathf.Max(8, Screen.width), Mathf.Max(8, Screen.height));
-            }
-
-            var w = Mathf.Max(8, ParseToInt(screenRes, 0, separator));
-            var h = Mathf.Max(8, ParseToInt(screenRes, separator + 1, screenRes.Length));
-            Profiler.EndSample();
-
-            return new Vector2Int(w, h);
-#else
-            return new Vector2Int(Screen.width, Screen.height);
-#endif
         }
     }
 }

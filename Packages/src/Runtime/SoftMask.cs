@@ -232,7 +232,7 @@ namespace Coffee.UISoftMask
             {
                 if (SoftMaskingEnabled())
                 {
-                    var size = RenderTextureRepository.GetScreenSize((int)downSamplingRate);
+                    var size = ScreenUtil.GetScreenSize(ScreenUtil.GetDisplayIndex(graphic), (int)downSamplingRate);
                     var hash = new Hash128((uint)GetHashCode(), (uint)size.x, (uint)size.y, 0);
                     if (!RenderTextureRepository.Valid(hash, _softMaskBuffer))
                     {
@@ -509,7 +509,7 @@ namespace Coffee.UISoftMask
             if (!SoftMaskingEnabled() || _softMaskBuffer == null) return;
 
             Logger.Log(this, "SetDirtyAndNotifyIfBufferSizeChanged");
-            var size = RenderTextureRepository.GetScreenSize((int)downSamplingRate);
+            var size = ScreenUtil.GetScreenSize(ScreenUtil.GetDisplayIndex(graphic), (int)downSamplingRate);
             var hash = new Hash128((uint)GetHashCode(), (uint)size.x, (uint)size.y, 0);
             if (RenderTextureRepository.Valid(hash, _softMaskBuffer)) return;
 
