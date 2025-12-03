@@ -1,8 +1,12 @@
 using System;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
 using UnityEngine.Profiling;
+
+#if UNITY_EDITOR
+using System.Collections.Generic;
+using System.Reflection;
+#endif
 
 namespace Coffee.UISoftMaskInternal
 {
@@ -82,10 +86,10 @@ namespace Coffee.UISoftMaskInternal
             Profiler.EndSample();
         }
 
-        public static Vector2Int GetPreferSize(Vector2Int size, int downSamplingRate)
+        public static Vector2Int GetPreferSize(int displayIndex, Vector2Int size, int downSamplingRate)
         {
             var aspect = (float)size.x / size.y;
-            var screenSize = GetScreenSize();
+            var screenSize = GetScreenSize(displayIndex);
 
             // Clamp to screen size.
             size.x = Mathf.Clamp(size.x, 8, screenSize.x);
@@ -119,36 +123,81 @@ namespace Coffee.UISoftMaskInternal
             return size;
         }
 
-        public static Vector2Int GetScreenSize(int downSamplingRate)
+        public static Vector2Int GetScreenSize(int displayIndex, int downSamplingRate)
         {
-            return GetPreferSize(GetScreenSize(), downSamplingRate);
+            return GetPreferSize(displayIndex, GetScreenSize(displayIndex), downSamplingRate);
         }
 
-        public static Vector2Int GetScreenSize()
+        public static Vector2Int GetScreenSize(int displayIndex)
         {
 #if UNITY_EDITOR
-            int ParseToInt(string s, int start, int end)
+            int activeIndex = Display.activeEditorGameViewTarget;
+            int maxIndex = Mathf.Max(displayIndex, activeIndex);
+            if (s_CachedEditorResolutions.Count <= maxIndex)
             {
-                var result = 0;
-                for (var i = start; i < end; i++)
+                for(var i = s_CachedEditorResolutions.Count; i < maxIndex + 1; i++)
                 {
-                    result = result * 10 + (s[i] - '0');
+                    if(i != activeIndex && TryFindGameViewResolution(i, out var resolution))
+                    {
+                        s_CachedEditorResolutions.Add(resolution);
+                    }
+                    else
+                    {
+                        s_CachedEditorResolutions.Add(new Vector2Int());
+                    }
                 }
-
-                return result;
             }
+            s_CachedEditorResolutions[activeIndex] = new Vector2Int(Display.main.renderingWidth, Display.main.renderingHeight);
 
-            Profiler.BeginSample("(COF)[RTRepository] GetScreenSize (Editor)");
-            var screenRes = UnityStats.screenRes;
-            var separator = screenRes.IndexOf('x');
-            var w = Mathf.Max(8, ParseToInt(screenRes, 0, separator));
-            var h = Mathf.Max(8, ParseToInt(screenRes, separator + 1, screenRes.Length));
-            Profiler.EndSample();
-
-            return new Vector2Int(w, h);
+            return s_CachedEditorResolutions[displayIndex];
 #else
-            return new Vector2Int(Screen.width, Screen.height);
+            var display = default(Display);
+            if (displayIndex >= Display.displays.Length || displayIndex < 0)
+            {
+                display = Display.main;
+            }
+            else
+            {
+                display = Display.displays[displayIndex];
+            }
+            return new Vector2Int(display.renderingWidth, display.renderingHeight);
 #endif
         }
+
+#if UNITY_EDITOR
+        static List<Vector2Int> s_CachedEditorResolutions = new();
+
+        static readonly System.Type s_GvType =
+            typeof(UnityEditor.EditorWindow).Assembly.GetType("UnityEditor.GameView");
+
+        static readonly PropertyInfo s_TargetSize =
+            s_GvType?.GetProperty("targetSize",
+                BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+
+        static readonly PropertyInfo s_DisplayField =
+            s_GvType?.GetProperty("targetDisplay",
+                BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+
+        static bool TryFindGameViewResolution(int displayIndex, out Vector2Int resolution)
+        {
+            resolution = default;
+
+            if (s_GvType == null || s_TargetSize == null || s_DisplayField == null)
+                return false;
+
+            var views = Resources.FindObjectsOfTypeAll(s_GvType);
+            foreach (var v in views)
+            {
+                var windowDisplayIndex = (int)s_DisplayField.GetValue(v);
+                if (windowDisplayIndex != displayIndex)
+                    continue;
+
+                resolution = Vector2Int.RoundToInt((Vector2)s_TargetSize.GetValue(v));
+                return true;
+            }
+
+            return false;
+        }
+#endif
     }
 }
