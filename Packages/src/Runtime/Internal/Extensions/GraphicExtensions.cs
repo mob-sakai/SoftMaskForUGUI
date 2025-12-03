@@ -71,10 +71,11 @@ namespace Coffee.UISoftMaskInternal
             var cam = self.canvas.renderMode != RenderMode.ScreenSpaceOverlay
                 ? self.canvas.worldCamera
                 : null;
+            var displayIndex = self.GetDisplayIndex();
             var min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
             var max = new Vector3(float.MinValue, float.MinValue, float.MinValue);
             self.rectTransform.GetWorldCorners(s_WorldCorners);
-            var screenSize = GetScreenSize();
+            var screenSize = GetScreenSize(displayIndex);
             for (var i = 0; i < 4; i++)
             {
                 if (cam)
@@ -103,6 +104,26 @@ namespace Coffee.UISoftMaskInternal
         }
 
         /// <summary>
+        /// Attempts to find the Graphic's display index using its canvas.
+        /// If no display index is found, we will fallback to display 1.
+        /// </summary>
+        public static int GetDisplayIndex (this Graphic self)
+        {
+            if(self.canvas.renderMode == RenderMode.ScreenSpaceOverlay)
+            {
+                return self.canvas.targetDisplay;
+            }
+            else
+            {
+                if(self.canvas.worldCamera.targetTexture == null)
+                {
+                    return self.canvas.worldCamera.targetDisplay;
+                }
+            }
+            return 0;
+        }
+
+        /// <summary>
         /// Get the actual main texture of a Graphic component.
         /// </summary>
         public static Texture GetActualMainTexture(this Graphic self)
@@ -114,16 +135,9 @@ namespace Coffee.UISoftMaskInternal
             return sprite ? sprite.GetActualTexture() : self.mainTexture;
         }
 
-        private static Vector2Int GetScreenSize()
+        private static Vector2Int GetScreenSize(int displayIndex)
         {
-#if UNITY_EDITOR
-            if (!Application.isPlaying && !Camera.current)
-            {
-                var res = UnityStats.screenRes.Split('x');
-                return new Vector2Int(int.Parse(res[0]), int.Parse(res[1]));
-            }
-#endif
-            return new Vector2Int(Screen.width, Screen.height);
+            return RenderTextureRepository.GetScreenSize(displayIndex);
         }
 
         public static float GetParentGroupAlpha(this Graphic self)
