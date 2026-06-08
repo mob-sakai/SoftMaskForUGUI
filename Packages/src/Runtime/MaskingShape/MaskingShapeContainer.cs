@@ -128,7 +128,7 @@ namespace Coffee.UISoftMask
 
         public void SetContainerDirty()
         {
-            Logger.LogIf(!_dirty, this, $"! SetContainerDirty {GetInstanceID()}");
+            Logger.LogIf(!_dirty, this, $"! SetContainerDirty {GetHashCode()}");
 
             if (!_mask)
             {
@@ -228,7 +228,7 @@ namespace Coffee.UISoftMask
 
             m_MaskingShapes.Add(shape);
             _dirty = true;
-            Logger.Log(this, $"Register #{m_MaskingShapes.Count}: {shape} {shape.GetInstanceID()}");
+            Logger.Log(this, $"Register #{m_MaskingShapes.Count}: {shape} {shape.GetHashCode()}");
         }
 
         public void Unregister(MaskingShape shape)
@@ -237,7 +237,7 @@ namespace Coffee.UISoftMask
 
             m_MaskingShapes.Remove(shape);
             _dirty = true;
-            Logger.Log(this, $"Unregister #{m_MaskingShapes.Count}: {shape} {shape.GetInstanceID()}");
+            Logger.Log(this, $"Unregister #{m_MaskingShapes.Count}: {shape} {shape.GetHashCode()}");
         }
 
         private TerminalMaskingShape FindTerminal()

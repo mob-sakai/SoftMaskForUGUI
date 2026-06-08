@@ -264,8 +264,8 @@ namespace Coffee.UISoftMask
             localId = (uint)(Mathf.Clamp01(threshold) * (1 << 8) + (subtract ? 1 << 9 : 0) + (localId << 10));
 #endif
             var hash = new Hash128(
-                (uint)baseMaterial.GetInstanceID(),
-                (uint)_softMask.softMaskBuffer.GetInstanceID(),
+                (uint)baseMaterial.GetHashCode(),
+                (uint)_softMask.softMaskBuffer.GetHashCode(),
                 (uint)(_stencilBits + (isStereo ? 1 << 8 : 0) + (useStencil ? 1 << 9 : 0) + (_softMaskDepth << 10)),
                 localId);
             if (!MaterialRepository.Valid(hash, _maskableMaterial))

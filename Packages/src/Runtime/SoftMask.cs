@@ -233,7 +233,7 @@ namespace Coffee.UISoftMask
                 if (SoftMaskingEnabled())
                 {
                     var size = RenderTextureRepository.GetScreenSize((int)downSamplingRate);
-                    var hash = new Hash128((uint)GetInstanceID(), (uint)size.x, (uint)size.y, 0);
+                    var hash = new Hash128((uint)GetHashCode(), (uint)size.x, (uint)size.y, 0);
                     if (!RenderTextureRepository.Valid(hash, _softMaskBuffer))
                     {
                         RenderTextureRepository.Get(hash, ref _softMaskBuffer,
@@ -503,7 +503,7 @@ namespace Coffee.UISoftMask
 
             Logger.Log(this, "SetDirtyAndNotifyIfBufferSizeChanged");
             var size = RenderTextureRepository.GetScreenSize((int)downSamplingRate);
-            var hash = new Hash128((uint)GetInstanceID(), (uint)size.x, (uint)size.y, 0);
+            var hash = new Hash128((uint)GetHashCode(), (uint)size.x, (uint)size.y, 0);
             if (RenderTextureRepository.Valid(hash, _softMaskBuffer)) return;
 
             // If the size of the soft mask buffer is changed, reset the SoftMaskable.
@@ -651,7 +651,7 @@ namespace Coffee.UISoftMask
         {
             if (isDirty || !this || !isActiveAndEnabled) return;
 
-            Logger.LogIf(!isDirty, this, $"! SetSoftMaskDirty {GetInstanceID()}");
+            Logger.LogIf(!isDirty, this, $"! SetSoftMaskDirty {GetHashCode()}");
             isDirty = true;
             for (var i = children.Count - 1; i >= 0; i--)
             {
