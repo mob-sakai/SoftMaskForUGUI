@@ -1,6 +1,7 @@
 using System;
 using Coffee.UISoftMaskInternal;
 using UnityEngine;
+using Logger = Coffee.UISoftMaskInternal.Logger;
 
 namespace Coffee.UISoftMask
 {
@@ -69,7 +70,7 @@ namespace Coffee.UISoftMask
             // The matrix has changed.
             if (prevHash != _lastCameraVpHash || prevResHash != _lastResHash)
             {
-                Logging.Log(this, "ViewProjection changed.");
+                Logger.Log(this, "ViewProjection changed.");
                 onCanvasViewChanged?.Invoke();
             }
         }

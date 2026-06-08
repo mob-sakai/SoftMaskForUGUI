@@ -54,7 +54,7 @@ namespace Coffee.UISoftMaskInternal
             RenderTextureFormat format = RenderTextureFormat.ARGB32)
         {
             Profiler.BeginSample("(COF)[RTRepository] GetDescriptor");
-            var graphicsFormat = GraphicsFormatUtility.GetGraphicsFormat(format, RenderTextureReadWrite.Default);
+            GraphicsFormat graphicsFormat = GraphicsFormatUtility.GetGraphicsFormat(format, RenderTextureReadWrite.Default);
             var rtd = new RenderTextureDescriptor(
                 Mathf.Max(8, size.x),
                 Mathf.Max(8, size.y),

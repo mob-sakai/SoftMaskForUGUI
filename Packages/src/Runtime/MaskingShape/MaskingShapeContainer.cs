@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Profiling;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
+using Logger = Coffee.UISoftMaskInternal.Logger;
 
 namespace Coffee.UISoftMask
 {
@@ -127,7 +128,7 @@ namespace Coffee.UISoftMask
 
         public void SetContainerDirty()
         {
-            Logging.LogIf(!_dirty, this, $"! SetContainerDirty {GetInstanceID()}");
+            Logger.LogIf(!_dirty, this, $"! SetContainerDirty {GetInstanceID()}");
 
             if (!_mask)
             {
@@ -227,7 +228,7 @@ namespace Coffee.UISoftMask
 
             m_MaskingShapes.Add(shape);
             _dirty = true;
-            Logging.Log(this, $"Register #{m_MaskingShapes.Count}: {shape} {shape.GetInstanceID()}");
+            Logger.Log(this, $"Register #{m_MaskingShapes.Count}: {shape} {shape.GetInstanceID()}");
         }
 
         public void Unregister(MaskingShape shape)
@@ -236,7 +237,7 @@ namespace Coffee.UISoftMask
 
             m_MaskingShapes.Remove(shape);
             _dirty = true;
-            Logging.Log(this, $"Unregister #{m_MaskingShapes.Count}: {shape} {shape.GetInstanceID()}");
+            Logger.Log(this, $"Unregister #{m_MaskingShapes.Count}: {shape} {shape.GetInstanceID()}");
         }
 
         private TerminalMaskingShape FindTerminal()

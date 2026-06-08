@@ -7,6 +7,7 @@ using UnityEngine.Events;
 using UnityEngine.Profiling;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
+using Logger = Coffee.UISoftMaskInternal.Logger;
 #if URP_ENABLE
 using UnityEngine.Rendering.Universal;
 #endif
@@ -500,7 +501,7 @@ namespace Coffee.UISoftMask
         {
             if (!SoftMaskingEnabled() || !_softMaskBuffer) return;
 
-            Logging.Log(this, "SetDirtyAndNotifyIfBufferSizeChanged");
+            Logger.Log(this, "SetDirtyAndNotifyIfBufferSizeChanged");
             var size = RenderTextureRepository.GetScreenSize((int)downSamplingRate);
             var hash = new Hash128((uint)GetInstanceID(), (uint)size.x, (uint)size.y, 0);
             if (RenderTextureRepository.Valid(hash, _softMaskBuffer)) return;
@@ -550,7 +551,7 @@ namespace Coffee.UISoftMask
         {
             if (_viewChangeTrigger != trigger)
             {
-                Logging.Log(this, $"UpdateCanvasViewChangeTrigger: {_viewChangeTrigger} -> {trigger}");
+                Logger.Log(this, $"UpdateCanvasViewChangeTrigger: {_viewChangeTrigger} -> {trigger}");
 
                 if (_viewChangeTrigger)
                 {
@@ -650,7 +651,7 @@ namespace Coffee.UISoftMask
         {
             if (isDirty || !this || !isActiveAndEnabled) return;
 
-            Logging.LogIf(!isDirty, this, $"! SetSoftMaskDirty {GetInstanceID()}");
+            Logger.LogIf(!isDirty, this, $"! SetSoftMaskDirty {GetInstanceID()}");
             isDirty = true;
             for (var i = children.Count - 1; i >= 0; i--)
             {
@@ -807,7 +808,7 @@ namespace Coffee.UISoftMask
                 Graphics.ExecuteCommandBuffer(_cb);
                 _hasSoftMaskBufferDrawn = true;
                 _hasResolutionChanged = false;
-                Logging.Log(this, $" >>>> SoftMaskBuffer '{softMaskBuffer.name}' will render.");
+                Logger.Log(this, $" >>>> SoftMaskBuffer '{softMaskBuffer.name}' will render.");
                 Profiler.EndSample();
             }
 

@@ -20,7 +20,9 @@ namespace Coffee.UISoftMaskInternal
     {
         public static T[] FindObjectsOfType<T>() where T : Object
         {
-#if UNITY_2023_1_OR_NEWER
+#if UNITY_6000_4_OR_NEWER
+            return Object.FindObjectsByType<T>(FindObjectsInactive.Include);
+#elif UNITY_2023_1_OR_NEWER
             return Object.FindObjectsByType<T>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 #else
             return Object.FindObjectsOfType<T>();
@@ -29,7 +31,7 @@ namespace Coffee.UISoftMaskInternal
 
         public static void Destroy(Object obj)
         {
-            if (!obj) return;
+            if (obj == null) return;
 #if UNITY_EDITOR
             if (!Application.isPlaying)
             {
@@ -44,7 +46,7 @@ namespace Coffee.UISoftMaskInternal
 
         public static void DestroyImmediate(Object obj)
         {
-            if (!obj) return;
+            if (obj == null) return;
 #if UNITY_EDITOR
             if (Application.isEditor)
             {
@@ -61,7 +63,7 @@ namespace Coffee.UISoftMaskInternal
         public static void SetDirty(Object obj)
         {
 #if UNITY_EDITOR
-            if (!obj) return;
+            if (obj == null) return;
             EditorUtility.SetDirty(obj);
 #endif
         }
@@ -117,11 +119,11 @@ namespace Coffee.UISoftMaskInternal
             foreach (var type in types)
             {
                 var script = scripts.FirstOrDefault(x => x.GetClass() == type);
-                if (!script) continue;
+                if (script == null) continue;
 
                 var path = type.GetCustomAttribute<IconAttribute>()?._path;
                 var icon = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
-                if (!icon) continue;
+                if (icon == null) continue;
 
                 s_SetIconForObject(script, icon);
             }
