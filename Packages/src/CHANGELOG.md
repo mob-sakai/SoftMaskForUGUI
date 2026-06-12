@@ -1,3 +1,10 @@
+## [3.5.1](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.5.0...3.5.1) (2026-06-12)
+
+
+### Bug Fixes
+
+* support Unity 6.5 or later ([965bb49](https://github.com/mob-sakai/SoftMaskForUGUI/commit/965bb492ef90d0c586e32f3462c09cfacd1c5fe5))
+
 # [3.5.0](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.4.1...3.5.0) (2025-11-08)
 
 
