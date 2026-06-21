@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Demos/HotUpdate/HotUpdate.unity
+    guid: 7ec916ecedc5e41a1896062381cbd257
+  - enabled: 1
     path: Assets/Samples/Demo/SoftMask_Demo.unity
     guid: aa372e7b286d0416eb942adfc3e442ec
   - enabled: 1
@@ -20,4 +23,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Demos/ReadMe/SoftMask_Readme.unity
     guid: c84daa5d0eba141b490bc6a987019ed1
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: cf50c9fe341d9486f856f50111a5f553,
+      type: 2}
