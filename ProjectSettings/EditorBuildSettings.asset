@@ -5,19 +5,24 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Samples/Demo/SoftMask_Demo.unity
     guid: aa372e7b286d0416eb942adfc3e442ec
-  - enabled: 1
+  - enabled: 0
     path: Assets/Demos/TextMeshPro Support/SoftMask_Demo_TextMeshProSupport.unity
     guid: b29fc66cd80684c2d903f2d65255b59b
-  - enabled: 1
+  - enabled: 0
     path: Assets/Demos/AntiAliasing/SoftMask_Demo_AntiAliasing.unity
     guid: 6c3e09109e1a24dc494278da86a563bd
-  - enabled: 1
+  - enabled: 0
     path: Assets/Demos/VsRectMask2D/VsRectMask2D.unity
     guid: daafbe503cab94e0d9093a5735eb85b0
-  - enabled: 1
+  - enabled: 0
     path: Assets/Demos/ReadMe/SoftMask_Readme.unity
     guid: c84daa5d0eba141b490bc6a987019ed1
-  m_configObjects: {}
+  - enabled: 1
+    path: Assets/Demos/Addressables/SoftMask_AddressablesTest.unity
+    guid: dfca18bc33ef84b678635a538c55ffe2
+  m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: 1d1c7daeafd3e4088b18e40aaffeb423,
+      type: 2}

@@ -22,16 +22,6 @@ ShaderVariantCollection:
       variants:
       - keywords: 
         passType: 0
-  - first: {fileID: 4800000, guid: 33e06cd3c50064f30a691b600fc62f3f, type: 3}
-    second:
-      variants:
-      - keywords: 
-        passType: 0
-  - first: {fileID: 4800000, guid: 935b7be1c88464d2eb87204fdfab5a38, type: 3}
-    second:
-      variants:
-      - keywords: GLOW_ON SOFTMASKABLE
-        passType: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -44,12 +34,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb5b5e33068c14a2bacdd6575e94f505, type: 3}
   m_Name: UISoftMaskProjectSettings
   m_EditorClassIdentifier: 
+  m_PreLoadSettingsInBuild: 1
   m_SoftMaskEnabled: 1
   m_StereoEnabled: 1
   m_TransformSensitivity: 1
+  m_SoftMaskable: 0
   m_HideGeneratedComponents: 1
   m_ShaderVariantRegistry:
     m_OptionalShaders: []
     m_Asset: {fileID: -3771181682974605552}
+    m_RegisteredShaders:
+    - {fileID: 4800000, guid: 9839189d918374a318d397a86e90aa73, type: 3}
+    - {fileID: 4800000, guid: 2933b413a51fc4ff3a83c7ef4177ae84, type: 3}
     m_ErrorOnUnregisteredVariant: 0
     m_UnregisteredVariants: []
