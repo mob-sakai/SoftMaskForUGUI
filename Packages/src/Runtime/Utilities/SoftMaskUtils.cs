@@ -152,7 +152,7 @@ namespace Coffee.UISoftMask
         {
             if (mat) return mat;
 
-            mat = new Material(Shader.Find("Hidden/UI/SoftMask"))
+            mat = new Material(UISoftMaskProjectSettings.shaderRegistry.FindShaderByName("Hidden/UI/SoftMask"))
             {
                 hideFlags = HideFlags.DontSave | HideFlags.NotEditable
             };

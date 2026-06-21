@@ -45,12 +45,16 @@ namespace Coffee.UISoftMaskInternal
         }
 
         private Dictionary<int, string> _cachedOptionalShaders = new Dictionary<int, string>();
+        private Dictionary<string, Shader> _shaderByName;
 
         [SerializeField]
         private List<StringPair> m_OptionalShaders = new List<StringPair>();
 
         [SerializeField]
         internal ShaderVariantCollection m_Asset;
+
+        [SerializeField]
+        private List<Shader> m_RegisteredShaders = new List<Shader>();
 
 #if UNITY_EDITOR
         [SerializeField]
@@ -63,6 +67,52 @@ namespace Coffee.UISoftMaskInternal
         public ShaderVariantCollection shaderVariantCollection => m_Asset;
         public Func<string, bool> onShaderRequested;
 
+        /// <summary>
+        /// Build the runtime name-to-shader lookup from <see cref="m_RegisteredShaders"/>.
+        /// When shaders are delivered via AssetBundles (i.e. not in the player build),
+        /// <see cref="Shader.Find"/> cannot locate them by name. This lookup provides
+        /// direct references serialized at edit-time as a reliable alternative.
+        /// </summary>
+        public void InitializeShaderLookup()
+        {
+            var count = m_RegisteredShaders.Count;
+            if (count == 0) return;
+
+            if (_shaderByName == null)
+            {
+                _shaderByName = new Dictionary<string, Shader>(count);
+            }
+            else
+            {
+                _shaderByName.Clear();
+            }
+
+            for (var i = 0; i < count; i++)
+            {
+                var s = m_RegisteredShaders[i];
+                if (s)
+                {
+                    _shaderByName[s.name] = s;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Find a shader by name. Prefers the registered direct reference from
+        /// <see cref="m_RegisteredShaders"/> when available, falls back to
+        /// <see cref="Shader.Find"/> otherwise. This ensures correct behavior in both
+        /// built-in delivery (PreloadedAssets) and external delivery (AssetBundle) modes.
+        /// </summary>
+        public Shader FindShaderByName(string name)
+        {
+            if (_shaderByName != null && _shaderByName.TryGetValue(name, out var shader) && shader)
+            {
+                return shader;
+            }
+
+            return Shader.Find(name);
+        }
+
         public Shader FindOptionalShader(Shader shader,
             string requiredName,
             string format,
@@ -74,7 +124,7 @@ namespace Coffee.UISoftMaskInternal
             var id = shader.GetHashCode();
             if (_cachedOptionalShaders.TryGetValue(id, out var optionalShaderName))
             {
-                return Shader.Find(optionalShaderName);
+                return FindShaderByName(optionalShaderName);
             }
 
             // The shader has required name.
@@ -92,7 +142,7 @@ namespace Coffee.UISoftMaskInternal
             {
                 var pair = m_OptionalShaders[i];
                 if (pair.key != shaderName) continue;
-                optionalShader = Shader.Find(pair.value);
+                optionalShader = FindShaderByName(pair.value);
                 if (!optionalShader) continue;
                 _cachedOptionalShaders[id] = pair.value;
                 return optionalShader;
@@ -100,7 +150,7 @@ namespace Coffee.UISoftMaskInternal
 
             // Find optional shader by format.
             optionalShaderName = string.Format(format, shaderName);
-            optionalShader = Shader.Find(optionalShaderName);
+            optionalShader = FindShaderByName(optionalShaderName);
             if (optionalShader)
             {
                 _cachedOptionalShaders[id] = optionalShaderName;
@@ -110,13 +160,13 @@ namespace Coffee.UISoftMaskInternal
 #if UNITY_EDITOR
             if (onShaderRequested?.Invoke(optionalShaderName) ?? false)
             {
-                return Shader.Find(defaultOptionalShaderName);
+                return FindShaderByName(defaultOptionalShaderName);
             }
 #endif
 
             // Find default optional shader.
             _cachedOptionalShaders[id] = defaultOptionalShaderName;
-            return Shader.Find(defaultOptionalShaderName);
+            return FindShaderByName(defaultOptionalShaderName);
         }
 
 #if UNITY_EDITOR
@@ -138,6 +188,7 @@ namespace Coffee.UISoftMaskInternal
         /// </summary>
         public void RegisterOptionalShaders(Object owner)
         {
+            if (owner == null) return;
             var shaderPaths = ShaderUtil.GetAllShaderInfo()
                 .Select(s => AssetDatabase.GetAssetPath(Shader.Find(s.name)))
                 .Where(path => !string.IsNullOrEmpty(path) && path.EndsWith(".shader"))
@@ -154,6 +205,7 @@ namespace Coffee.UISoftMaskInternal
         /// </summary>
         private void RegisterOptionalShaders(Object owner, string path)
         {
+            if (owner == null) return;
             if (!File.Exists(path) || !path.EndsWith(".shader")) return;
 
             var packageName = PackageInfo.FindForAssembly(typeof(ShaderVariantRegistry).Assembly)?.name;
@@ -186,6 +238,7 @@ namespace Coffee.UISoftMaskInternal
 
         public void InitializeIfNeeded(Object owner)
         {
+            if (owner == null) return;
             Profiler.BeginSample("(EDITOR/COF)[ShaderVariantRegistry] InitializeIfNeeded");
 
             if (!m_Asset && AssetDatabase.IsMainAsset(owner))
@@ -208,8 +261,36 @@ namespace Coffee.UISoftMaskInternal
                 AssetDatabase.SaveAssets();
             }
 
+            SyncRegisteredShaders(owner);
             ClearCache();
             Profiler.EndSample();
+        }
+
+        /// <summary>
+        /// Sync <see cref="m_RegisteredShaders"/> based on the current delivery mode.
+        /// When <see cref="PreloadedProjectSettings.excludeFromPreloadedAssetsWhenBuildPlayer"/> is enabled,
+        /// extracts shader references from the SVC so they can be resolved at runtime
+        /// without <see cref="Shader.Find"/>. Otherwise clears the list to avoid
+        /// stale references and unnecessary asset dependencies.
+        /// </summary>
+        private void SyncRegisteredShaders(Object owner)
+        {
+            if (owner == null) return;
+            var so = new SerializedObject(m_Asset);
+            var shaders = so.FindProperty("m_Shaders");
+            m_RegisteredShaders.Clear();
+            for (var i = 0; i < shaders.arraySize; i++)
+            {
+                var shaderRef = shaders.GetArrayElementAtIndex(i)
+                    .FindPropertyRelative("first")
+                    .objectReferenceValue as Shader;
+                if (shaderRef && !m_RegisteredShaders.Contains(shaderRef))
+                {
+                    m_RegisteredShaders.Add(shaderRef);
+                }
+            }
+
+            EditorUtility.SetDirty(owner);
         }
 
         internal void RegisterVariant(Material material, string path)
@@ -429,10 +510,7 @@ namespace Coffee.UISoftMaskInternal
                 EditorGUILayout.Space(-20);
             }
 
-            var labelWidth = EditorGUIUtility.labelWidth;
-            EditorGUIUtility.labelWidth = 180;
             EditorGUILayout.PropertyField(_errorOnUnregisteredVariant);
-            EditorGUIUtility.labelWidth = labelWidth;
         }
 
         private static void AddVariant(ShaderVariantCollection collection, string shaderName, string keywords)

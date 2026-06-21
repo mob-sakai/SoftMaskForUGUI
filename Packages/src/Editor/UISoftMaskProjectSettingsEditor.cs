@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Coffee.UISoftMask
 {
     [CustomEditor(typeof(UISoftMaskProjectSettings))]
-    internal class UISoftMaskProjectSettingsEditor : Editor
+    internal class UISoftMaskProjectSettingsEditor : PreloadedProjectSettingsEditor
     {
         private ShaderVariantRegistryEditor _shaderVariantRegistryEditor;
 
@@ -29,6 +29,9 @@ namespace Coffee.UISoftMask
             }
 
             _shaderVariantRegistryEditor.Draw();
+
+            DrawPreLoadSettingsInBuild();
+
             serializedObject.ApplyModifiedProperties();
 
             // Upgrade All Assets For V3.
