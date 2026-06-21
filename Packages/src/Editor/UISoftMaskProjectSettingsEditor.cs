@@ -30,7 +30,7 @@ namespace Coffee.UISoftMask
 
             _shaderVariantRegistryEditor.Draw();
 
-            DrawPreLoadSettingsInBuild();
+            DrawPreLoadSettingsInBuild("SoftMask");
 
             serializedObject.ApplyModifiedProperties();
 

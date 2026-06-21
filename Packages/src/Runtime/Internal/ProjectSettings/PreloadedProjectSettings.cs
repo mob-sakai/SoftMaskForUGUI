@@ -166,15 +166,15 @@ namespace Coffee.UISoftMaskInternal
             _preLoadSettingsInBuild = serializedObject.FindProperty("m_PreLoadSettingsInBuild");
         }
 
-        protected void DrawPreLoadSettingsInBuild()
+        protected void DrawPreLoadSettingsInBuild(string packageName)
         {
             EditorGUILayout.PropertyField(_preLoadSettingsInBuild);
             if (!_preLoadSettingsInBuild.boolValue)
             {
                 EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.HelpBox(
-                    "UIEffectProjectSettings asset will not be built in.\n" +
-                    "please load manually from Resources, AssetBundle, or Addressables before using UIEffect.",
+                    $"{target.GetType().Name} asset will not be built in.\n" +
+                    $"please load manually from Resources, AssetBundle, or Addressables before using {packageName}.",
                     MessageType.Warning);
                 if (GUILayout.Button("Ping"))
                 {
