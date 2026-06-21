@@ -339,8 +339,9 @@ namespace Coffee.UISoftMask
             {
                 graphic.RegisterDirtyMaterialCallback(
                     _updateParentSoftMask ?? (_updateParentSoftMask = UpdateParentSoftMask));
-                graphic.RegisterDirtyVerticesCallback(
+                graphic.RegisterDirtyMaterialCallback(
                     _setSoftMaskDirty ?? (_setSoftMaskDirty = SetSoftMaskDirty));
+                graphic.RegisterDirtyVerticesCallback(_setSoftMaskDirty);
                 graphic.SetVerticesDirty();
             }
 
@@ -365,8 +366,9 @@ namespace Coffee.UISoftMask
             {
                 graphic.UnregisterDirtyMaterialCallback(
                     _updateParentSoftMask ?? (_updateParentSoftMask = UpdateParentSoftMask));
-                graphic.UnregisterDirtyVerticesCallback(
+                graphic.UnregisterDirtyMaterialCallback(
                     _setSoftMaskDirty ?? (_setSoftMaskDirty = SetSoftMaskDirty));
+                graphic.UnregisterDirtyVerticesCallback(_setSoftMaskDirty);
                 graphic.SetVerticesDirty();
             }
 
