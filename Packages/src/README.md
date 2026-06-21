@@ -284,7 +284,7 @@ To apply these changes automatically, please follow the steps below:
   Requires memory for `RenderTexture` and [soft-maskable shader](#usage-with-your-custom-shaders).
 - **Anti-Aliasing**: Less jagged stencil mask.  
   It does not require `RenderTexture` or soft-maskable shader, and works faster.
-- **Normal**: Same as `Mask` component's stencil mask.
+- **Normal**: Same as Unity UI default `Mask` component.
 
 <br><br>
 
@@ -298,12 +298,13 @@ To apply these changes automatically, please follow the steps below:
         - Requires memory for `RenderTexture` and [soft-maskable shader](#usage-with-your-custom-shaders).
         - Use RenderTexture as a soft mask buffer.
         - The alpha of the masking graphic can be used.
+        - ⚠️ Enable `Project Settings > UI > Soft Mask > Soft Mask Enabled` to use this mode.
     - `AntiAliasing`:
         - Less jagged stencil mask.
         - It does not require `RenderTexture` or soft-maskable shader, and works faster.
         - Suppress the jaggedness of the masking graphic.
         - The masking graphic cannot be displayed.
-    - `Normal`: Same as Mask component's stencil mask.
+    - `Normal`: Same as Unity UI default `Mask` component.
 - **Show Mask Graphic** (SoftMasking or Normal): Show the graphic that is associated with the Mask render area.
 - **Alpha Hit Test**: The transparent part of the mask cannot be clicked.
     - Alpha hit test is not supported when the texture is in crunch format or non-readable.
@@ -329,9 +330,9 @@ To apply these changes automatically, please follow the steps below:
     - If overlapping objects appear see-through, please adjust this value.  
       ![](https://github.com/user-attachments/assets/435c94ee-d42a-4b74-9411-cd11db0a5b2f)
 
-`SoftMaskable` components are added automatically to GameObjects under a `SoftMask` component.  
-If the properties are set to their default values, it is marked as `HideFlag.DontSave` and will not be saved in the
-scene or prefab.
+> [!TIPS]
+> `SoftMaskable` components are added automatically to GameObjects under a `SoftMask` component.  
+> If the properties are set to their default values, it is marked as `HideFlag.DontSave` and will not be saved in the scene or prefab.
 
 <br><br>
 
@@ -352,14 +353,16 @@ scene or prefab.
     - `Subtract`: When the pointer is within this shape, the raycast is disabled.
     - `Ignore`: This shape is ignored in raycast determination.
 
-`MaskingShape` component allows you to add or remove the masking region.  
-Placing `MaskingShape` component (with any `Graphic`) under `SoftMask` component.  
-![](https://github.com/user-attachments/assets/8325d190-0102-4677-9687-5c9bad3f9398)
+> [!TIPS]
+> `MaskingShape` component allows you to add or remove the masking region.  
+> Placing `MaskingShape` component (with any `Graphic`) under `SoftMask` component.  
+> ![](https://github.com/user-attachments/assets/8325d190-0102-4677-9687-5c9bad3f9398)
 
-You can use it not only with `SoftMask` component but also with `Mask` component.  
-If the `MaskingMode` is `AntiAliasing` or `Normal`, or if you are using the `Mask` component, the `MaskingShape`
-component must be placed above the masked `Graphic` in the hierarchy. This is a limitation based on the stencil mask.  
-The available features depend on the `Masking Mode`.
+> [!TIPS]
+> You can use it not only with `SoftMask` component but also with `Mask` component.  
+> If the `MaskingMode` is `AntiAliasing` or `Normal`, or if you are using the `Mask` component, the `MaskingShape` component must be placed above the masked `Graphic` in the hierarchy.  
+> This is a limitation based on the stencil mask.  
+> The available features depend on the `Masking Mode`.
 
 <br><br>
 
@@ -370,21 +373,30 @@ The available features depend on the `Masking Mode`.
 - **Target**: The target RectTransform to follow.
 - **Target Properties**: `Position (X/Y/Z)`, `Rotation (X/Y/Z)`, `Scale (X/Y/Z)`, `Delta Size (X/Y)`.
 
-`RectTransformFitter` component follows the target RectTransform.  
-You can specify the properties to follow (position, rotation, scale, delta size) with
-`RectTransformFitter.targetProperties`.  
-By combining it with the `MaskingShape` component, you can implement an effect that displays only the buttons during the
-tutorial.
+> [!TIPS]
+> `RectTransformFitter` component follows the target RectTransform.  
+> You can specify the properties to follow (position, rotation, scale, delta size) with
+> `RectTransformFitter.targetProperties`.  
+> By combining it with the `MaskingShape` component, you can implement an effect that displays only the buttons during the tutorial.
 
 <br><br>
 
 ### Project Settings
 
-![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/1759018902322.png)
-
 You can adjust the project-wide settings for SoftMaskForUGUI. (`Edit > Project Settings > UI > Soft Mask`)
 
+
+> [!IMPORTANT]
+> The setting file is usually saved in `Assets/ProjectSettings/UISoftMaskProjectSettings.asset`. Include this file in your version control system.  
+> The setting file is automatically added as a preloaded asset in `ProjectSettings/ProjectSettings.asset`.  
+> To hot-update the shader variants, see `Advanced > Pre Load Settings In Build`.
+
+![](https://github.com/mob-sakai/mob-sakai/releases/download/docs/1781948490289.png)
+
+#### Setting
+
 - **Soft Mask Enabled**: Enable soft masking.
+    - If disabled, the `Soft Masking` mode will behave as `Normal` mode.
 - **Stereo Enabled**: Enable VR mode.
 - **Transform Sensitivity**: `Low`, `Medium`, `High`
     - Adjust the transformation sensitivity for the soft mask buffer update.
@@ -392,8 +404,14 @@ You can adjust the project-wide settings for SoftMaskForUGUI. (`Edit > Project S
 - **Soft Maskable**: Determines how to add `SoftMaskable` components under `SoftMask`.
     - `Automatic`: `SoftMaskable` components are added automatically as needed.
     - `Manual`: You need to add `SoftMaskable` components explicitly.
+
+#### Editor
+
 - **Hide Generated Component**: Automatically hide the generated `MaskingShapeContainer` and `TerminalMaskingShape`
   components.
+
+#### Shader
+
 - **Optional Shaders (SoftMaskable)**: A list of shaders that will be prioritized when a soft-maskable shader is
   requested.
     - If the shader is included in the list, that shader will be used.
@@ -407,13 +425,27 @@ You can adjust the project-wide settings for SoftMaskForUGUI. (`Edit > Project S
 - **Unregistered Variants**: A list of shader variants that are not registered. Use "+" button to add variants.
 - **Error On Unregistered Variant**: If enabled, an error will be displayed when an unregistered shader variant is used.
     - The shader variant will be automatically added to the `Unregistered Variants` list.
+
+#### Advanced
+
+- **Pre Load Settings In Build**: When enabled, this settings asset will be added to `PlayerSettings.preloadedAssets` in build.
+- When disable, you should load this settings via `Resources`, `AssetBundles` or `Addressables` to use this package.
+- You can overwrite the settings by re-enabling `UISoftMaskProjectSettings`. This allows you to hot update shader variants and presets.
+
+```csharp
+private static IEnumerator HotUpdateCoroutine()
+{
+    const string k_SettingsAddress = "Assets/ProjectSettings/UISoftMaskProjectSettings.asset";
+    yield return Addressables.LoadAssetAsync<UISoftMaskProjectSettings>(k_SettingsAddress);
+    while (UISoftMaskProjectSettings.shaderVariantCollection.WarmUpProgressively(5) == false) yield return null;
+}
+```
+
+#### Upgrade
+
 - **Upgrade All Assets For V3**: Upgrade all assets for v3.
     - ⚠️ This will apply the changes to all assets in the project.
     - For details, please see [Upgrade All Assets For V3](#-upgrade-all-assets-for-v3).
-
-> [!IMPORTANT]
-> - The setting file is usually saved in `Assets/ProjectSettings/UISoftMaskProjectSettings.asset`. Include this file in your version control system.
-> - The setting file is automatically added as a preloaded asset in `ProjectSettings/ProjectSettings.asset`.
 
 <br><br>
 
