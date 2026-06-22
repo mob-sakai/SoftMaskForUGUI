@@ -30,12 +30,12 @@ float2 ScreenToUv(const float2 screenPos)
     float ratio = _ScreenParams.x / _ScreenParams.y;
     switch (UNITY_DISPLAY_ORIENTATION_PRETRANSFORM)
     {
-        case UNITY_DISPLAY_ORIENTATION_PRETRANSFORM_90:
-            return half2((1 - uv.y) / ratio, uv.x * ratio);
-        case UNITY_DISPLAY_ORIENTATION_PRETRANSFORM_180:
-            return half2(1 - uv.x, 1 - uv.y);
-        case UNITY_DISPLAY_ORIENTATION_PRETRANSFORM_270:
-            return half2((uv.y + ratio - 1) / ratio, 1 - uv.x * ratio);
+    case UNITY_DISPLAY_ORIENTATION_PRETRANSFORM_90:
+        return half2((1 - uv.y) / ratio, uv.x * ratio);
+    case UNITY_DISPLAY_ORIENTATION_PRETRANSFORM_180:
+        return half2(1 - uv.x, 1 - uv.y);
+    case UNITY_DISPLAY_ORIENTATION_PRETRANSFORM_270:
+        return half2((uv.y + ratio - 1) / ratio, 1 - uv.x * ratio);
     }
     #endif
 
@@ -79,7 +79,7 @@ float SoftMaskSample(float2 uv, float a)
     #ifdef UNITY_UI_ALPHACLIP
     if (_MaskingShapeSubtract == 1)
     {
-        clip (a * alpha.x * alpha.y * alpha.z * alpha.w - _AlphaClipThreshold - 0.001);
+        clip(a * alpha.x * alpha.y * alpha.z * alpha.w - _AlphaClipThreshold - 0.001);
     }
     #endif
     #endif

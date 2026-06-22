@@ -121,7 +121,7 @@ Shader "Hidden/UI/Default (SoftMaskable)"
 
                 if (_UIVertexColorAlwaysGammaSpace)
                 {
-                    if(!IsGammaSpace())
+                    if (!IsGammaSpace())
                     {
                         v.color.rgb = GammaToLinear(v.color.rgb);
                     }

@@ -9,6 +9,17 @@ namespace Coffee.UISoftMask
     {
         private ShaderVariantRegistryEditor _shaderVariantRegistryEditor;
 
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            _shaderVariantRegistryEditor = ShaderVariantRegistryEditor.Create(serializedObject, "(SoftMaskable)",
+                () =>
+                {
+                    UISoftMaskProjectSettings.shaderRegistry
+                        .RegisterOptionalShaders(UISoftMaskProjectSettings.instance);
+                });
+        }
+
         public override void OnInspectorGUI()
         {
             EditorGUIUtility.labelWidth = 180;
@@ -17,17 +28,6 @@ namespace Coffee.UISoftMask
             // Shader registry.
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Shader", EditorStyles.boldLabel);
-            if (_shaderVariantRegistryEditor == null)
-            {
-                var property = serializedObject.FindProperty("m_ShaderVariantRegistry");
-                _shaderVariantRegistryEditor = new ShaderVariantRegistryEditor(property, "(SoftMaskable)",
-                    () =>
-                    {
-                        UISoftMaskProjectSettings.shaderRegistry
-                            .RegisterOptionalShaders(UISoftMaskProjectSettings.instance);
-                    });
-            }
-
             _shaderVariantRegistryEditor.Draw();
 
             DrawPreLoadSettingsInBuild("SoftMask");

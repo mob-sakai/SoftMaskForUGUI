@@ -28,7 +28,7 @@ namespace Coffee.UISoftMaskInternal
             var sp = GetSerializedProperty();
             for (var i = 0; i < sp.arraySize; i++)
             {
-                if (sp.GetArrayElementAtIndex(i).objectReferenceValue is Shader shader)
+                if (sp.GetArrayElementAtIndex(i).objectReferenceValue is Shader shader && shader)
                 {
                     yield return shader;
                 }
