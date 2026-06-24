@@ -23,17 +23,14 @@ namespace Coffee.UISoftMaskInternal
 
         protected static bool s_BuildingPlayer;
 
-        private class Postprocessor : AssetPostprocessor
+        private class EditorEvents : AssetPostprocessor, IPreprocessBuildWithReport, IPostprocessBuildWithReport
         {
+            int IOrderedCallback.callbackOrder => 0;
+
             private static void OnPostprocessAllAssets(string[] _, string[] __, string[] ___, string[] ____)
             {
                 Initialize();
             }
-        }
-
-        private class ExcludeFromBuild : IPreprocessBuildWithReport, IPostprocessBuildWithReport
-        {
-            int IOrderedCallback.callbackOrder => 0;
 
             void IPreprocessBuildWithReport.OnPreprocessBuild(BuildReport report)
             {
@@ -264,7 +261,7 @@ namespace Coffee.UISoftMaskInternal
             s_Instance = null;
         }
 #else
-    public static T instance => s_Instance != null ? s_Instance : s_Instance = CreateInstance<T>();
+        public static T instance => s_Instance != null ? s_Instance : s_Instance = CreateInstance<T>();
 #endif
 
         /// <summary>
@@ -280,6 +277,7 @@ namespace Coffee.UISoftMaskInternal
                 return;
             }
 
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
             EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
 #else
             if (s_Instance != null && s_Instance != this)
