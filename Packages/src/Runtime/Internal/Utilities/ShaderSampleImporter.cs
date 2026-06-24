@@ -1,5 +1,4 @@
 #if UNITY_EDITOR
-using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -23,6 +22,7 @@ namespace Coffee.UISoftMaskInternal
 
             // Collect sample names.
             s_Samples = samples;
+            s_SampleNames.Clear();
             foreach (var (shaderName, sampleName, _) in samples)
             {
                 s_SampleNames[shaderName] = sampleName;
@@ -156,12 +156,15 @@ namespace Coffee.UISoftMaskInternal
             }
 
             // Remove deprecated shaders.
-            foreach (var (guid, fileName) in s_DeprecatedShaders)
+            if (s_DeprecatedShaders != null)
             {
-                var path = AssetDatabase.GUIDToAssetPath(guid);
-                if (!string.IsNullOrEmpty(path) && Path.GetFileName(path) == fileName)
+                foreach (var (guid, fileName) in s_DeprecatedShaders)
                 {
-                    AssetDatabase.DeleteAsset(path);
+                    var path = AssetDatabase.GUIDToAssetPath(guid);
+                    if (!string.IsNullOrEmpty(path) && Path.GetFileName(path) == fileName)
+                    {
+                        AssetDatabase.DeleteAsset(path);
+                    }
                 }
             }
 

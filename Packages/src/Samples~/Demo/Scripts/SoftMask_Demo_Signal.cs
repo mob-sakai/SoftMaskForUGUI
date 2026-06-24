@@ -32,11 +32,24 @@ namespace Coffee.UISoftMask.Demos
             canvasRenderer.SetAlpha(1);
         }
 
+
+#if UNITY_EDITOR && UNITY_2019_3_OR_NEWER
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+#elif UNITY_EDITOR
+        [InitializeOnLoadMethod]
+#else
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+#endif
         private static void InitializeOnLoad()
         {
             bakedCount = 0;
-            SoftMask.onRenderSoftMaskBuffer += _ => bakedCount++;
+            SoftMask.onRenderSoftMaskBuffer -= OnRenderSoftMaskBuffer;
+            SoftMask.onRenderSoftMaskBuffer += OnRenderSoftMaskBuffer;
+        }
+
+        private static void OnRenderSoftMaskBuffer(SoftMask _)
+        {
+            bakedCount++;
         }
 
         private void CheckDirty()

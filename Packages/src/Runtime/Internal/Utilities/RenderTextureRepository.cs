@@ -18,7 +18,7 @@ namespace Coffee.UISoftMaskInternal
 
         public static int count => s_Repository.count;
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR && UNITY_2019_3_OR_NEWER
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Clear()
         {
