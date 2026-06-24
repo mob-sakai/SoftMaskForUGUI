@@ -129,7 +129,7 @@ namespace Coffee.UISoftMask
             var colorMask = Vector4.zero;
             colorMask[depth] = alpha;
             mpb.SetVector(s_ColorMask, colorMask);
-            mpb.SetTexture(s_MainTex, texture ? texture : null);
+            mpb.SetTexture(s_MainTex, texture != null ? texture : null);
             mpb.SetFloat(s_ThresholdMin, threshold.min);
             mpb.SetFloat(s_ThresholdMax, threshold.max);
             Profiler.EndSample();
@@ -150,7 +150,7 @@ namespace Coffee.UISoftMask
         /// </summary>
         private static Material GetSoftMaskingMaterial(ref Material mat, BlendOp op)
         {
-            if (mat) return mat;
+            if (mat != null) return mat;
 
             mat = new Material(UISoftMaskProjectSettings.shaderRegistry.FindShaderByName("Hidden/UI/SoftMask"))
             {
@@ -169,7 +169,7 @@ namespace Coffee.UISoftMask
         /// </summary>
         public static void AddSoftMaskableOnChildren(MonoBehaviour self, bool includeSelf)
         {
-            if (!self || !self.isActiveAndEnabled) return;
+            if (self == null || !self.isActiveAndEnabled) return;
             if (!UISoftMaskProjectSettings.addSoftMaskableAutomatically) return;
 
             self.AddComponentOnChildren<SoftMaskable>(includeSelf);

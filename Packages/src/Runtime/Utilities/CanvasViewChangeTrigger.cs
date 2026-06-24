@@ -56,7 +56,7 @@ namespace Coffee.UISoftMask
 
         private void CheckViewProjectionMatrix()
         {
-            if (!_canvas) return;
+            if (_canvas == null) return;
 
             // Get the view and projection matrix of the Canvas.
             var prevHash = _lastCameraVpHash;
@@ -84,7 +84,7 @@ namespace Coffee.UISoftMask
             var rootCanvas = transform.GetRootComponent<Canvas>();
 
             // Get the CanvasViewChangeTrigger component if found, or add.
-            return rootCanvas ? rootCanvas.GetOrAddComponent<CanvasViewChangeTrigger>() : null;
+            return rootCanvas != null ? rootCanvas.GetOrAddComponent<CanvasViewChangeTrigger>() : null;
         }
     }
 }

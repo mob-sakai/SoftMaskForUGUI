@@ -19,10 +19,10 @@ namespace Coffee.UISoftMaskInternal
         /// </summary>
         public static Material GetMaterialForRendering(this Graphic self)
         {
-            if (!self || !self.isActiveAndEnabled) return null;
+            if (self == null || !self.isActiveAndEnabled) return null;
 
             var cr = self.canvasRenderer;
-            if (!cr || cr.materialCount == 0) return null;
+            if (cr == null || cr.materialCount == 0) return null;
 
             return cr.GetMaterial();
         }
@@ -33,7 +33,7 @@ namespace Coffee.UISoftMaskInternal
         public static void GetMaterialsForRendering(this Graphic self, List<Material> result)
         {
             result.Clear();
-            if (!self) return;
+            if (self == null) return;
 
             var cr = self.canvasRenderer;
             var count = cr.materialCount;
@@ -60,7 +60,7 @@ namespace Coffee.UISoftMaskInternal
         /// </summary>
         public static bool IsInScreen(this Graphic self)
         {
-            if (!self || !self.canvas) return false;
+            if (self == null || self.canvas == null) return false;
 
             if (FrameCache.TryGet(self, nameof(IsInScreen), out bool result))
             {
@@ -77,7 +77,7 @@ namespace Coffee.UISoftMaskInternal
             var screenSize = GetScreenSize();
             for (var i = 0; i < 4; i++)
             {
-                if (cam)
+                if (cam != null)
                 {
                     s_WorldCorners[i] = cam.WorldToViewportPoint(s_WorldCorners[i]);
                 }
@@ -111,13 +111,13 @@ namespace Coffee.UISoftMaskInternal
             if (image == null) return self.mainTexture;
 
             var sprite = image.overrideSprite;
-            return sprite ? sprite.GetActualTexture() : self.mainTexture;
+            return sprite != null ? sprite.GetActualTexture() : self.mainTexture;
         }
 
         private static Vector2Int GetScreenSize()
         {
 #if UNITY_EDITOR
-            if (!Application.isPlaying && !Camera.current)
+            if (!Application.isPlaying && Camera.current == null)
             {
                 var res = UnityStats.screenRes.Split('x');
                 return new Vector2Int(int.Parse(res[0]), int.Parse(res[1]));

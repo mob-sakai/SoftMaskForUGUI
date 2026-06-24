@@ -18,7 +18,7 @@ namespace Coffee.UISoftMask
         /// <summary>
         /// Graphic component on this GameObject.
         /// </summary>
-        public Graphic graphic => _graphic || TryGetComponent(out _graphic) ? _graphic : null;
+        public Graphic graphic => _graphic != null || TryGetComponent(out _graphic) ? _graphic : null;
 
         private void OnEnable() { }
 
@@ -30,7 +30,7 @@ namespace Coffee.UISoftMask
         bool ICanvasRaycastFilter.IsRaycastLocationValid(Vector2 sp, Camera eventCamera)
         {
             // Check if this component is active and enabled, if the Graphic component is not null, and if the Graphic is active.
-            if (!isActiveAndEnabled || !graphic || !graphic.IsActive()) return true;
+            if (!isActiveAndEnabled || graphic == null || !graphic.IsActive()) return true;
 
             // Perform alpha-based hit testing.
             return Utils.AlphaHitTestValid(graphic, sp, eventCamera, 0.01f);

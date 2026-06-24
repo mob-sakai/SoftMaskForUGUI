@@ -27,7 +27,7 @@ namespace Coffee.UISoftMask.Demos
             if (m_Targets == null) return;
             foreach (var target in m_Targets)
             {
-                if (target) target.SetActive(enable != m_Reverse);
+                if (target != null) target.SetActive(enable != m_Reverse);
             }
         }
     }

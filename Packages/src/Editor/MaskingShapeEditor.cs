@@ -27,7 +27,7 @@ namespace Coffee.UISoftMask
         public override void OnInspectorGUI()
         {
             var current = target as MaskingShape;
-            if (!current) return;
+            if (current == null) return;
 
             var useStencil = UISoftMaskProjectSettings.useStencilOutsideScreen;
             Utils.GetStencilBits(current.transform, false, useStencil, out var mask, out var _);

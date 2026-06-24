@@ -73,7 +73,7 @@ namespace Coffee.UISoftMask
         private Action _updateAntiAliasing;
         private UnityAction _updateContainer;
 
-        public Graphic graphic => _graphic || TryGetComponent(out _graphic) ? _graphic : null;
+        public Graphic graphic => _graphic != null || TryGetComponent(out _graphic) ? _graphic : null;
 
         public bool hasTransformChanged =>
             transform.HasChanged(ref _prevTransformMatrix, UISoftMaskProjectSettings.transformSensitivity);
@@ -176,7 +176,7 @@ namespace Coffee.UISoftMask
         {
             UpdateContainer();
 
-            if (graphic)
+            if (graphic != null)
             {
                 graphic.RegisterDirtyMaterialCallback(_updateContainer ?? (_updateContainer = UpdateContainer));
                 graphic.RegisterDirtyVerticesCallback(_setContainerDirty ?? (_setContainerDirty = SetContainerDirty));
@@ -204,7 +204,7 @@ namespace Coffee.UISoftMask
             UpdateContainer();
             RegisterAntiAliasingIfNeeded();
 
-            if (graphic)
+            if (graphic != null)
             {
                 graphic.UnregisterDirtyMaterialCallback(_updateContainer ?? (_updateContainer = UpdateContainer));
                 graphic.UnregisterDirtyVerticesCallback(_setContainerDirty ?? (_setContainerDirty = SetContainerDirty));
@@ -248,17 +248,17 @@ namespace Coffee.UISoftMask
         int IComparable<MaskingShape>.CompareTo(MaskingShape other)
         {
             if (this == other) return 0;
-            if (!this && other) return -1;
-            if (this && !other) return 1;
+            if (this == null && other != null) return -1;
+            if (this != null && other == null) return 1;
 
-            var depth = graphic ? graphic.depth : -1;
-            var otherDepth = other.graphic ? other.graphic.depth : -1;
+            var depth = graphic != null ? graphic.depth : -1;
+            var otherDepth = other.graphic != null ? other.graphic.depth : -1;
             if (depth != -1 && otherDepth != -1)
             {
                 return depth - otherDepth;
             }
 
-            return transform.CompareHierarchyIndex(other.transform, _container ? _container.transform : null);
+            return transform.CompareHierarchyIndex(other.transform, _container != null ? _container.transform : null);
         }
 
         void IMaskable.RecalculateMasking()
@@ -281,7 +281,7 @@ namespace Coffee.UISoftMask
 
             // Not in mask.
             RecalculateStencilIfNeeded();
-            if (_stencilBits == 0 && !_mask)
+            if (_stencilBits == 0 && _mask == null)
             {
                 StencilMaterial.Remove(_maskMaterial);
                 _maskMaterial = null;
@@ -314,7 +314,7 @@ namespace Coffee.UISoftMask
             }
 
             StencilMaterial.Remove(_maskMaterial);
-            if (maskMat && maskMat != baseMaterial)
+            if (maskMat != null && maskMat != baseMaterial)
             {
                 toUse = _maskMaterial = maskMat;
             }
@@ -330,7 +330,7 @@ namespace Coffee.UISoftMask
                 return;
             }
 
-            mesh.CopyTo(_mesh ? _mesh : _mesh = MeshExtensions.Rent());
+            mesh.CopyTo(_mesh != null ? _mesh : _mesh = MeshExtensions.Rent());
         }
 
         void IMeshModifier.ModifyMesh(VertexHelper verts)
@@ -341,7 +341,7 @@ namespace Coffee.UISoftMask
                 return;
             }
 
-            verts.CopyTo(_mesh ? _mesh : _mesh = MeshExtensions.Rent());
+            verts.CopyTo(_mesh != null ? _mesh : _mesh = MeshExtensions.Rent());
         }
 
         internal bool AntiAliasingEnabled()
@@ -371,7 +371,7 @@ namespace Coffee.UISoftMask
 
         private void SetContainerDirty()
         {
-            if (_container)
+            if (_container != null)
             {
                 _container.SetContainerDirty();
             }
@@ -379,7 +379,7 @@ namespace Coffee.UISoftMask
 
         private void SetMaterialDirty()
         {
-            if (graphic)
+            if (graphic != null)
             {
                 var proxy = GraphicProxy.Find(graphic);
                 proxy.SetMaterialDirty(graphic);
@@ -393,19 +393,19 @@ namespace Coffee.UISoftMask
             {
                 var useStencil = UISoftMaskProjectSettings.useStencilOutsideScreen;
                 Utils.GetStencilBits(transform, false, useStencil, out var mask, out var _);
-                if (!mask) return;
+                if (mask == null) return;
 
                 newContainer = mask.GetOrAddComponent<MaskingShapeContainer>();
             }
 
             if (newContainer != _container)
             {
-                if (_container)
+                if (_container != null)
                 {
                     _container.Unregister(this);
                 }
 
-                if (newContainer)
+                if (newContainer != null)
                 {
                     newContainer.Register(this);
                 }
@@ -442,7 +442,7 @@ namespace Coffee.UISoftMask
             var proxy = GraphicProxy.Find(graphic);
             var texture = proxy.GetMainTexture(graphic);
             var mesh = _mesh;
-            if (!mesh) return;
+            if (mesh == null) return;
             if (!graphic.IsInScreen()) return;
 
             Profiler.BeginSample("(SM4UI)[MaskingShape)] DrawSoftMaskBuffer");
@@ -480,7 +480,7 @@ namespace Coffee.UISoftMask
 
         private void UpdateAntiAliasing()
         {
-            if (!this || !_graphic) return;
+            if (this == null || _graphic == null) return;
 
             RecalculateStencilIfNeeded();
 

@@ -137,7 +137,7 @@ namespace Coffee.UISoftMask
                 UpdateAntiAlias();
                 SetDirtyAndNotify();
 
-                if (graphic)
+                if (graphic != null)
                 {
                     graphic.SetMaterialDirty();
                 }
@@ -185,7 +185,7 @@ namespace Coffee.UISoftMask
             get
             {
                 var depth = -1;
-                for (var current = this; current; current = current._parent)
+                for (var current = this; current != null; current = current._parent)
                 {
                     if (current.SoftMaskingEnabled())
                     {
@@ -221,7 +221,7 @@ namespace Coffee.UISoftMask
             }
         }
 
-        public bool hasSoftMaskBuffer => _softMaskBuffer;
+        public bool hasSoftMaskBuffer => _softMaskBuffer != null;
 
         /// <summary>
         /// The soft mask buffer.
@@ -287,9 +287,9 @@ namespace Coffee.UISoftMask
             get
             {
 #if URP_ENABLE
-                if (_rootCanvas
+                if (_rootCanvas != null
                     && _rootCanvas.renderMode != RenderMode.ScreenSpaceOverlay
-                    && _rootCanvas.worldCamera
+                    && _rootCanvas.worldCamera != null
                     && GraphicsSettings.currentRenderPipeline is UniversalRenderPipelineAsset)
                 {
                     return true;
@@ -318,9 +318,9 @@ namespace Coffee.UISoftMask
 #endif
 
                 return isSupported
-                       && _rootCanvas
+                       && _rootCanvas != null
                        && _rootCanvas.renderMode != RenderMode.ScreenSpaceOverlay
-                       && _rootCanvas.worldCamera
+                       && _rootCanvas.worldCamera != null
                        && _rootCanvas.worldCamera.allowDynamicResolution;
             }
         }
@@ -335,7 +335,7 @@ namespace Coffee.UISoftMask
             UIExtraCallbacks.onAfterCanvasRebuild +=
                 _renderSoftMaskBuffer ?? (_renderSoftMaskBuffer = RenderSoftMaskBuffer);
 
-            if (graphic)
+            if (graphic != null)
             {
                 graphic.RegisterDirtyMaterialCallback(
                     _updateParentSoftMask ?? (_updateParentSoftMask = UpdateParentSoftMask));
@@ -362,7 +362,7 @@ namespace Coffee.UISoftMask
             UIExtraCallbacks.onAfterCanvasRebuild -=
                 _renderSoftMaskBuffer ?? (_renderSoftMaskBuffer = RenderSoftMaskBuffer);
 
-            if (graphic)
+            if (graphic != null)
             {
                 graphic.UnregisterDirtyMaterialCallback(
                     _updateParentSoftMask ?? (_updateParentSoftMask = UpdateParentSoftMask));
@@ -445,7 +445,7 @@ namespace Coffee.UISoftMask
             SetSoftMaskDirty();
             UpdateAntiAlias();
 
-            if (graphic)
+            if (graphic != null)
             {
                 graphic.SetVerticesDirty();
             }
@@ -466,7 +466,7 @@ namespace Coffee.UISoftMask
         void IMaskable.RecalculateMasking()
         {
             SetSoftMaskDirty();
-            if (!SoftMaskingEnabled() && _softMaskBuffer)
+            if (!SoftMaskingEnabled() && _softMaskBuffer != null)
             {
                 RenderTextureRepository.Release(ref _softMaskBuffer);
             }
@@ -479,13 +479,13 @@ namespace Coffee.UISoftMask
 
         void IMeshModifier.ModifyMesh(Mesh mesh)
         {
-            if (!mesh || !SoftMaskingEnabled())
+            if (mesh == null || !SoftMaskingEnabled())
             {
                 MeshExtensions.Return(ref _mesh);
                 return;
             }
 
-            mesh.CopyTo(_mesh ? _mesh : _mesh = MeshExtensions.Rent());
+            mesh.CopyTo(_mesh != null ? _mesh : _mesh = MeshExtensions.Rent());
         }
 
         void IMeshModifier.ModifyMesh(VertexHelper verts)
@@ -496,12 +496,12 @@ namespace Coffee.UISoftMask
                 return;
             }
 
-            verts.CopyTo(_mesh ? _mesh : _mesh = MeshExtensions.Rent());
+            verts.CopyTo(_mesh != null ? _mesh : _mesh = MeshExtensions.Rent());
         }
 
         private void SetDirtyAndNotifyIfBufferSizeChanged()
         {
-            if (!SoftMaskingEnabled() || !_softMaskBuffer) return;
+            if (!SoftMaskingEnabled() || _softMaskBuffer == null) return;
 
             Logger.Log(this, "SetDirtyAndNotifyIfBufferSizeChanged");
             var size = RenderTextureRepository.GetScreenSize((int)downSamplingRate);
@@ -531,7 +531,7 @@ namespace Coffee.UISoftMask
                         SetSoftMaskDirty();
                     }
 
-                    if (!_viewChangeTrigger && _rootCanvas)
+                    if (_viewChangeTrigger == null && _rootCanvas != null)
                     {
                         UpdateCanvasViewChangeTrigger(CanvasViewChangeTrigger.Find(transform));
                         SetSoftMaskDirty();
@@ -542,7 +542,7 @@ namespace Coffee.UISoftMask
                 // AntiAliasing mode: Update anti-aliasing for graphic.
                 case MaskingMode.AntiAliasing:
                 {
-                    if (!this || !graphic) return;
+                    if (this == null || graphic == null) return;
                     Utils.UpdateAntiAlias(graphic, isActiveAndEnabled, antiAliasingThreshold);
                     break;
                 }
@@ -555,13 +555,13 @@ namespace Coffee.UISoftMask
             {
                 Logger.Log(this, $"UpdateCanvasViewChangeTrigger: {_viewChangeTrigger} -> {trigger}");
 
-                if (_viewChangeTrigger)
+                if (_viewChangeTrigger != null)
                 {
                     _viewChangeTrigger.onCanvasViewChanged -=
                         _onCanvasViewChanged ?? (_onCanvasViewChanged = OnCanvasViewChanged);
                 }
 
-                if (trigger)
+                if (trigger != null)
                 {
                     trigger.onCanvasViewChanged +=
                         _onCanvasViewChanged ?? (_onCanvasViewChanged = OnCanvasViewChanged);
@@ -585,7 +585,7 @@ namespace Coffee.UISoftMask
             }
 
             // Check parent
-            if (_parent && !_parent.IsRaycastLocationValid(sp, eventCamera))
+            if (_parent != null && !_parent.IsRaycastLocationValid(sp, eventCamera))
             {
                 FrameCache.Set(this, nameof(IsRaycastLocationValid), false);
                 return false;
@@ -608,7 +608,7 @@ namespace Coffee.UISoftMask
                 Profiler.EndSample();
             }
 
-            if (_shapeContainer)
+            if (_shapeContainer != null)
             {
                 Profiler.BeginSample("(SM4UI)[SoftMask] IsRaycastLocationValid > Shapes");
                 valid = _shapeContainer.IsInside(sp, eventCamera, valid, 0.5f);
@@ -621,14 +621,14 @@ namespace Coffee.UISoftMask
 
         public override Material GetModifiedMaterial(Material baseMaterial)
         {
-            if (!isActiveAndEnabled || !graphic || !graphic.canvas) return baseMaterial;
+            if (!isActiveAndEnabled || graphic == null || graphic.canvas == null) return baseMaterial;
 
             return base.GetModifiedMaterial(baseMaterial);
         }
 
         private void SetDirtyAndNotify()
         {
-            if (!this || !isActiveAndEnabled) return;
+            if (this == null || !isActiveAndEnabled) return;
 
             SetSoftMaskDirty();
             MaskUtilities.NotifyStencilStateChanged(this);
@@ -642,7 +642,7 @@ namespace Coffee.UISoftMask
 #if UNITY_EDITOR
             EditorApplication.delayCall += () =>
             {
-                if (!this || !isActiveAndEnabled) return;
+                if (this == null || !isActiveAndEnabled) return;
                 _hasResolutionChanged = true;
                 SetDirtyAndNotify();
             };
@@ -651,13 +651,13 @@ namespace Coffee.UISoftMask
 
         public void SetSoftMaskDirty()
         {
-            if (isDirty || !this || !isActiveAndEnabled) return;
+            if (isDirty || this == null || !isActiveAndEnabled) return;
 
             Logger.LogIf(!isDirty, this, $"! SetSoftMaskDirty {GetHashCode()}");
             isDirty = true;
             for (var i = children.Count - 1; i >= 0; i--)
             {
-                if (children[i])
+                if (children[i] != null)
                 {
                     children[i].SetSoftMaskDirty();
                 }
@@ -704,12 +704,12 @@ namespace Coffee.UISoftMask
 
         private void UpdateParentSoftMask(SoftMask newParent)
         {
-            if (_parent && _parent.children.Contains(this))
+            if (_parent != null && _parent.children.Contains(this))
             {
                 _parent.children.Remove(this);
             }
 
-            if (newParent && !newParent.children.Contains(this))
+            if (newParent != null && !newParent.children.Contains(this))
             {
                 newParent.children.Add(this);
             }
@@ -730,15 +730,15 @@ namespace Coffee.UISoftMask
 
         private bool IsInScreen()
         {
-            if (graphic && graphic.IsInScreen()) return true;
-            if (_shapeContainer && _shapeContainer.IsInScreen()) return true;
+            if (graphic != null && graphic.IsInScreen()) return true;
+            if (_shapeContainer != null && _shapeContainer.IsInScreen()) return true;
 
             return false;
         }
 
         private void RenderSoftMaskBuffer()
         {
-            if (!SoftMaskingEnabled() || !graphic || !graphic.canvas) return;
+            if (!SoftMaskingEnabled() || graphic == null || graphic.canvas == null) return;
 
             if (FrameCache.TryGet(this, nameof(RenderSoftMaskBuffer), out bool _)) return;
             FrameCache.Set(this, nameof(RenderSoftMaskBuffer), true);
@@ -746,7 +746,7 @@ namespace Coffee.UISoftMask
             if (!isDirty) return;
             isDirty = false;
 
-            if (_parent)
+            if (_parent != null)
             {
                 _parent.RenderSoftMaskBuffer();
             }
@@ -823,7 +823,7 @@ namespace Coffee.UISoftMask
             if (_hasResolutionChanged)
             {
                 var p = _parent;
-                while (p)
+                while (p != null)
                 {
                     p.RenderSoftMaskBuffer(cb, eye);
                     p = p._parent;
@@ -844,10 +844,10 @@ namespace Coffee.UISoftMask
                 Profiler.EndSample();
             }
 
-            if (!_hasResolutionChanged && eye != Camera.MonoOrStereoscopicEye.Right && _parent)
+            if (!_hasResolutionChanged && eye != Camera.MonoOrStereoscopicEye.Right && _parent != null)
             {
                 Profiler.BeginSample("(SM4UI)[SoftMask] RenderSoftMaskBuffer > Copy texture from parent");
-                if (_parent.softMaskBuffer)
+                if (_parent.softMaskBuffer != null)
                 {
                     _cb.Blit(_parent.softMaskBuffer, softMaskBuffer);
                 }
@@ -865,7 +865,7 @@ namespace Coffee.UISoftMask
             }
 
             var mesh = _mesh;
-            if (mesh)
+            if (mesh != null)
             {
                 Profiler.BeginSample("(SM4UI)[SoftMask] RenderSoftMaskBuffer > Draw mesh");
                 var softMaterial = SoftMaskUtils.GetSoftMaskingMaterial(MaskingShape.MaskingMethod.Additive);
@@ -873,7 +873,7 @@ namespace Coffee.UISoftMask
                 Profiler.EndSample();
             }
 
-            if (_shapeContainer)
+            if (_shapeContainer != null)
             {
                 Profiler.BeginSample("(SM4UI)[SoftMask] RenderSoftMaskBuffer > Draw shapes");
                 _shapeContainer.DrawSoftMaskBuffer(cb, softMaskDepth);

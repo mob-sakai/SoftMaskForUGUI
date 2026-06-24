@@ -43,7 +43,7 @@ namespace Coffee.UISoftMask
             }
 
             _dirty = true;
-            m_MaskingShapes.RemoveAll(x => !x);
+            m_MaskingShapes.RemoveAll(x => x == null);
             m_MaskingShapes.Sort();
         }
 
@@ -72,7 +72,7 @@ namespace Coffee.UISoftMask
             }
 
             // If the mask is owner of the container, skip the raycast.
-            if (!_mask || !_mask.MaskEnabled() || _mask is IMaskingShapeContainerOwner)
+            if (_mask == null || !_mask.MaskEnabled() || _mask is IMaskingShapeContainerOwner)
             {
                 FrameCache.Set(this, key, true);
                 return true;
@@ -87,7 +87,7 @@ namespace Coffee.UISoftMask
         Material IMaterialModifier.GetModifiedMaterial(Material baseMaterial)
         {
             // If the terminal exists, remove pop instruction (the operation to revert the stencil).
-            if (isActiveAndEnabled && _mask && _mask.MaskEnabled() && _needTerminal)
+            if (isActiveAndEnabled && _mask != null && _mask.MaskEnabled() && _needTerminal)
             {
                 _mask.graphic.canvasRenderer.hasPopInstruction = false;
                 _mask.graphic.canvasRenderer.popMaterialCount = 0;
@@ -108,7 +108,7 @@ namespace Coffee.UISoftMask
             for (var i = 0; i < m_MaskingShapes.Count; i++)
             {
                 var maskingShape = m_MaskingShapes[i];
-                if (!maskingShape || !maskingShape.IsInside(sp, eventCamera, threshold)) continue;
+                if (maskingShape == null || !maskingShape.IsInside(sp, eventCamera, threshold)) continue;
                 switch (maskingShape.actualRaycastMethod)
                 {
                     case MaskingShape.RaycastMethod.Additive:
@@ -130,7 +130,7 @@ namespace Coffee.UISoftMask
         {
             Logger.LogIf(!_dirty, this, $"! SetContainerDirty {GetHashCode()}");
 
-            if (!_mask)
+            if (_mask == null)
             {
                 TryGetComponent(out _mask);
             }
@@ -140,14 +140,14 @@ namespace Coffee.UISoftMask
 
         private void CheckTransformChanged()
         {
-            if (!_mask) return;
+            if (_mask == null) return;
 
             var softMask = _mask as SoftMask;
             _needTerminal = false;
             for (var i = 0; i < m_MaskingShapes.Count; i++)
             {
                 var shape = m_MaskingShapes[i];
-                if (!shape || !shape.graphic || !shape.graphic.IsInScreen()) continue;
+                if (shape == null || shape.graphic == null || !shape.graphic.IsInScreen()) continue;
 
                 if (shape.hasTransformChanged)
                 {
@@ -160,9 +160,9 @@ namespace Coffee.UISoftMask
                 }
             }
 
-            if (_dirty && _mask && _mask.MaskEnabled())
+            if (_dirty && _mask != null && _mask.MaskEnabled())
             {
-                if (softMask)
+                if (softMask != null)
                 {
                     softMask.SetSoftMaskDirty();
                 }
@@ -175,17 +175,17 @@ namespace Coffee.UISoftMask
             _dirty = false;
 
             if (!_mask.MaskEnabled()
-                || (softMask && softMask.SoftMaskingEnabled() && !UISoftMaskProjectSettings.useStencilOutsideScreen))
+                || (softMask != null && softMask.SoftMaskingEnabled() && !UISoftMaskProjectSettings.useStencilOutsideScreen))
             {
                 _needTerminal = false;
             }
 
-            if (_needTerminal && !_terminal)
+            if (_needTerminal && _terminal == null)
             {
                 _terminal = FindTerminal();
             }
 
-            if (_terminal)
+            if (_terminal != null)
             {
                 _terminal.enabled = _needTerminal;
                 _terminal.transform.SetAsLastSibling();
@@ -197,7 +197,7 @@ namespace Coffee.UISoftMask
             for (var i = 0; i < m_MaskingShapes.Count; i++)
             {
                 var shape = m_MaskingShapes[i];
-                if (shape && shape.graphic && shape.graphic.IsInScreen())
+                if (shape != null && shape.graphic != null && shape.graphic.IsInScreen())
                 {
                     return true;
                 }
@@ -211,7 +211,7 @@ namespace Coffee.UISoftMask
             for (var i = m_MaskingShapes.Count - 1; i >= 0; i--)
             {
                 var shape = m_MaskingShapes[i];
-                if (!shape) m_MaskingShapes.RemoveAtFast(i);
+                if (shape == null) m_MaskingShapes.RemoveAtFast(i);
             }
 
             m_MaskingShapes.Sort();
@@ -224,7 +224,7 @@ namespace Coffee.UISoftMask
 
         public void Register(MaskingShape shape)
         {
-            if (!shape || m_MaskingShapes.Contains(shape)) return;
+            if (shape == null || m_MaskingShapes.Contains(shape)) return;
 
             m_MaskingShapes.Add(shape);
             _dirty = true;

@@ -13,7 +13,7 @@ namespace Coffee.UISoftMaskInternal
 
         private static SerializedProperty GetSerializedProperty()
         {
-            if (!s_GraphicsSettings)
+            if (s_GraphicsSettings == null)
             {
                 s_GraphicsSettings = typeof(GraphicsSettings).GetMethod("GetGraphicsSettings",
                         BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
@@ -28,7 +28,7 @@ namespace Coffee.UISoftMaskInternal
             var sp = GetSerializedProperty();
             for (var i = 0; i < sp.arraySize; i++)
             {
-                if (sp.GetArrayElementAtIndex(i).objectReferenceValue is Shader shader && shader)
+                if (sp.GetArrayElementAtIndex(i).objectReferenceValue is Shader shader && shader != null)
                 {
                     yield return shader;
                 }
@@ -73,7 +73,7 @@ namespace Coffee.UISoftMaskInternal
             var removed = 0;
             for (var i = 0; i < sp.arraySize; i++)
             {
-                if (!sp.GetArrayElementAtIndex(i).objectReferenceValue)
+                if (sp.GetArrayElementAtIndex(i).objectReferenceValue == null)
                 {
                     removed++;
                 }

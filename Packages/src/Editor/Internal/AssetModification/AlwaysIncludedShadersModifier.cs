@@ -34,7 +34,7 @@ namespace Coffee.UISoftMaskInternal.AssetModification
         protected override bool RunModify(bool dryRun)
         {
             var shader = AssetDatabase.LoadAssetAtPath<Shader>(path);
-            if (!shader) return false;
+            if (shader == null) return false;
 
             var included = AlwaysIncludedShadersProxy.GetShaders()
                 .Contains(shader);
@@ -72,7 +72,7 @@ namespace Coffee.UISoftMaskInternal.AssetModification
 
             private static SerializedProperty GetSerializedProperty()
             {
-                if (!s_GraphicsSettings)
+                if (s_GraphicsSettings == null)
                 {
                     s_GraphicsSettings = typeof(GraphicsSettings).GetMethod("GetGraphicsSettings",
                             BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
@@ -144,7 +144,7 @@ namespace Coffee.UISoftMaskInternal.AssetModification
                 var removed = 0;
                 for (var i = 0; i < sp.arraySize; i++)
                 {
-                    if (!sp.GetArrayElementAtIndex(i).objectReferenceValue)
+                    if (sp.GetArrayElementAtIndex(i).objectReferenceValue == null)
                     {
                         removed++;
                     }

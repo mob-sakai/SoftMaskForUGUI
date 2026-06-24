@@ -26,7 +26,7 @@ namespace Coffee.UISoftMask
 
         public static GraphicProxy Find(Graphic graphic)
         {
-            if (!graphic) return null;
+            if (graphic == null) return null;
 
             var count = s_Proxies.Count;
             for (var i = count - 1; i >= 0; i--)
@@ -43,7 +43,7 @@ namespace Coffee.UISoftMask
         /// </summary>
         protected virtual bool IsValid(Graphic graphic)
         {
-            return graphic;
+            return graphic != null;
         }
 
         public virtual Texture GetMainTexture(Graphic graphic)

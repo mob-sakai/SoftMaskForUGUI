@@ -44,11 +44,11 @@ namespace Coffee.UISoftMaskInternal
                 foreach (var t in TypeCache.GetTypesDerivedFrom(typeof(PreloadedProjectSettings<>)))
                 {
                     var settings = GetDefaultSettings(t);
-                    if (!settings || settings.m_PreLoadSettingsInBuild) continue;
+                    if (settings == null || settings.m_PreLoadSettingsInBuild) continue;
 
                     PlayerSettings.SetPreloadedAssets(
                         PlayerSettings.GetPreloadedAssets()
-                            .Where(x => x && x.GetType() != t)
+                            .Where(x => x != null && x.GetType() != t)
                             .ToArray());
 
                     Debug.Log($"[PreloadedProjectSettings] Build started: removed '{settings.name}' " +
@@ -222,7 +222,7 @@ namespace Coffee.UISoftMaskInternal
 
         private void OnPlayModeStateChanged(PlayModeStateChange state)
         {
-            if (!this) return;
+            if (this == null) return;
 
             switch (state)
             {
@@ -258,7 +258,7 @@ namespace Coffee.UISoftMaskInternal
 
             EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
 #else
-            if (s_Instance && s_Instance != this)
+            if (s_Instance != null && s_Instance != this)
             {
                 Destroy(s_Instance);
             }
@@ -293,7 +293,7 @@ namespace Coffee.UISoftMaskInternal
             {
                 if (_target == null)
                 {
-                    if (_editor)
+                    if (_editor != null)
                     {
                         DestroyImmediate(_editor);
                         _editor = null;

@@ -73,12 +73,12 @@ namespace Coffee.UISoftMaskInternal
         public static bool HasChanged(this Transform self, Transform baseTransform, ref Matrix4x4 prev,
             float epsilon = k_DefaultEpsilon)
         {
-            if (!self) return false;
+            if (self == null) return false;
 
-            var hash = baseTransform ? baseTransform.GetHashCode() : 0;
+            var hash = baseTransform != null ? baseTransform.GetHashCode() : 0;
             if (FrameCache.TryGet(self, nameof(HasChanged), hash, out bool result)) return result;
 
-            var matrix = baseTransform
+            var matrix = baseTransform != null
                 ? baseTransform.worldToLocalMatrix * self.localToWorldMatrix
                 : self.localToWorldMatrix;
             var current = matrix * Matrix4x4.Scale(Vector3.one * 10000);
@@ -107,7 +107,7 @@ namespace Coffee.UISoftMaskInternal
 
         public static Bounds GetRelativeBounds(this Transform self, Transform child)
         {
-            if (!self || !child)
+            if (self == null || child == null)
             {
                 return new Bounds(Vector3.zero, Vector3.zero);
             }

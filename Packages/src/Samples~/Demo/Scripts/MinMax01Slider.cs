@@ -30,13 +30,13 @@ namespace Coffee.UISoftMask
         {
             get
             {
-                if (!m_MinSlider || !m_MaxSlider) return new MinMax01(0, 1);
+                if (m_MinSlider == null || m_MaxSlider == null) return new MinMax01(0, 1);
 
                 return new MinMax01(m_MinSlider.value, m_MaxSlider.value);
             }
             set
             {
-                if (!m_MinSlider || !m_MaxSlider) return;
+                if (m_MinSlider == null || m_MaxSlider == null) return;
                 if (Mathf.Approximately(value.min, m_MinSlider.value) &&
                     Mathf.Approximately(value.max, m_MaxSlider.value))
                 {
@@ -55,8 +55,8 @@ namespace Coffee.UISoftMask
             set
             {
                 base.interactable = value;
-                if (m_MinSlider) m_MinSlider.interactable = value;
-                if (m_MaxSlider) m_MaxSlider.interactable = value;
+                if (m_MinSlider != null) m_MinSlider.interactable = value;
+                if (m_MaxSlider != null) m_MaxSlider.interactable = value;
             }
         }
 
@@ -64,7 +64,7 @@ namespace Coffee.UISoftMask
         {
             base.OnEnable();
 
-            if (m_MinSlider)
+            if (m_MinSlider != null)
             {
                 m_MinSlider.onValueChanged.AddListener(OnMinValueChanged);
                 m_MinSlider.minValue = 0;
@@ -72,7 +72,7 @@ namespace Coffee.UISoftMask
                 m_MinSlider.wholeNumbers = false;
             }
 
-            if (m_MaxSlider)
+            if (m_MaxSlider != null)
             {
                 m_MaxSlider.onValueChanged.AddListener(OnMaxValueChanged);
                 m_MaxSlider.minValue = 0;
@@ -85,12 +85,12 @@ namespace Coffee.UISoftMask
         {
             base.OnDisable();
 
-            if (m_MinSlider)
+            if (m_MinSlider != null)
             {
                 m_MinSlider.onValueChanged.RemoveListener(OnMinValueChanged);
             }
 
-            if (m_MaxSlider)
+            if (m_MaxSlider != null)
             {
                 m_MaxSlider.onValueChanged.RemoveListener(OnMaxValueChanged);
             }
@@ -113,7 +113,7 @@ namespace Coffee.UISoftMask
 
         private void OnMinValueChanged(float minValue)
         {
-            if (!m_MinSlider || !m_MaxSlider) return;
+            if (m_MinSlider == null || m_MaxSlider == null) return;
 
             m_MinSlider.SetValueWithoutNotify(Mathf.Min(minValue, m_MaxSlider.value));
             InvokeValueChanged();
@@ -121,7 +121,7 @@ namespace Coffee.UISoftMask
 
         private void OnMaxValueChanged(float maxValue)
         {
-            if (!m_MinSlider || !m_MaxSlider) return;
+            if (m_MinSlider == null || m_MaxSlider == null) return;
 
             m_MaxSlider.SetValueWithoutNotify(Mathf.Max(maxValue, m_MinSlider.value));
             InvokeValueChanged();
@@ -129,14 +129,14 @@ namespace Coffee.UISoftMask
 
         private void InvokeValueChanged()
         {
-            if (!m_MinSlider || !m_MaxSlider) return;
+            if (m_MinSlider == null || m_MaxSlider == null) return;
 
             m_OnValueChanged.Invoke(new MinMax01(m_MinSlider.value, m_MaxSlider.value));
         }
 
         private void UpdateDrag(PointerEventData eventData, Camera cam)
         {
-            if (!m_MinSlider || !m_MaxSlider || !m_Background) return;
+            if (m_MinSlider == null || m_MaxSlider == null || m_Background == null) return;
 
             var axisIndex = (int)m_MinSlider.direction / 2;
             var fillSize = m_Background.rect.size[axisIndex];
@@ -177,8 +177,8 @@ namespace Coffee.UISoftMask
         {
             return isActiveAndEnabled
                    && eventData.button == PointerEventData.InputButton.Left
-                   && m_MinSlider && m_MinSlider.IsInteractable()
-                   && m_MaxSlider && m_MaxSlider.IsInteractable();
+                   && m_MinSlider != null && m_MinSlider.IsInteractable()
+                   && m_MaxSlider != null && m_MaxSlider.IsInteractable();
         }
 
         [Serializable]
@@ -191,8 +191,8 @@ namespace Coffee.UISoftMask
         {
             base.OnValidate();
 
-            if (m_MinSlider) m_MinSlider.interactable = interactable;
-            if (m_MaxSlider) m_MaxSlider.interactable = interactable;
+            if (m_MinSlider != null) m_MinSlider.interactable = interactable;
+            if (m_MaxSlider != null) m_MaxSlider.interactable = interactable;
         }
 
         [CanEditMultipleObjects]
@@ -225,7 +225,7 @@ namespace Coffee.UISoftMask
                 var minSlider = _minSlider.objectReferenceValue as Slider;
                 var maxSlider = _maxSlider.objectReferenceValue as Slider;
 
-                if (minSlider && maxSlider)
+                if (minSlider != null && maxSlider != null)
                 {
                     var minValue = minSlider.value;
                     var maxValue = maxSlider.value;

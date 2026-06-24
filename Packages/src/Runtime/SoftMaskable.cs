@@ -80,10 +80,10 @@ namespace Coffee.UISoftMask
                 if (m_IgnoreSelf) return true;
 
                 RecalculateStencilIfNeeded();
-                if (!_softMask || !_softMask.isActiveAndEnabled) return true;
+                if (_softMask == null || !_softMask.isActiveAndEnabled) return true;
 
                 var tr = transform.parent;
-                while (tr)
+                while (tr != null)
                 {
                     if (tr.TryGetComponent<SoftMaskable>(out var parent) && parent.ignoreChildren)
                     {
@@ -162,7 +162,7 @@ namespace Coffee.UISoftMask
         private void OnDisable()
         {
             UIExtraCallbacks.onBeforeCanvasRebuild -= _checkGraphic ?? (_checkGraphic = CheckGraphic);
-            if (_graphic)
+            if (_graphic != null)
             {
                 _graphic.SetMaterialDirty();
             }
@@ -214,7 +214,7 @@ namespace Coffee.UISoftMask
                 return baseMaterial;
             }
 
-            if (!isActiveAndEnabled || !_graphic || !_graphic.canvas || !_graphic.maskable || isTerminal ||
+            if (!isActiveAndEnabled || _graphic == null || _graphic.canvas == null || !_graphic.maskable || isTerminal ||
                 baseMaterial == null || ignored)
             {
                 MaterialRepository.Release(ref _maskableMaterial);
@@ -222,7 +222,7 @@ namespace Coffee.UISoftMask
             }
 
             RecalculateStencilIfNeeded();
-            var softMaskDepth = _softMask ? _softMask.softMaskDepth : -1;
+            var softMaskDepth = _softMask != null ? _softMask.softMaskDepth : -1;
             if (softMaskDepth < 0 || 4 <= softMaskDepth)
             {
                 _softMaskDepth = -1;
@@ -327,7 +327,7 @@ namespace Coffee.UISoftMask
 
         private void CheckGraphic()
         {
-            if (_graphic || !TryGetComponent(out _graphic)) return;
+            if (_graphic != null || !TryGetComponent(out _graphic)) return;
 
             UIExtraCallbacks.onBeforeCanvasRebuild -= _checkGraphic ?? (_checkGraphic = CheckGraphic);
             gameObject.AddComponent<SoftMaskable>();
@@ -336,14 +336,14 @@ namespace Coffee.UISoftMask
 
         public void SetMaterialDirty()
         {
-            if (!isActiveAndEnabled || !_graphic) return;
+            if (!isActiveAndEnabled || _graphic == null) return;
             _graphic.SetMaterialDirty();
             Misc.QueuePlayerLoopUpdate();
         }
 
         public void SetMaterialDirtyForChildren()
         {
-            if (!isActiveAndEnabled || !_graphic) return;
+            if (!isActiveAndEnabled || _graphic == null) return;
 
             var childCount = transform.childCount;
             for (var i = 0; i < childCount; i++)
@@ -379,10 +379,10 @@ namespace Coffee.UISoftMask
         private static readonly int s_GameVp2 = Shader.PropertyToID("_GameVP_2");
         private void UpdateSceneViewMatrix()
         {
-            if (!_graphic || !_graphic.canvas || !_maskableMaterial) return;
+            if (_graphic == null || _graphic.canvas == null || _maskableMaterial == null) return;
 
             var mat = _graphic.GetMaterialForRendering();
-            if (!mat || FrameCache.TryGet(mat, nameof(UpdateSceneViewMatrix), out bool _))
+            if (mat == null || FrameCache.TryGet(mat, nameof(UpdateSceneViewMatrix), out bool _))
             {
                 return;
             }
@@ -394,7 +394,7 @@ namespace Coffee.UISoftMask
                 Profiler.BeginSample("(SM4UI)[SoftMaskable] (Editor) UpdateSceneViewMatrix > Calc GameVp");
                 var rt = canvas.transform as RectTransform;
                 var cam = canvas.worldCamera;
-                if (canvas && canvas.renderMode != RenderMode.ScreenSpaceOverlay && cam)
+                if (canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay && cam != null)
                 {
                     var eye = isStereo ? Camera.MonoOrStereoscopicEye.Left : Camera.MonoOrStereoscopicEye.Mono;
                     canvas.GetViewProjectionMatrix(eye, out var vMatrix, out var pMatrix);

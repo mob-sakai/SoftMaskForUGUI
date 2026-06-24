@@ -14,7 +14,7 @@ namespace Coffee.UISoftMask
         /// </summary>
         protected override bool IsValid(Graphic graphic)
         {
-            if (!graphic) return false;
+            if (graphic == null) return false;
             if (graphic is TextMeshProUGUI || graphic is TMP_SubMeshUI) return true;
 
             return false;
@@ -29,10 +29,10 @@ namespace Coffee.UISoftMask
         public override Texture GetMainTexture(Graphic graphic)
         {
             var cr = graphic.canvasRenderer;
-            if (!cr || cr.materialCount == 0) return null;
+            if (cr == null || cr.materialCount == 0) return null;
 
             var mat = cr.GetMaterial(0);
-            if (!mat) return null;
+            if (mat == null) return null;
 
             return mat.mainTexture;
         }

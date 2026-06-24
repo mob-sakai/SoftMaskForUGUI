@@ -11,7 +11,7 @@ namespace Coffee.UISoftMask
             base.OnInspectorGUI();
 
             var current = target as AlphaHitTestTarget;
-            if (!current) return;
+            if (current == null) return;
 
             Utils.DrawAlphaHitTestWarning(current.graphic);
         }

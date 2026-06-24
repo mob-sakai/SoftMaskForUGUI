@@ -17,7 +17,7 @@ namespace Coffee.UISoftMask
         /// </summary>
         public static void UpdateAntiAlias(Graphic graphic, bool enabled, float threshold)
         {
-            if (!graphic) return;
+            if (graphic == null) return;
 
             var canvasRenderer = graphic.canvasRenderer;
             var currentColor = canvasRenderer.GetColor();
@@ -57,11 +57,11 @@ namespace Coffee.UISoftMask
             var depth = 0;
             var stencilBits = 0;
             var tr = includeSelf ? transform : transform.parent;
-            while (tr)
+            while (tr != null)
             {
                 if (tr.TryGetComponent<Mask>(out var mask) && mask.MaskEnabled())
                 {
-                    if (!nearestMask)
+                    if (nearestMask == null)
                     {
                         nearestMask = mask;
                     }
@@ -69,7 +69,7 @@ namespace Coffee.UISoftMask
                     stencilBits = 0 < depth++ ? stencilBits << 1 : 0;
                     if (mask is SoftMask softMask && softMask.SoftMaskingEnabled())
                     {
-                        if (!nearestSoftMask)
+                        if (nearestSoftMask == null)
                         {
                             nearestSoftMask = softMask;
                         }
@@ -97,7 +97,7 @@ namespace Coffee.UISoftMask
 
         public static bool AlphaHitTestValid(Graphic src, Vector2 sp, Camera eventCamera, float threshold)
         {
-            if (!src || !src.IsActive()) return false;
+            if (src == null || !src.IsActive()) return false;
             if (!(src is Image || src is RawImage)) return true;
 
             if (FrameCache.TryGet(src, nameof(AlphaHitTestValid), out bool valid))
@@ -120,10 +120,10 @@ namespace Coffee.UISoftMask
 
         private static bool AlphaHitTestValid(Image src, Vector2 sp, Camera eventCamera, float threshold)
         {
-            if (!src) return true;
+            if (src == null) return true;
 
             var texture = src.overrideSprite.GetActualTexture();
-            if (!texture) return true;
+            if (texture == null) return true;
             if (GraphicsFormatUtility.IsCrunchFormat(texture.format) || !texture.isReadable) return false;
 
             var origin = src.alphaHitTestMinimumThreshold;
@@ -187,19 +187,19 @@ namespace Coffee.UISoftMask
                 return $"{src.GetType().Name} is not supported type for alpha hit test.";
             }
 
-            if (src is Image image && image)
+            if (src is Image image && image != null)
             {
-                var atlas = image.overrideSprite
+                var atlas = image.overrideSprite != null
                     ? image.overrideSprite.GetActiveAtlas()
                     : null;
-                if (atlas && atlas.GetPackingSettings().enableTightPacking)
+                if (atlas != null && atlas.GetPackingSettings().enableTightPacking)
                 {
                     return $"Tight packed sprite atlas '{atlas.name}' is not supported.";
                 }
             }
 
             var tex = src.GetActualMainTexture();
-            if (!tex)
+            if (tex == null)
             {
                 return "No texture is assigned.";
             }
@@ -219,7 +219,7 @@ namespace Coffee.UISoftMask
 
         public static void DrawAlphaHitTestWarning(Graphic graphic)
         {
-            if (!graphic) return;
+            if (graphic == null) return;
 
             var warn = GetWarningMessage(graphic);
             if (string.IsNullOrEmpty(warn)) return;
@@ -229,15 +229,15 @@ namespace Coffee.UISoftMask
                 EditorGUILayout.HelpBox(warn, MessageType.Warning);
                 if (GUILayout.Button("Select"))
                 {
-                    if (graphic is Image image && image)
+                    if (graphic is Image image && image != null)
                     {
                         var sprite = image.overrideSprite;
-                        if (sprite)
+                        if (sprite != null)
                         {
                             Selection.activeObject = sprite.GetActiveAtlas();
                         }
 
-                        if (!Selection.activeObject)
+                        if (Selection.activeObject == null)
                         {
                             Selection.activeObject = image.GetActualMainTexture();
                         }

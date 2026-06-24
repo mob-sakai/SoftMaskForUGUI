@@ -142,7 +142,7 @@ namespace Coffee.UISoftMask
         private void Fit()
         {
             // TODO; Child warning.
-            if (!m_Target || !_rectTransform || m_Target.IsChildOf(_rectTransform)) return;
+            if (m_Target == null || _rectTransform == null || m_Target.IsChildOf(_rectTransform)) return;
 
             Profiler.BeginSample("(SM4UI)[RectTransformFitter] Fit");
 
@@ -180,7 +180,7 @@ namespace Coffee.UISoftMask
             {
                 var parent = _rectTransform.parent;
                 var s1 = m_Target.lossyScale;
-                var s2 = parent ? parent.lossyScale : Vector3.one;
+                var s2 = parent != null ? parent.lossyScale : Vector3.one;
                 var localScale = _rectTransform.localScale;
                 if (0 < (m_TargetProperties & RectTransformProperties.ScaleX))
                 {

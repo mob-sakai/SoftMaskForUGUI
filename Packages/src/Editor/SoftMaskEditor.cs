@@ -48,7 +48,7 @@ namespace Coffee.UISoftMask
             var current = target as SoftMask;
             if (current == null) return;
 
-            if (!current.graphic || !current.graphic.IsActive())
+            if (current.graphic == null || !current.graphic.IsActive())
             {
                 EditorGUILayout.HelpBox("Masking disabled due to Graphic component being disabled.",
                     MessageType.Warning);
@@ -135,7 +135,7 @@ namespace Coffee.UISoftMask
 
         private static bool IsMaskUI(Object obj)
         {
-            return obj
+            return obj != null
                    && obj.name == "UIMask"
                    && AssetDatabase.GetAssetPath(obj) == "Resources/unity_builtin_extra";
         }
@@ -158,7 +158,7 @@ namespace Coffee.UISoftMask
                     var depth = current.softMaskDepth;
                     var colorMask = GetColorMask(depth);
 
-                    if (tex)
+                    if (tex != null)
                     {
                         GUILayout.Label($"{tex.name} (Depth: {depth} {colorMask})");
                         var aspectRatio = (float)tex.width / tex.height;
@@ -189,19 +189,19 @@ namespace Coffee.UISoftMask
                 return $"{src.GetType().Name} is not supported type for alpha hit test.";
             }
 
-            if (src is Image image && image)
+            if (src is Image image && image != null)
             {
-                var atlas = image.overrideSprite
+                var atlas = image.overrideSprite != null
                     ? image.overrideSprite.GetActiveAtlas()
                     : null;
-                if (atlas && atlas.GetPackingSettings().enableTightPacking)
+                if (atlas != null && atlas.GetPackingSettings().enableTightPacking)
                 {
                     return $"Tight packed sprite atlas '{atlas.name}' is not supported.";
                 }
             }
 
             var tex = src.GetActualMainTexture();
-            if (!tex)
+            if (tex == null)
             {
                 return "No texture is assigned.";
             }
@@ -221,7 +221,7 @@ namespace Coffee.UISoftMask
 
         public static void DrawAlphaHitTestWarning(Graphic graphic)
         {
-            if (!graphic) return;
+            if (graphic == null) return;
 
             var warn = GetWarningMessage(graphic);
             if (string.IsNullOrEmpty(warn)) return;
@@ -230,15 +230,15 @@ namespace Coffee.UISoftMask
             EditorGUILayout.HelpBox(warn, MessageType.Warning);
             if (GUILayout.Button("Select"))
             {
-                if (graphic is Image image && image)
+                if (graphic is Image image && image != null)
                 {
                     var sprite = image.overrideSprite;
-                    if (sprite)
+                    if (sprite != null)
                     {
                         Selection.activeObject = sprite.GetActiveAtlas();
                     }
 
-                    if (!Selection.activeObject)
+                    if (Selection.activeObject == null)
                     {
                         Selection.activeObject = image.GetActualMainTexture();
                     }

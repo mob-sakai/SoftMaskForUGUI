@@ -39,7 +39,7 @@ namespace Coffee.UISoftMask
                     break;
             }
 
-            if (m_CustomTarget)
+            if (m_CustomTarget != null)
             {
                 m_CustomTarget.localPosition += delta;
             }

@@ -29,7 +29,7 @@ namespace Coffee.UISoftMask
 
         protected override void OnEnable()
         {
-            if (!s_SharedTerminalMaterial)
+            if (s_SharedTerminalMaterial == null)
             {
                 var shader = UISoftMaskProjectSettings.shaderRegistry
                     .FindShaderByName("Hidden/UI/TerminalMaskingShape");
@@ -53,7 +53,7 @@ namespace Coffee.UISoftMask
         protected override void OnDisable()
         {
             base.OnDisable();
-            if (_parentMask && _parentMask.MaskEnabled())
+            if (_parentMask != null && _parentMask.MaskEnabled())
             {
                 _parentMask.graphic.SetMaterialDirty();
             }
@@ -98,7 +98,7 @@ namespace Coffee.UISoftMask
             }
 
             RecalculateStencilIfNeeded();
-            if ((_stencilBits == 0 && !_mask) || _parentMask != _mask)
+            if ((_stencilBits == 0 && _mask == null) || _parentMask != _mask)
             {
                 StencilMaterial.Remove(m_MaskMaterial);
                 m_MaskMaterial = null;
