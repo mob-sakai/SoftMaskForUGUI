@@ -1,3 +1,16 @@
+# [3.6.0](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.5.1...3.6.0) (2026-06-25)
+
+
+### Bug Fixes
+
+* Support for skipping "reload domain" ([c417f71](https://github.com/mob-sakai/SoftMaskForUGUI/commit/c417f7109ce86493a1ae41a62673e4c8cc9e71be))
+* when a graphic material is changed, the SoftMask will be marked as dirty ([81b3f87](https://github.com/mob-sakai/SoftMaskForUGUI/commit/81b3f8782ede135ce94a9009621138e7637ba107)), closes [#250](https://github.com/mob-sakai/SoftMaskForUGUI/issues/250)
+
+
+### Features
+
+* add option to remove from preloadedAssets when build player ([3d553ea](https://github.com/mob-sakai/SoftMaskForUGUI/commit/3d553eaa605b34b8fcafb93ad065a8742f89c204)), closes [#267](https://github.com/mob-sakai/SoftMaskForUGUI/issues/267)
+
 ## [3.5.1](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.5.0...3.5.1) (2026-06-12)
 
 
