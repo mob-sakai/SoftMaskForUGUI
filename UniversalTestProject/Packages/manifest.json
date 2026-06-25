@@ -1,7 +1,13 @@
 {
   "dependencies": {
+    "com.coffee.nano-monitor": "https://github.com/mob-sakai/Coffee.Internal.git?path=Packages/NanoMonitor",
     "com.coffee.softmask-for-ugui": "file:../../Packages/src",
-    "com.unity.ide.rider": "3.0.34",
-    "com.unity.render-pipelines.universal": "16.0.6"
+    "com.coffee.symbolic-linker": "https://github.com/mob-sakai/Coffee.Internal.git?path=Packages/SymbolicLinker",
+    "com.esotericsoftware.spine.spine-csharp": "https://github.com/EsotericSoftware/spine-runtimes.git?path=spine-csharp/src#4.2",
+    "com.esotericsoftware.spine.spine-unity": "https://github.com/EsotericSoftware/spine-runtimes.git?path=spine-unity/Assets/Spine#4.2",
+    "com.unity.addressables": "2.9.1",
+    "com.unity.ide.rider": "3.0.40",
+    "com.unity.render-pipelines.universal": "17.3.0",
+    "com.unity.modules.animation": "1.0.0"
   }
 }

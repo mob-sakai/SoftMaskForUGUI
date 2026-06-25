@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b29e98153ec2fbd44b8f7da1b41194e8, type: 3}
+  m_Name: SpineSettings
+  m_EditorClassIdentifier: spine-unity-editor::Spine.Unity.Editor.SpinePreferences
+  defaultScale: 0.01
+  defaultMix: 0.2
+  defaultShader: Spine/Skeleton
+  defaultZSpacing: 0
+  defaultInstantiateLoop: 1
+  defaultPhysicsPositionInheritance: {x: 1, y: 1}
+  defaultPhysicsRotationInheritance: 1
+  showHierarchyIcons: 1
+  reloadAfterPlayMode: 1
+  setTextureImporterSettings: 1
+  textureSettingsReference: 
+  fixPrefabOverrideViaMeshFilter: 0
+  removePrefabPreviewMeshes: 0
+  applyAdditiveMaterial: 0
+  blendModeMaterialMultiply: {fileID: 0}
+  blendModeMaterialScreen: {fileID: 0}
+  blendModeMaterialAdditive: {fileID: 0}
+  atlasTxtImportWarning: 1
+  textureImporterWarning: 1
+  componentMaterialWarning: 1
+  skeletonDataAssetNoFileError: 1
+  autoReloadSceneSkeletons: 1
+  handleScale: 1
+  mecanimEventIncludeFolderName: 1
+  timelineDefaultMixDuration: 0
+  timelineUseBlendDuration: 1

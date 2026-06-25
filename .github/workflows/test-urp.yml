@@ -7,7 +7,7 @@ run-name: 🧪 Test URP (${{ github.event.pull_request.title || github.ref_name 
 
 env:
   # MINIMUM_VERSION: The minimum version of Unity.
-  MINIMUM_VERSION: 2023.1
+  MINIMUM_VERSION: 6000.1
   # EXCLUDE_FILTER: The excluded versions of Unity.
   EXCLUDE_FILTER: '(2020.2.0|2021.1|2023.3)'
   PROJECT_PATH: UniversalTestProject
