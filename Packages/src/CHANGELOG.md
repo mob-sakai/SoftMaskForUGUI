@@ -1,3 +1,10 @@
+## [3.6.1](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.6.0...3.6.1) (2026-06-28)
+
+
+### Bug Fixes
+
+* support "disable domain reload" on Unity 6.6 or later ([e07c5c6](https://github.com/mob-sakai/SoftMaskForUGUI/commit/e07c5c6162db52f775921862a6a5e0d6a806ba11))
+
 # [3.6.0](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.5.1...3.6.0) (2026-06-25)
 
 
