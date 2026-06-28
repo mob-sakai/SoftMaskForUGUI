@@ -34,6 +34,7 @@ namespace Coffee.UISoftMask.Demos
 
 
 #if UNITY_EDITOR && UNITY_2019_3_OR_NEWER
+        [InitializeOnLoadMethod]
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
 #elif UNITY_EDITOR
         [InitializeOnLoadMethod]
