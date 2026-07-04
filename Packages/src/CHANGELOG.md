@@ -1,3 +1,10 @@
+## [3.6.2](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.6.1...3.6.2) (2026-07-04)
+
+
+### Bug Fixes
+
+* TextMeshPro support is not working ([aa10380](https://github.com/mob-sakai/SoftMaskForUGUI/commit/aa103804d0fa8740b4574ff4f9bf66e6f946a5c7))
+
 ## [3.6.1](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.6.0...3.6.1) (2026-06-28)
 
 
