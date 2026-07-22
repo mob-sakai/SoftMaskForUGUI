@@ -279,18 +279,23 @@ namespace Coffee.UISoftMaskInternal
             if (m_Asset == null) return;
             var so = new SerializedObject(m_Asset);
             var shaders = so.FindProperty("m_Shaders");
-            m_RegisteredShaders.Clear();
-            for (var i = 0; i < shaders.arraySize; i++)
+
+            // Get all shaders in the SVC, ignoring nulls and duplicates.
+            var shadersInSVC = Enumerable.Range(0, shaders.arraySize)
+                .Select(i =>
+                    shaders.GetArrayElementAtIndex(i).FindPropertyRelative("first").objectReferenceValue as Shader)
+                .Where(s => s != null)
+                .Distinct()
+                .ToList();
+
+            // If the registered shaders are already in sync with the SVC, no need to update.
+            if (m_RegisteredShaders.SequenceEqual(shadersInSVC))
             {
-                var shaderRef = shaders.GetArrayElementAtIndex(i)
-                    .FindPropertyRelative("first")
-                    .objectReferenceValue as Shader;
-                if (shaderRef != null && !m_RegisteredShaders.Contains(shaderRef))
-                {
-                    m_RegisteredShaders.Add(shaderRef);
-                }
+                return;
             }
 
+            m_RegisteredShaders.Clear();
+            m_RegisteredShaders.AddRange(shadersInSVC);
             EditorUtility.SetDirty(owner);
         }
 
