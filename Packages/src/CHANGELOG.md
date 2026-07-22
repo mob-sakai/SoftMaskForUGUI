@@ -1,3 +1,10 @@
+## [3.6.3](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.6.2...3.6.3) (2026-07-22)
+
+
+### Bug Fixes
+
+* infinite asset import loop caused by unchanged ProjectSettings being marked dirty ([6360b2c](https://github.com/mob-sakai/SoftMaskForUGUI/commit/6360b2c762c26ec4a4a56cfe42fe9224db70e0d2)), closes [#271](https://github.com/mob-sakai/SoftMaskForUGUI/issues/271)
+
 ## [3.6.2](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.6.1...3.6.2) (2026-07-04)
 
 
