@@ -60,9 +60,9 @@ jobs:
         id: setup
         run: |
           echo "==== Target Unity Versions ===="
-          LATEST_VERSIONS=`npx -y unity-changeset@latest list --json --versions --all --latest-patch --ignore-alpha --min ${MINIMUM_VERSION}`
+          LATEST_VERSIONS=`npx -y unity-changeset@latest list --json --versions --all --latest-patch --min ${MINIMUM_VERSION}`
           if [ "${{ inputs.usePeriodVersions }}" = "true" ]; then
-            ADDITIONAL_VERSIONS=`npx -y unity-changeset@latest list --json --versions --ignore-alpha --min ${MINIMUM_VERSION} --grep '0f'`
+            ADDITIONAL_VERSIONS=`npx -y unity-changeset@latest list --json --versions --min ${MINIMUM_VERSION} --grep '0f'`
           else
             ADDITIONAL_VERSIONS=[]
           fi
@@ -97,7 +97,7 @@ jobs:
             ${{ env.PROJECT_PATH }}-Library-
 
       - name: 🛠️ Build Unity Project (Test)
-        uses: game-ci/unity-builder@main
+        uses: mob-sakai/unity-builder@fix/support-unity6.6
         timeout-minutes: 45
         with:
           customImage: ghcr.io/mob-sakai/unity3d:${{ matrix.unityVersion }}
@@ -111,7 +111,7 @@ jobs:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
 
       # - name: 🧪 Run tests
-      #   uses: game-ci/unity-test-runner@main
+      #   uses: mob-sakai/unity-test-runner@fix/support-unity6.6
       #   timeout-minutes: 45
       #   with:
       #     customImage: ghcr.io/mob-sakai/unity3d:${{ matrix.unityVersion }}

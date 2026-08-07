@@ -21,5 +21,6 @@ EditorBuildSettings:
     path: Assets/Demos/VsRectMask2D/VsRectMask2D.unity
     guid: daafbe503cab94e0d9093a5735eb85b0
   m_configObjects:
-    com.unity.addressableassets: {fileID: 11400000, guid: cf50c9fe341d9486f856f50111a5f553,
+    com.unity.addressableassets: {fileID: 11400000, guid: ec98517cfd68f42b8a8481093911ffdd,
       type: 2}
+  m_UseUCBPForAssetBundles: 0
