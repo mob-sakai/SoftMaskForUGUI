@@ -1,95 +1,81 @@
 Doi.png
 	size: 1024, 512
 	filter: Linear, Linear
-	pma: true
 armL
-	bounds: 2, 36, 163, 133
+	bounds: 502, 208, 163, 133
 armR
-	bounds: 167, 36, 133, 109
-	rotate: 90
+	bounds: 852, 232, 133, 109
 arrow
-	bounds: 609, 334, 64, 85
+	bounds: 853, 25, 64, 85
 body
-	bounds: 2, 171, 274, 339
+	bounds: 2, 2, 274, 339
 bootR
-	bounds: 783, 426, 91, 84
+	bounds: 598, 72, 91, 84
 browL
-	bounds: 126, 12, 40, 22
+	bounds: 278, 13, 40, 22
 browR
-	bounds: 2, 2, 32, 25
-	rotate: 90
+	bounds: 723, 24, 32, 25
 eyelids closed
-	bounds: 278, 191, 183, 92
+	bounds: 667, 249, 183, 92
 eyelids open
-	bounds: 502, 421, 176, 89
+	bounds: 667, 158, 176, 89
 hairL
-	bounds: 548, 239, 54, 60
+	bounds: 583, 10, 54, 60
 hairL2
-	bounds: 385, 49, 71, 76
+	bounds: 467, 27, 71, 76
 hairM
-	bounds: 876, 433, 96, 77
+	bounds: 278, 37, 96, 77
 hairM blob
-	bounds: 29, 4, 30, 45
-	rotate: 90
+	bounds: 598, 161, 30, 45
 hairM blobS
-	bounds: 448, 146, 16, 20
+	bounds: 958, 13, 16, 20
 hairR
-	bounds: 974, 427, 41, 83
+	bounds: 540, 20, 41, 83
 hairR2
-	bounds: 680, 416, 94, 101
-	rotate: 90
+	bounds: 502, 105, 94, 101
 hairSide
-	bounds: 76, 10, 48, 24
+	bounds: 765, 132, 48, 24
 head
-	bounds: 278, 285, 222, 225
+	bounds: 278, 116, 222, 225
 indexL
-	bounds: 640, 260, 24, 36
+	bounds: 919, 74, 24, 36
 indexR
-	bounds: 207, 6, 34, 28
+	bounds: 630, 178, 34, 28
 inmouth
-	bounds: 548, 191, 46, 55
-	rotate: 90
+	bounds: 639, 15, 46, 55
 irisL
-	bounds: 609, 298, 34, 47
-	rotate: 90
+	bounds: 987, 245, 34, 47
 irisL flatspec
-	bounds: 278, 41, 19, 10
+	bounds: 987, 233, 19, 10
 irisL spec
-	bounds: 448, 168, 18, 21
+	bounds: 346, 14, 18, 21
 irisR
-	bounds: 604, 249, 34, 47
+	bounds: 987, 294, 34, 47
 irisR flatspec
-	bounds: 502, 288, 22, 11
+	bounds: 765, 119, 22, 11
 irisR spec
-	bounds: 448, 127, 16, 17
+	bounds: 630, 159, 16, 17
 middleL
-	bounds: 243, 8, 26, 36
-	rotate: 90
+	bounds: 815, 120, 26, 36
 middleR
-	bounds: 766, 342, 34, 26
-	rotate: 90
+	bounds: 687, 23, 34, 26
 mouth
-	bounds: 675, 331, 89, 83
+	bounds: 376, 31, 89, 83
 nose
-	bounds: 658, 322, 11, 10
+	bounds: 1008, 233, 11, 10
 pinkyL
-	bounds: 605, 191, 24, 27
-	rotate: 90
+	bounds: 320, 8, 24, 27
 pony1
-	bounds: 278, 53, 72, 105
-	rotate: 90
+	bounds: 691, 51, 72, 105
 pony2
-	bounds: 463, 197, 86, 83
-	rotate: 90
+	bounds: 765, 27, 86, 83
 ringL
-	bounds: 605, 217, 26, 30
+	bounds: 996, 30, 26, 30
 rotate
-	bounds: 502, 301, 105, 118
+	bounds: 845, 112, 105, 118
 strap
-	bounds: 278, 127, 62, 168
-	rotate: 90
+	bounds: 952, 62, 62, 168
 thumbL
-	bounds: 168, 6, 37, 28
+	bounds: 919, 32, 37, 28
 thumbR
-	bounds: 766, 378, 36, 25
-	rotate: 90
+	bounds: 958, 35, 36, 25
