@@ -1,3 +1,10 @@
+## [3.6.4](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.6.3...3.6.4) (2026-08-07)
+
+
+### Bug Fixes
+
+* support Unity 6.6 ([c9ef2f3](https://github.com/mob-sakai/SoftMaskForUGUI/commit/c9ef2f36ddd0e29cb26c3ed423f7ae20aa2da6bb)), closes [#272](https://github.com/mob-sakai/SoftMaskForUGUI/issues/272)
+
 ## [3.6.3](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.6.2...3.6.3) (2026-07-22)
 
 
