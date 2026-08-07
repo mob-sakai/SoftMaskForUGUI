@@ -139,6 +139,11 @@ namespace Coffee.UISoftMask
 
         bool ILayoutIgnorer.ignoreLayout => true;
 
+#if UNITY_6000_6_OR_NEWER
+        float ILayoutElement.maxWidth => LayoutUtility.DefaultMaxSize;
+        float ILayoutElement.maxHeight => LayoutUtility.DefaultMaxSize;
+#endif
+
         private void Fit()
         {
             // TODO; Child warning.

@@ -9,6 +9,10 @@ namespace Coffee.UISoftMask
 {
     internal sealed class TmpProxy : GraphicProxy
     {
+#if UNITY_6000_6_OR_NEWER
+        private static readonly VertexHelper s_VertexHelper = new VertexHelper();
+#endif
+
         /// <summary>
         /// Check if the graphic is valid for this proxy.
         /// </summary>
@@ -51,6 +55,11 @@ namespace Coffee.UISoftMask
         {
             var subMeshes = InternalListPool<TMP_SubMeshUI>.Rent();
             text.GetComponentsInChildren(subMeshes, 1);
+            if (subMeshes.Count == 0)
+            {
+                InternalListPool<TMP_SubMeshUI>.Return(ref subMeshes);
+                return;
+            }
 
             for (var i = 0; i < subMeshes.Count; i++)
             {
@@ -58,9 +67,14 @@ namespace Coffee.UISoftMask
                 maskingShape.hideFlags = HideFlags.NotEditable;
                 maskingShape.enabled = parent.enabled;
                 maskingShape.parent = parent;
+#if UNITY_6000_6_OR_NEWER
+                subMeshes[i].mesh.CopyTo(s_VertexHelper);
+                (maskingShape as IMeshModifier).ModifyMesh(s_VertexHelper);
+#else
 #pragma warning disable CS0618
                 (maskingShape as IMeshModifier).ModifyMesh(subMeshes[i].mesh);
 #pragma warning restore CS0618
+#endif
             }
 
             InternalListPool<TMP_SubMeshUI>.Return(ref subMeshes);
@@ -72,16 +86,26 @@ namespace Coffee.UISoftMask
 
             if (text.TryGetComponent<SoftMask>(out var sm))
             {
+#if UNITY_6000_6_OR_NEWER
+                text.mesh.CopyTo(s_VertexHelper);
+                (sm as IMeshModifier).ModifyMesh(s_VertexHelper);
+#else
 #pragma warning disable CS0618
                 (sm as IMeshModifier).ModifyMesh(text.mesh);
 #pragma warning restore CS0618
+#endif
                 UpdateSubMeshUI(text, sm);
             }
             else if (text.TryGetComponent<MaskingShape>(out var ms))
             {
+#if UNITY_6000_6_OR_NEWER
+                text.mesh.CopyTo(s_VertexHelper);
+                (ms as IMeshModifier).ModifyMesh(s_VertexHelper);
+#else
 #pragma warning disable CS0618
                 (ms as IMeshModifier).ModifyMesh(text.mesh);
 #pragma warning restore CS0618
+#endif
                 UpdateSubMeshUI(text, ms);
             }
         }

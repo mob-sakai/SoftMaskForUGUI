@@ -88,6 +88,11 @@ namespace Coffee.UISoftMask
             _shouldRecalculateStencil = true;
         }
 
+#if UNITY_6000_6_OR_NEWER
+        float ILayoutElement.maxWidth => LayoutUtility.DefaultMaxSize;
+        float ILayoutElement.maxHeight => LayoutUtility.DefaultMaxSize;
+#endif
+
         public override Material GetModifiedMaterial(Material baseMaterial)
         {
             if (!IsActive())
