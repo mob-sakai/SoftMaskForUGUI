@@ -1,3 +1,10 @@
+## [3.6.5](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.6.4...3.6.5) (2026-08-27)
+
+
+### Bug Fixes
+
+* ignore shader registry order changes ([62d9f16](https://github.com/mob-sakai/SoftMaskForUGUI/commit/62d9f162b05a216e963f2a9a59495892cfba4be2)), closes [#273](https://github.com/mob-sakai/SoftMaskForUGUI/issues/273)
+
 ## [3.6.4](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.6.3...3.6.4) (2026-08-07)
 
 
