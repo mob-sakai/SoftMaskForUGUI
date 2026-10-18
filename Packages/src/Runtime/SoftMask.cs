@@ -391,6 +391,8 @@ namespace Coffee.UISoftMask
 
         protected override void OnDestroy()
         {
+            // Always detach before clearing the cached delegate, even if already disabled.
+            UpdateCanvasViewChangeTrigger(null);
             InternalListPool<SoftMask>.Return(ref _children);
             _onBeforeCanvasRebuild = null;
             _renderSoftMaskBuffer = null;
@@ -433,6 +435,9 @@ namespace Coffee.UISoftMask
 
         protected override void OnTransformParentChanged()
         {
+            // Hierarchy callbacks can arrive after OnDisable has removed subscriptions.
+            if (!isActiveAndEnabled) return;
+
             UpdateParentSoftMask();
             UpdateCanvasViewChangeTrigger(CanvasViewChangeTrigger.Find(transform));
         }
