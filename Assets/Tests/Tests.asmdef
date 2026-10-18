@@ -1,6 +1,7 @@
 {
     "name": "Tests",
     "references": [
+        "Coffee.SoftMaskForUGUI"
     ],
     "optionalUnityReferences": [
         "TestAssemblies"
