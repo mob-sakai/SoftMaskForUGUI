@@ -364,6 +364,7 @@ namespace Coffee.UISoftMask
         private void UpdateHideFlags()
         {
             hideFlags = ignoreSelf || ignoreChildren || !Mathf.Approximately(power, 1f)
+                        || !UISoftMaskProjectSettings.addSoftMaskableAutomatically
                 ? HideFlags.None
                 : HideFlags.DontSaveInEditor;
         }
