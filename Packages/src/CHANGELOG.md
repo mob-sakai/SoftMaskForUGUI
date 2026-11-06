@@ -1,3 +1,10 @@
+## [3.6.6](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.6.5...3.6.6) (2026-11-06)
+
+
+### Bug Fixes
+
+* keep SoftMaskable saved in Manual mode ([4924c0e](https://github.com/mob-sakai/SoftMaskForUGUI/commit/4924c0e622ff5f4f3aa97b1a4e662062f9e9461b))
+
 ## [3.6.5](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.6.4...3.6.5) (2026-08-27)
 
 
