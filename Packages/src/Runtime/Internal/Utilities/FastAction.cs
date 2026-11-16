@@ -51,6 +51,8 @@ namespace Coffee.UISoftMaskInternal
         /// </summary>
         protected void Invoke(Action<T> callback)
         {
+            if (callback == null) return;
+
             var node = _delegates.First;
             while (node != null)
             {

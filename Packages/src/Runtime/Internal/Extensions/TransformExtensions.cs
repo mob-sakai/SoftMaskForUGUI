@@ -18,6 +18,8 @@ namespace Coffee.UISoftMaskInternal
         public static int CompareHierarchyIndex(this Transform self, Transform other, Transform stopAt)
         {
             if (self == other) return 0;
+            if (self == null) return -1;
+            if (other == null) return 1;
 
             Profiler.BeginSample("(COF)[TransformExt] CompareHierarchyIndex > GetTransforms");
             var lTrs = self.GetTransforms(stopAt, InternalListPool<Transform>.Rent());
@@ -50,7 +52,7 @@ namespace Coffee.UISoftMaskInternal
         private static List<Transform> GetTransforms(this Transform self, Transform stopAt, List<Transform> results)
         {
             results.Clear();
-            while (self != stopAt)
+            while (self != null && self != stopAt)
             {
                 results.Add(self);
                 self = self.parent;
@@ -125,6 +127,8 @@ namespace Coffee.UISoftMaskInternal
             var worldToLocalMatrix = self.worldToLocalMatrix;
             for (var i = 0; i < list.Count; i++)
             {
+                if (list[i] == null) continue;
+
                 list[i].GetWorldCorners(s_Corners);
                 for (var j = 0; j < 4; j++)
                 {

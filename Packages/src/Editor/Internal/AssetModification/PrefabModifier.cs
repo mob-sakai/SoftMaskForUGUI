@@ -12,6 +12,8 @@ namespace Coffee.UISoftMaskInternal.AssetModification
         {
             using (var scope = new EditScope(path))
             {
+                if (scope.root == null) return false;
+
                 var changed = ModifyGameObject(scope.root, dryRun);
 
                 if (!dryRun && changed)
@@ -36,7 +38,7 @@ namespace Coffee.UISoftMaskInternal.AssetModification
 
             public void Dispose()
             {
-                PrefabUtility.UnloadPrefabContents(root);
+                if (root != null) PrefabUtility.UnloadPrefabContents(root);
             }
 
             public void Save()

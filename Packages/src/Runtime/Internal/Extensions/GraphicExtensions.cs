@@ -32,10 +32,14 @@ namespace Coffee.UISoftMaskInternal
         /// </summary>
         public static void GetMaterialsForRendering(this Graphic self, List<Material> result)
         {
+            if (result == null) return;
+
             result.Clear();
             if (self == null) return;
 
             var cr = self.canvasRenderer;
+            if (cr == null) return;
+
             var count = cr.materialCount;
             var popCount = cr.popMaterialCount;
 
@@ -107,6 +111,8 @@ namespace Coffee.UISoftMaskInternal
         /// </summary>
         public static Texture GetActualMainTexture(this Graphic self)
         {
+            if (self == null) return null;
+
             var image = self as Image;
             if (image == null) return self.mainTexture;
 
@@ -128,6 +134,8 @@ namespace Coffee.UISoftMaskInternal
 
         public static float GetParentGroupAlpha(this Graphic self)
         {
+            if (self == null || self.canvasRenderer == null) return 1;
+
             var alpha = self.canvasRenderer.GetAlpha();
             if (Mathf.Approximately(alpha, 0)) return 1;
 

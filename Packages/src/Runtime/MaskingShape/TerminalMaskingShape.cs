@@ -40,7 +40,12 @@ namespace Coffee.UISoftMask
             }
 
             material = s_SharedTerminalMaterial;
-            transform.parent.TryGetComponent(out _parentMask);
+            var parent = transform.parent;
+            if (parent != null)
+            {
+                parent.TryGetComponent(out _parentMask);
+            }
+
             _shouldRecalculateStencil = true;
             hideFlags = UISoftMaskProjectSettings.hideFlagsForTemp;
 
@@ -53,9 +58,12 @@ namespace Coffee.UISoftMask
         protected override void OnDisable()
         {
             base.OnDisable();
-            if (_parentMask != null && _parentMask.MaskEnabled())
+            if (_parentMask == null || !_parentMask.MaskEnabled()) return;
+
+            var graphic = _parentMask.graphic;
+            if (graphic != null)
             {
-                _parentMask.graphic.SetMaterialDirty();
+                graphic.SetMaterialDirty();
             }
         }
 
@@ -95,7 +103,7 @@ namespace Coffee.UISoftMask
 
         public override Material GetModifiedMaterial(Material baseMaterial)
         {
-            if (!IsActive())
+            if (!IsActive() || baseMaterial == null)
             {
                 StencilMaterial.Remove(m_MaskMaterial);
                 m_MaskMaterial = null;

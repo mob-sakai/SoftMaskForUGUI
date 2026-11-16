@@ -10,31 +10,39 @@ namespace Coffee.UISoftMask.Demos
 
         public void SetMaskingMode(int value)
         {
+            if (m_SoftMasks == null) return;
+
             foreach (var sm in m_SoftMasks)
             {
-                sm.maskingMode = (SoftMask.MaskingMode)value;
+                if (sm != null) sm.maskingMode = (SoftMask.MaskingMode)value;
             }
         }
 
         public void SetDownSamplingRate(int value)
         {
+            if (m_SoftMasks == null) return;
+
             foreach (var sm in m_SoftMasks)
             {
-                sm.downSamplingRate = (SoftMask.DownSamplingRate)value;
+                if (sm != null) sm.downSamplingRate = (SoftMask.DownSamplingRate)value;
             }
         }
 
         public void SetTransformSensitivity(int index)
         {
             var values = (TransformSensitivity[])Enum.GetValues(typeof(TransformSensitivity));
+            if (index < 0 || values.Length <= index) return;
+
             UISoftMaskProjectSettings.transformSensitivity = values[index];
         }
 
         public void SetSoftnessRange(MinMax01 value)
         {
+            if (m_SoftMasks == null) return;
+
             foreach (var sm in m_SoftMasks)
             {
-                sm.softnessRange = value;
+                if (sm != null) sm.softnessRange = value;
             }
         }
     }

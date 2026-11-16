@@ -35,9 +35,11 @@ namespace Coffee.UISoftMaskInternal.AssetModification
 
         private bool ModifyLine(StringBuilder sb, string line)
         {
+            if (textModifiers == null) return false;
+
             foreach (var modifier in textModifiers)
             {
-                if (modifier.ModifyText(sb, line))
+                if (modifier != null && modifier.ModifyText(sb, line))
                 {
                     return true;
                 }

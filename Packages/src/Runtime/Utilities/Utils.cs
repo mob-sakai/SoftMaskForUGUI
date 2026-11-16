@@ -20,6 +20,8 @@ namespace Coffee.UISoftMask
             if (graphic == null) return;
 
             var canvasRenderer = graphic.canvasRenderer;
+            if (canvasRenderer == null) return;
+
             var currentColor = canvasRenderer.GetColor();
             var targetAlpha = 1f;
             if (enabled)

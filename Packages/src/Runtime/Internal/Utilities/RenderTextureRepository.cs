@@ -140,7 +140,19 @@ namespace Coffee.UISoftMaskInternal
 
             Profiler.BeginSample("(COF)[RTRepository] GetScreenSize (Editor)");
             var screenRes = UnityStats.screenRes;
+            if (string.IsNullOrEmpty(screenRes))
+            {
+                Profiler.EndSample();
+                return new Vector2Int(Mathf.Max(8, Screen.width), Mathf.Max(8, Screen.height));
+            }
+
             var separator = screenRes.IndexOf('x');
+            if (separator <= 0 || separator >= screenRes.Length - 1)
+            {
+                Profiler.EndSample();
+                return new Vector2Int(Mathf.Max(8, Screen.width), Mathf.Max(8, Screen.height));
+            }
+
             var w = Mathf.Max(8, ParseToInt(screenRes, 0, separator));
             var h = Mathf.Max(8, ParseToInt(screenRes, separator + 1, screenRes.Length));
             Profiler.EndSample();

@@ -16,12 +16,22 @@ namespace Coffee.UISoftMask.Demos
 
         private void LateUpdate()
         {
+            if (m_SoftMasks == null)
+            {
+                texture = null;
+                return;
+            }
+
             foreach (var softMask in m_SoftMasks)
             {
                 if (!softMask || !softMask.SoftMaskingEnabled() || !softMask.hasSoftMaskBuffer) continue;
 
                 texture = softMask.softMaskBuffer;
-                _aspectRatioFitter.aspectRatio = (float)Screen.width / Screen.height;
+                if (_aspectRatioFitter != null)
+                {
+                    _aspectRatioFitter.aspectRatio = (float)Screen.width / Screen.height;
+                }
+
                 return;
             }
 
@@ -32,9 +42,14 @@ namespace Coffee.UISoftMask.Demos
         {
             base.OnEnable();
             _aspectRatioFitter = GetComponent<AspectRatioFitter>();
+            if (m_SoftMasks == null) return;
+
             foreach (var softMask in m_SoftMasks)
             {
-                softMask.clearColor = Color.black;
+                if (softMask != null)
+                {
+                    softMask.clearColor = Color.black;
+                }
             }
         }
     }

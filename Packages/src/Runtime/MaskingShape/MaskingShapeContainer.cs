@@ -89,8 +89,12 @@ namespace Coffee.UISoftMask
             // If the terminal exists, remove pop instruction (the operation to revert the stencil).
             if (isActiveAndEnabled && _mask != null && _mask.MaskEnabled() && _needTerminal)
             {
-                _mask.graphic.canvasRenderer.hasPopInstruction = false;
-                _mask.graphic.canvasRenderer.popMaterialCount = 0;
+                var graphic = _mask.graphic;
+                if (graphic != null && graphic.canvasRenderer != null)
+                {
+                    graphic.canvasRenderer.hasPopInstruction = false;
+                    graphic.canvasRenderer.popMaterialCount = 0;
+                }
             }
 
             return baseMaterial;

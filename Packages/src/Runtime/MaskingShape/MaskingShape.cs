@@ -272,7 +272,7 @@ namespace Coffee.UISoftMask
 
         Material IMaterialModifier.GetModifiedMaterial(Material baseMaterial)
         {
-            if (!isActiveAndEnabled)
+            if (!isActiveAndEnabled || baseMaterial == null)
             {
                 StencilMaterial.Remove(_maskMaterial);
                 _maskMaterial = null;
@@ -416,7 +416,8 @@ namespace Coffee.UISoftMask
 
         internal bool IsInside(Vector2 sp, Camera eventCamera, float threshold = 0.01f)
         {
-            if (!isActiveAndEnabled) return false;
+            var graphic = this.graphic;
+            if (!isActiveAndEnabled || graphic == null) return false;
 
             {
                 Profiler.BeginSample("(SM4UI)[MaskingShape)] IsInside > Rectangle");
@@ -439,7 +440,12 @@ namespace Coffee.UISoftMask
 
         internal void DrawSoftMaskBuffer(CommandBuffer cb, int depth)
         {
+            var graphic = this.graphic;
+            if (graphic == null) return;
+
             var proxy = GraphicProxy.Find(graphic);
+            if (proxy == null) return;
+
             var texture = proxy.GetMainTexture(graphic);
             var mesh = _mesh;
             if (mesh == null) return;

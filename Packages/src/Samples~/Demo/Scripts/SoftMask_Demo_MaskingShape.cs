@@ -9,16 +9,22 @@ namespace Coffee.UISoftMask.Demos
 
         public void SetMaskingMethod(int value)
         {
+            if (m_MaskingShape == null) return;
+
             m_MaskingShape.maskingMethod = (MaskingShape.MaskingMethod)value;
         }
 
         public void SetSoftnessRange(MinMax01 value)
         {
+            if (m_MaskingShape == null) return;
+
             m_MaskingShape.softnessRange = value;
         }
 
         public void SetShowMaskGraphic(bool value)
         {
+            if (m_MaskingShape == null) return;
+
             m_MaskingShape.showMaskGraphic = value;
         }
     }

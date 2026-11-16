@@ -27,6 +27,8 @@ namespace Coffee.UISoftMask
 
         public void OnDrag(PointerEventData eventData)
         {
+            if (_rectTransform == null || _canvas == null) return;
+
             var delta = (Vector3)GetLocalDelta(eventData.delta);
 
             switch (m_Target)
@@ -35,7 +37,11 @@ namespace Coffee.UISoftMask
                     _rectTransform.localPosition += delta;
                     break;
                 case Target.Parent:
-                    _rectTransform.parent.localPosition += delta;
+                    if (_rectTransform.parent != null)
+                    {
+                        _rectTransform.parent.localPosition += delta;
+                    }
+
                     break;
             }
 

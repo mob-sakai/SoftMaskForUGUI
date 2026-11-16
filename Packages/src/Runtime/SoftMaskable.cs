@@ -241,6 +241,13 @@ namespace Coffee.UISoftMask
                 _softMaskDepth -= 1;
             }
 
+            var softMaskBuffer = _softMask.softMaskBuffer;
+            if (softMaskBuffer == null)
+            {
+                MaterialRepository.Release(ref _maskableMaterial);
+                return baseMaterial;
+            }
+
             Profiler.BeginSample("(SM4UI)[SoftMaskable] GetModifiedMaterial");
             var isStereo = UISoftMaskProjectSettings.stereoEnabled && _graphic.canvas.IsStereoCanvas();
             var useStencil = UISoftMaskProjectSettings.useStencilOutsideScreen;
@@ -265,7 +272,7 @@ namespace Coffee.UISoftMask
 #endif
             var hash = new Hash128(
                 (uint)baseMaterial.GetHashCode(),
-                (uint)_softMask.softMaskBuffer.GetHashCode(),
+                (uint)softMaskBuffer.GetHashCode(),
                 (uint)(_stencilBits + (isStereo ? 1 << 8 : 0) + (useStencil ? 1 << 9 : 0) + (_softMaskDepth << 10)),
                 localId);
             if (!MaterialRepository.Valid(hash, _maskableMaterial))
@@ -289,7 +296,7 @@ namespace Coffee.UISoftMask
             _maskableMaterial.SetInt(s_AllowDynamicResolution, _softMask.allowDynamicResolution ? 1 : 0);
             _maskableMaterial.SetInt(s_AllowRenderScale, _softMask.allowRenderScale ? 1 : 0);
             _maskableMaterial.SetFloat(s_SoftMaskingPower, power);
-            _maskableMaterial.SetTexture(s_SoftMaskTex, _softMask.softMaskBuffer);
+            _maskableMaterial.SetTexture(s_SoftMaskTex, softMaskBuffer);
             _maskableMaterial.SetInt(s_SoftMaskableStereo, isStereo ? 1 : 0);
             _maskableMaterial.SetVector(s_SoftMaskColor, new Vector4(
                 0 <= _softMaskDepth ? 1 : 0,
@@ -389,6 +396,8 @@ namespace Coffee.UISoftMask
             }
 
             var canvas = _graphic.canvas.rootCanvas;
+            if (canvas == null) return;
+
             var isStereo = UISoftMaskProjectSettings.stereoEnabled && canvas.IsStereoCanvas();
             if (!FrameCache.TryGet(canvas, "GameVp", out Matrix4x4 gameVp))
             {

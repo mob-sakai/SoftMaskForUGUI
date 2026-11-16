@@ -6,31 +6,42 @@ namespace Coffee.UISoftMask.Demos
     {
         public void EnableCameraPan(bool flag)
         {
-            var canvas = GetComponentInParent<Canvas>().rootCanvas;
-            var angles = canvas.worldCamera.transform.rotation.eulerAngles;
+            var canvas = GetRootCanvas();
+            if (canvas == null || canvas.worldCamera == null) return;
+
+            var camera = canvas.worldCamera;
+            var angles = camera.transform.rotation.eulerAngles;
             angles.y = flag ? -5 : 0;
-            canvas.worldCamera.transform.rotation = Quaternion.Euler(angles);
+            camera.transform.rotation = Quaternion.Euler(angles);
         }
 
         public void EnableCameraTilt(bool flag)
         {
-            var canvas = GetComponentInParent<Canvas>().rootCanvas;
-            var angles = canvas.worldCamera.transform.rotation.eulerAngles;
+            var canvas = GetRootCanvas();
+            if (canvas == null || canvas.worldCamera == null) return;
+
+            var camera = canvas.worldCamera;
+            var angles = camera.transform.rotation.eulerAngles;
             angles.x = flag ? 10 : 0;
-            canvas.worldCamera.transform.rotation = Quaternion.Euler(angles);
+            camera.transform.rotation = Quaternion.Euler(angles);
         }
 
         public void EnableCameraRoll(bool flag)
         {
-            var canvas = GetComponentInParent<Canvas>().rootCanvas;
-            var angles = canvas.worldCamera.transform.rotation.eulerAngles;
+            var canvas = GetRootCanvas();
+            if (canvas == null || canvas.worldCamera == null) return;
+
+            var camera = canvas.worldCamera;
+            var angles = camera.transform.rotation.eulerAngles;
             angles.z = flag ? 10 : 0;
-            canvas.worldCamera.transform.rotation = Quaternion.Euler(angles);
+            camera.transform.rotation = Quaternion.Euler(angles);
         }
 
         public void SetRenderMode(int mode)
         {
-            var canvas = GetComponentInParent<Canvas>().rootCanvas;
+            var canvas = GetRootCanvas();
+            if (canvas == null) return;
+
             if (canvas.renderMode == (RenderMode)mode)
             {
                 return;
@@ -46,6 +57,12 @@ namespace Coffee.UISoftMask.Demos
             {
                 canvas.renderMode = (RenderMode)mode;
             }
+        }
+
+        private Canvas GetRootCanvas()
+        {
+            var canvas = GetComponentInParent<Canvas>();
+            return canvas != null ? canvas.rootCanvas : null;
         }
     }
 }

@@ -79,12 +79,22 @@ namespace Coffee.UISoftMaskInternal.AssetModification
                         ?.Invoke(null, null) as GraphicsSettings;
                 }
 
-                return new SerializedObject(s_GraphicsSettings).FindProperty("m_AlwaysIncludedShaders");
+                if (s_GraphicsSettings == null)
+                {
+                    Debug.LogError("Could not retrieve GraphicsSettings.");
+                    return null;
+                }
+
+                var property = new SerializedObject(s_GraphicsSettings).FindProperty("m_AlwaysIncludedShaders");
+                if (property == null) Debug.LogError("Could not retrieve the always-included shaders setting.");
+                return property;
             }
 
             public static IEnumerable<Shader> GetShaders()
             {
                 var sp = GetSerializedProperty();
+                if (sp == null) yield break;
+
                 for (var i = 0; i < sp.arraySize; i++)
                 {
                     if (sp.GetArrayElementAtIndex(i).objectReferenceValue is Shader shader)
@@ -96,8 +106,12 @@ namespace Coffee.UISoftMaskInternal.AssetModification
 
             public static void Remove(Shader shader)
             {
+                if (shader == null) return;
+
                 var changed = false;
                 var sp = GetSerializedProperty();
+                if (sp == null) return;
+
                 for (var i = 0; i < sp.arraySize; i++)
                 {
                     // Found the shader to remove.
@@ -117,8 +131,12 @@ namespace Coffee.UISoftMaskInternal.AssetModification
 
             public static void Add(Shader shader)
             {
+                if (shader == null) return;
+
                 var changed = true;
                 var sp = GetSerializedProperty();
+                if (sp == null) return;
+
                 for (var i = 0; i < sp.arraySize; i++)
                 {
                     // Already included.

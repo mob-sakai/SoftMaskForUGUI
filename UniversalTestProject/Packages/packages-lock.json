@@ -7,7 +7,7 @@
       "dependencies": {
         "com.unity.ugui": "1.0.0"
       },
-      "hash": "837a42e346860e230168db0803f53d0adf120c42"
+      "hash": "d5d12cb14184509b0d4ab12fa22dd3e6f6b50f16"
     },
     "com.coffee.softmask-for-ugui": {
       "version": "file:../../Packages/src",
@@ -22,7 +22,7 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "837a42e346860e230168db0803f53d0adf120c42"
+      "hash": "d5d12cb14184509b0d4ab12fa22dd3e6f6b50f16"
     },
     "com.esotericsoftware.spine.spine-csharp": {
       "version": "https://github.com/EsotericSoftware/spine-runtimes.git?path=spine-csharp/src#4.3",

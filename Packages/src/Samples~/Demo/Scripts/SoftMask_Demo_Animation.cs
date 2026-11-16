@@ -15,8 +15,12 @@ namespace Coffee.UISoftMask.Demos
             switch (m_AnimationType)
             {
                 case AnimationType.BlinkHitArea:
-                    StartCoroutine(Co_Flash(GetComponent<CanvasGroup>()));
+                {
+                    var canvasGroup = GetComponent<CanvasGroup>();
+                    if (canvasGroup == null) return;
+                    StartCoroutine(Co_Flash(canvasGroup));
                     break;
+                }
                 case AnimationType.IrisOut:
                     StartCoroutine(Co_IrisOut(transform));
                     StartCoroutine(Co_Rotate(transform));
