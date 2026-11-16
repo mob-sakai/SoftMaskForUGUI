@@ -6,13 +6,23 @@
         "m_EditorClassIdentifier": "",
         "m_SymbolicLinks": [
             {
-                "m_From": "Assets/Samples",
-                "m_To": "../../Packages/src/Samples~",
+                "m_From": "Assets/Samples/Demo",
+                "m_To": "../../../Packages/src/Samples~/Demo",
                 "m_Define": ""
             },
             {
-                "m_From": "Assets/TextMeshPro Support (Unity 6)",
-                "m_To": "../../Packages/src/Samples~/TextMeshPro Support (Unity 6)~",
+                "m_From": "Assets/Samples/com.coffee.softmask-for-ugui.textmeshpro",
+                "m_To": "../../../Packages/src/Samples~/com.coffee.softmask-for-ugui.textmeshpro",
+                "m_Define": ""
+            },
+            {
+                "m_From": "Assets/Samples/com.coffee.softmask-for-ugui.shadergraph",
+                "m_To": "../../../Packages/src/Samples~/com.coffee.softmask-for-ugui.shadergraph",
+                "m_Define": ""
+            },
+            {
+                "m_From": "Assets/Samples/com.coffee.softmask-for-ugui.spine",
+                "m_To": "../../../Packages/src/Samples~/com.coffee.softmask-for-ugui.spine",
                 "m_Define": ""
             },
             {
