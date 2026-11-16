@@ -23,31 +23,37 @@ Enhance Unity UI (uGUI) with advanced soft-masking features to create more visua
 - [📌 Key Features](#-key-features)
 - [🎮 Demo](#-demo)
 - [⚙ Installation](#-installation)
-    - [Install via OpenUPM](#install-via-openupm)
-    - [Install via UPM (with Package Manager UI)](#install-via-upm-with-package-manager-ui)
-    - [Install via UPM (Manually)](#install-via-upm-manually)
-    - [Install as Embedded Package](#install-as-embedded-package)
-    - [Import Additional Resources](#import-additional-resources)
+  - [Install via OpenUPM](#install-via-openupm)
+  - [Install via UPM (with Package Manager UI)](#install-via-upm-with-package-manager-ui)
+  - [Install via UPM (Manually)](#install-via-upm-manually)
+  - [Install as Embedded Package](#install-as-embedded-package)
+  - [Import Additional Resources](#import-additional-resources)
+    - [Install Additional Resources as Packages](#install-additional-resources-as-packages)
 - [🔄 Upgrade All Assets For V3](#-upgrade-all-assets-for-v3)
 - [🚀 Usage](#-usage)
-    - [Getting Started](#getting-started)
-    - [RectMask2D vs SoftMask](#rectmask2d-vs-softmask)
-    - [Comparison of Masking Mode](#comparison-of-masking-mode)
-    - [Component: SoftMask](#component-softmask)
-    - [Component: SoftMaskable](#component-softmaskable)
-    - [Component: MaskingShape](#component-maskingshape)
-    - [Component: RectTransformFitter](#component-recttransformfitter)
-    - [Project Settings](#project-settings)
-    - [Usage with Scripts](#usage-with-scripts)
-    - [Usage with TextMeshPro or Spine](#usage-with-textmeshpro-or-spine)
-    - [Usage with Your Custom Shaders](#usage-with-your-custom-shaders)
-    - [Usage with Canvas ShaderGraph](#usage-with-canvas-shadergraph)
-    - [Usage with UIEffect](#usage-with-uieffect)
-    - [:warning: Limitations](#warning-limitations)
+  - [Getting Started](#getting-started)
+  - [RectMask2D vs SoftMask](#rectmask2d-vs-softmask)
+  - [Comparison of Masking Mode](#comparison-of-masking-mode)
+  - [Component: SoftMask](#component-softmask)
+  - [Component: SoftMaskable](#component-softmaskable)
+  - [Component: MaskingShape](#component-maskingshape)
+  - [Component: RectTransformFitter](#component-recttransformfitter)
+  - [Project Settings](#project-settings)
+    - [Setting](#setting)
+    - [Editor](#editor)
+    - [Shader](#shader)
+    - [Advanced](#advanced)
+    - [Upgrade](#upgrade)
+  - [Usage with Scripts](#usage-with-scripts)
+  - [Usage with TextMeshPro or Spine](#usage-with-textmeshpro-or-spine)
+  - [Usage with Your Custom Shaders](#usage-with-your-custom-shaders)
+  - [Usage with Canvas ShaderGraph](#usage-with-canvas-shadergraph)
+  - [Usage with UIEffect](#usage-with-uieffect)
+  - [:warning: Limitations](#warning-limitations)
 - [🤝 Contributing](#-contributing)
-    - [Issues](#issues)
-    - [Pull Requests](#pull-requests)
-    - [Support](#support)
+  - [Issues](#issues)
+  - [Pull Requests](#pull-requests)
+  - [Support](#support)
 - [License](#license)
 - [Author](#author)
 - [See Also](#see-also)
@@ -127,7 +133,7 @@ _This package requires **Unity 2019.4 or later**._
 - To update the package, use Package Manager UI (`Window > Package Manager`) or run the following command with
   `@{version}`:
   ```
-  openupm add com.coffee.softmask-for-ugui@3.2.0
+  openupm add com.coffee.softmask-for-ugui@3.7.0
   ```
 
 ### Install via UPM (with Package Manager UI)
@@ -137,7 +143,7 @@ _This package requires **Unity 2019.4 or later**._
   `https://github.com/mob-sakai/SoftMaskForUGUI.git?path=Packages/src`  
   ![](https://github.com/user-attachments/assets/f88f47ad-c606-44bd-9e86-ee3f72eac548)
 - To update the package, change suffix `#{version}` to the target version.
-    - e.g. `https://github.com/mob-sakai/SoftMaskForUGUI.git?path=Packages/src#3.2.0`
+    - e.g. `https://github.com/mob-sakai/SoftMaskForUGUI.git?path=Packages/src#3.7.0`
 
 ### Install via UPM (Manually)
 
@@ -152,7 +158,7 @@ _This package requires **Unity 2019.4 or later**._
   ```
 
 - To update the package, change suffix `#{version}` to the target version.
-    - e.g. `"com.coffee.softmask-for-ugui": "https://github.com/mob-sakai/SoftMaskForUGUI.git?path=Packages/src#3.2.0",`
+    - e.g. `"com.coffee.softmask-for-ugui": "https://github.com/mob-sakai/SoftMaskForUGUI.git?path=Packages/src#3.7.0",`
 
 ### Install as Embedded Package
 
@@ -170,6 +176,49 @@ Additional resources can be imported to extend functionality.
 
 - [Usage with TextMeshPro or Spine](#usage-with-textmeshpro-or-spine).
 - [Usage with Canvas ShaderGraph](#usage-with-canvas-shadergraph).
+
+#### Install Additional Resources as Packages
+
+Starting with v3.7.0, you can install optional resources as separate UPM packages instead of importing them as samples.  
+This lets you use the features you need without adding their assets to your project's `Assets/Samples` directory.
+
+> [!TIP]
+> Use the **same version as the SoftMaskForUGUI package**.  
+> If you have already imported a resource as a sample, delete its corresponding sample from `Assets/Samples/UI Soft Mask/{version}` before installing the package.
+
+The following optional packages are available from the OpenUPM registry.  
+Choose the package that matches your Unity version and render pipeline, then replace `3.7.0` with your `SoftMaskForUGUI` package version if needed.
+
+```sh
+# TextMeshPro support (Unity 2023.2 or earlier)
+openupm add com.coffee.softmask-for-ugui.textmeshpro-legacy@3.7.0
+# TextMeshPro support (Unity 2023.3 or later)
+openupm add com.coffee.softmask-for-ugui.textmeshpro@3.7.0
+# ShaderGraph support
+openupm add com.coffee.softmask-for-ugui.shadergraph@3.7.0
+# Spine components
+openupm add com.coffee.softmask-for-ugui.spine@3.7.0
+```
+
+For manual installation, add the desired package entries to your `Packages/manifest.json` file, install the package through Package Manager, or embed the package in your project.  
+The following is a valid `manifest.json` dependencies example; remove entries for resources you do not need.  
+Use only one TextMeshPro support package, and select the ShaderGraph package for your render pipeline.
+
+```json
+{
+  "dependencies": {
+    // TextMeshPro Support (2023.2 or earlier):
+    "com.coffee.softmask-for-ugui.textmeshpro-legacy": "https://github.com/mob-sakai/SoftMaskForUGUI.git?path=Packages/src/Samples~/com.coffee.softmask-for-ugui.textmeshpro-legacy#3.7.0",
+    // TextMeshPro Support (2023.3, 6000.0 or later):
+    "com.coffee.softmask-for-ugui.textmeshpro": "https://github.com/mob-sakai/SoftMaskForUGUI.git?path=Packages/src/Samples~/com.coffee.softmask-for-ugui.textmeshpro#3.7.0",
+    // ShaderGraph Support:
+    "com.coffee.softmask-for-ugui.shadergraph": "https://github.com/mob-sakai/SoftMaskForUGUI.git?path=Packages/src/Samples~/com.coffee.softmask-for-ugui.shadergraph#3.7.0",
+    // Spine Components:
+    "com.coffee.softmask-for-ugui.spine": "https://github.com/mob-sakai/SoftMaskForUGUI.git?path=Packages/src/Samples~/com.coffee.softmask-for-ugui.spine#3.7.0",
+    ...
+  }
+}
+```
 
 <br><br>
 
@@ -462,6 +511,10 @@ softMask.softnessRange = new MinMax01(0.5f, 0.75f);
 
 ### Usage with TextMeshPro or Spine
 
+> [!TIP]
+> "Additional Resources" can be installed as a package from v3.7.0 or later.  
+> For more information, please refer to the [Install Additional Resources](#import-additional-resources) section.
+
 To use SoftMask with TextMeshPro or Spine, you need to import additional resources.  
 When a shader included in the samples is requested, an import dialog will automatically appear.  
 Click the `Import` button.
@@ -529,6 +582,10 @@ There are two ways to support SoftMask with custom shaders.
 <br><br>
 
 ### Usage with Canvas ShaderGraph
+
+> [!TIP]
+> "Additional Resources" can be installed as a package from v3.7.0 or later.  
+> For more information, please refer to the [Install Additional Resources](#import-additional-resources) section.
 
 NOTE: Unity 2023.2/6000.0+ is required.
 

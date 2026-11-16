@@ -1,0 +1,24 @@
+{
+  "name": "com.coffee.softmask-for-ugui.shadergraph",
+  "displayName": "UI Soft Mask - ShaderGraph Support",
+  "description": "An extension for UI Soft Mask that adds ShaderGraph support.",
+  "version": "3.7.0",
+  "unity": "2023.2",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mob-sakai/SoftMaskForUGUI.git"
+  },
+  "author": {
+    "name": "mob-sakai",
+    "email": "sakai861104@gmail.com",
+    "url": "https://github.com/mob-sakai"
+  },
+  "dependencies": {
+    "com.coffee.softmask-for-ugui": "3.7.0"
+  },
+  "keywords": [
+    "ui",
+    "softmask"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "name": "com.coffee.softmask-for-ugui.spine",
+  "displayName": "UI Soft Mask - Spine Support",
+  "description": "An extension for UI Soft Mask that adds Spine support.",
+  "version": "3.7.0",
+  "unity": "2017.3",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mob-sakai/SoftMaskForUGUI.git"
+  },
+  "author": {
+    "name": "mob-sakai",
+    "email": "sakai861104@gmail.com",
+    "url": "https://github.com/mob-sakai"
+  },
+  "dependencies": {
+    "com.coffee.softmask-for-ugui": "3.7.0"
+  },
+  "keywords": [
+    "ui",
+    "softmask"
+  ]
+}
