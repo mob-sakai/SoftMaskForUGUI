@@ -67,14 +67,7 @@ namespace Coffee.UISoftMask
                 maskingShape.hideFlags = HideFlags.NotEditable;
                 maskingShape.enabled = parent.enabled;
                 maskingShape.parent = parent;
-#if UNITY_6000_6_OR_NEWER
-                subMeshes[i].mesh.CopyTo(s_VertexHelper);
-                (maskingShape as IMeshModifier).ModifyMesh(s_VertexHelper);
-#else
-#pragma warning disable CS0618
-                (maskingShape as IMeshModifier).ModifyMesh(subMeshes[i].mesh);
-#pragma warning restore CS0618
-#endif
+                maskingShape.ModifyMesh(subMeshes[i].mesh);
             }
 
             InternalListPool<TMP_SubMeshUI>.Return(ref subMeshes);
@@ -86,26 +79,12 @@ namespace Coffee.UISoftMask
 
             if (text.TryGetComponent<SoftMask>(out var sm))
             {
-#if UNITY_6000_6_OR_NEWER
-                text.mesh.CopyTo(s_VertexHelper);
-                (sm as IMeshModifier).ModifyMesh(s_VertexHelper);
-#else
-#pragma warning disable CS0618
-                (sm as IMeshModifier).ModifyMesh(text.mesh);
-#pragma warning restore CS0618
-#endif
+                sm.ModifyMesh(text.mesh);
                 UpdateSubMeshUI(text, sm);
             }
             else if (text.TryGetComponent<MaskingShape>(out var ms))
             {
-#if UNITY_6000_6_OR_NEWER
-                text.mesh.CopyTo(s_VertexHelper);
-                (ms as IMeshModifier).ModifyMesh(s_VertexHelper);
-#else
-#pragma warning disable CS0618
-                (ms as IMeshModifier).ModifyMesh(text.mesh);
-#pragma warning restore CS0618
-#endif
+                ms.ModifyMesh(text.mesh);
                 UpdateSubMeshUI(text, ms);
             }
         }

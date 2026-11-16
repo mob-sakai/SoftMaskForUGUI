@@ -482,7 +482,7 @@ namespace Coffee.UISoftMask
             _shapeContainer = container;
         }
 
-        void IMeshModifier.ModifyMesh(Mesh mesh)
+        public void ModifyMesh(Mesh mesh)
         {
             if (mesh == null || !SoftMaskingEnabled())
             {
@@ -493,7 +493,7 @@ namespace Coffee.UISoftMask
             mesh.CopyTo(_mesh != null ? _mesh : _mesh = MeshExtensions.Rent());
         }
 
-        void IMeshModifier.ModifyMesh(VertexHelper verts)
+        public void ModifyMesh(VertexHelper verts)
         {
             if (!SoftMaskingEnabled())
             {

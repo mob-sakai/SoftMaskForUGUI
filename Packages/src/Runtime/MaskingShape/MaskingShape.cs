@@ -322,7 +322,7 @@ namespace Coffee.UISoftMask
             return toUse;
         }
 
-        void IMeshModifier.ModifyMesh(Mesh mesh)
+        public void ModifyMesh(Mesh mesh)
         {
             if (!isActiveAndEnabled)
             {
@@ -333,7 +333,7 @@ namespace Coffee.UISoftMask
             mesh.CopyTo(_mesh != null ? _mesh : _mesh = MeshExtensions.Rent());
         }
 
-        void IMeshModifier.ModifyMesh(VertexHelper verts)
+        public void ModifyMesh(VertexHelper verts)
         {
             if (!isActiveAndEnabled)
             {
