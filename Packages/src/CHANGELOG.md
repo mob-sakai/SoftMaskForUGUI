@@ -1,3 +1,10 @@
+# [3.7.0](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.6.7...3.7.0) (2026-11-17)
+
+
+### Features
+
+* "Additional Resource" can be installed as a package instead of importing as a sample ([285c928](https://github.com/mob-sakai/SoftMaskForUGUI/commit/285c928e0bed7fc28c753bdc95e45cc8f51a48f4))
+
 ## [3.6.7](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.6.6...3.6.7) (2026-11-17)
 
 
