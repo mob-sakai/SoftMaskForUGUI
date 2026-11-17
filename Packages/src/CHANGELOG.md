@@ -1,3 +1,13 @@
+## [3.6.7](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.6.6...3.6.7) (2026-11-17)
+
+
+### Bug Fixes
+
+* added "Show Readme" to the auto-import menu ([3b432a1](https://github.com/mob-sakai/SoftMaskForUGUI/commit/3b432a1d0c6d75557abdba58e01c373e337b2b43))
+* fix potential NPE in code ([26b7337](https://github.com/mob-sakai/SoftMaskForUGUI/commit/26b7337374460d7e391b2b2750ce14d1cffe9579))
+* prevent canvas event leaks when reparenting disabled masks ([f2ef983](https://github.com/mob-sakai/SoftMaskForUGUI/commit/f2ef98338edd8458ed2c0863c3b11caa6e11c230))
+* support Unity 6.7 ([e2b572b](https://github.com/mob-sakai/SoftMaskForUGUI/commit/e2b572b020893174d147cd0137ddbd134ba301d7))
+
 ## [3.6.6](https://github.com/mob-sakai/SoftMaskForUGUI/compare/3.6.5...3.6.6) (2026-11-06)
 
 
