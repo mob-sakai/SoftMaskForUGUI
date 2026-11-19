@@ -357,6 +357,7 @@ namespace Coffee.UISoftMask
         /// </summary>
         protected override void OnDisable()
         {
+            SoftMaskUtils.CancelSoftMaskableOnChildren(this);
             UIExtraCallbacks.onBeforeCanvasRebuild -=
                 _onBeforeCanvasRebuild ?? (_onBeforeCanvasRebuild = OnBeforeCanvasRebuild);
             UIExtraCallbacks.onAfterCanvasRebuild -=
@@ -430,7 +431,7 @@ namespace Coffee.UISoftMask
 
         protected void OnTransformChildrenChanged()
         {
-            AddSoftMaskableOnChildren();
+            SoftMaskUtils.ScheduleSoftMaskableOnChildren(this);
         }
 
         protected override void OnTransformParentChanged()

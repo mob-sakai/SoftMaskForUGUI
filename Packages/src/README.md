@@ -381,6 +381,8 @@ To apply these changes automatically, please follow the steps below:
 
 > [!TIPS]
 > `SoftMaskable` components are added automatically to GameObjects under a `SoftMask` component.  
+> After hierarchy changes, automatic addition is deferred until the next Canvas update. Code that needs the
+> component immediately should add it explicitly.
 > If the properties are set to their default values, it is marked as `HideFlag.DontSave` and will not be saved in the scene or prefab.
 
 <br><br>

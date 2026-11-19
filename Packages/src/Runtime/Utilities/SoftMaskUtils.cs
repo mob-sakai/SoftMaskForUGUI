@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Coffee.UISoftMaskInternal;
 using UnityEditor;
 using UnityEngine;
@@ -14,6 +15,15 @@ namespace Coffee.UISoftMask
     /// </summary>
     internal static class SoftMaskUtils
     {
+        private static HashSet<MonoBehaviour> s_PendingHierarchyChanges = new HashSet<MonoBehaviour>();
+        private static HashSet<MonoBehaviour> s_ProcessingHierarchyChanges = new HashSet<MonoBehaviour>();
+        private static bool s_IsProcessingHierarchyChanges;
+
+        static SoftMaskUtils()
+        {
+            UIExtraCallbacks.onBeforeCanvasRebuild += ProcessPendingHierarchyChanges;
+        }
+
         /// <summary>
         /// Object pool for CommandBuffer instances.
         /// </summary>
@@ -173,6 +183,57 @@ namespace Coffee.UISoftMask
             if (!UISoftMaskProjectSettings.addSoftMaskableAutomatically) return;
 
             self.AddComponentOnChildren<SoftMaskable>(includeSelf);
+        }
+
+        public static void ScheduleSoftMaskableOnChildren(MonoBehaviour self)
+        {
+            if (self == null || !self.isActiveAndEnabled) return;
+            if (!UISoftMaskProjectSettings.addSoftMaskableAutomatically) return;
+
+            s_PendingHierarchyChanges.Add(self);
+        }
+
+        public static void CancelSoftMaskableOnChildren(MonoBehaviour self)
+        {
+            s_PendingHierarchyChanges.Remove(self);
+        }
+
+        private static void ProcessPendingHierarchyChanges()
+        {
+            if (s_IsProcessingHierarchyChanges) return;
+            s_IsProcessingHierarchyChanges = true;
+            try
+            {
+                while (s_PendingHierarchyChanges.Count > 0)
+                {
+                    var pending = s_PendingHierarchyChanges;
+                    s_PendingHierarchyChanges = s_ProcessingHierarchyChanges;
+                    s_ProcessingHierarchyChanges = pending;
+
+                    foreach (var component in s_ProcessingHierarchyChanges)
+                    {
+                        if (component == null || !component.isActiveAndEnabled) continue;
+                        if (component is SoftMask mask)
+                        {
+                            if (mask.SoftMaskingEnabled())
+                            {
+                                AddSoftMaskableOnChildren(mask, true);
+                            }
+                        }
+                        else
+                        {
+                            AddSoftMaskableOnChildren(component, false);
+                        }
+                    }
+
+                    s_ProcessingHierarchyChanges.Clear();
+                }
+            }
+            finally
+            {
+                s_ProcessingHierarchyChanges.Clear();
+                s_IsProcessingHierarchyChanges = false;
+            }
         }
     }
 }

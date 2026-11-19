@@ -161,6 +161,7 @@ namespace Coffee.UISoftMask
 
         private void OnDisable()
         {
+            SoftMaskUtils.CancelSoftMaskableOnChildren(this);
             UIExtraCallbacks.onBeforeCanvasRebuild -= _checkGraphic ?? (_checkGraphic = CheckGraphic);
             if (_graphic != null)
             {
@@ -193,7 +194,7 @@ namespace Coffee.UISoftMask
 
         private void OnTransformChildrenChanged()
         {
-            SoftMaskUtils.AddSoftMaskableOnChildren(this, false);
+            SoftMaskUtils.ScheduleSoftMaskableOnChildren(this);
         }
 
         private void OnTransformParentChanged()
