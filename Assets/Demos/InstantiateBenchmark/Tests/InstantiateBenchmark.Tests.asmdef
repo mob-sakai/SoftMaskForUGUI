@@ -1,0 +1,9 @@
+{
+    "name": "InstantiateBenchmark.Tests",
+    "references": [
+        "Coffee.SoftMaskForUGUI"
+    ],
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ]
+}
