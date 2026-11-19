@@ -137,7 +137,8 @@ namespace Coffee.UISoftMask
             const string tmpSupport = "TextMeshPro Support";
             const string version = "v3.3.0";
 #endif
-            ShaderSampleImporter.RegisterReadmeUrl("https://github.com/mob-sakai/SoftMaskForUGUI#import-additional-resources");
+            ShaderSampleImporter.RegisterReadmeUrl(
+                "https://github.com/mob-sakai/SoftMaskForUGUI#import-additional-resources");
             ShaderSampleImporter.RegisterShaderSamples(new[]
             {
                 // TextMeshPro Support/TextMeshPro Support (Unity 6)

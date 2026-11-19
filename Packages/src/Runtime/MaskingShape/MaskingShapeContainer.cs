@@ -179,7 +179,8 @@ namespace Coffee.UISoftMask
             _dirty = false;
 
             if (!_mask.MaskEnabled()
-                || (softMask != null && softMask.SoftMaskingEnabled() && !UISoftMaskProjectSettings.useStencilOutsideScreen))
+                || (softMask != null && softMask.SoftMaskingEnabled() &&
+                    !UISoftMaskProjectSettings.useStencilOutsideScreen))
             {
                 _needTerminal = false;
             }

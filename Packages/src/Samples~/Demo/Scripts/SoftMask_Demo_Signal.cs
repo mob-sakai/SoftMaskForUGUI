@@ -32,7 +32,6 @@ namespace Coffee.UISoftMask.Demos
             canvasRenderer.SetAlpha(1);
         }
 
-
 #if UNITY_EDITOR && UNITY_2019_3_OR_NEWER
         [InitializeOnLoadMethod]
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]

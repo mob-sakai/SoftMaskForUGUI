@@ -8,7 +8,7 @@ namespace Coffee.UISoftMaskInternal.AssetModification
         public string path;
 
         protected abstract string id { get; }
-        protected bool hasUpgraded { private set; get; }
+        protected bool hasUpgraded { get; private set; }
 
         public void Modify(bool dryRun)
         {

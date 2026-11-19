@@ -43,7 +43,8 @@ namespace Tests
 
         private SoftMask CreateMask()
         {
-            var go = new GameObject("Mask", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(SoftMask));
+            var go = new GameObject("Mask", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image),
+                typeof(SoftMask));
             var mask = go.GetComponent<SoftMask>();
             go.GetComponent<Image>().enabled = false;
             go.transform.SetParent(_firstParent, false);
@@ -61,7 +62,7 @@ namespace Tests
         [UnityTest]
         public IEnumerator DisabledMasksReparentedUnderSameCanvasDoNotLeaveSubscriptions()
         {
-            for (int i = 0; i < 32; i++)
+            for (var i = 0; i < 32; i++)
             {
                 var mask = CreateMask();
                 Assert.That(SubscriptionCount(), Is.EqualTo(1), "Active mask should subscribe after reparenting");
@@ -71,6 +72,7 @@ namespace Tests
                 Assert.That(SubscriptionCount(), Is.Zero, "Disabled reparenting must not subscribe");
                 Object.Destroy(mask.gameObject);
             }
+
             yield return null;
             Assert.That(SubscriptionCount(), Is.Zero);
         }
