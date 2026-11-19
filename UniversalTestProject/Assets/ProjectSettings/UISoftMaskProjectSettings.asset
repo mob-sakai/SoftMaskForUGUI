@@ -64,5 +64,6 @@ MonoBehaviour:
     - {fileID: 4800000, guid: 33e06cd3c50064f30a691b600fc62f3f, type: 3}
     - {fileID: 4800000, guid: 2933b413a51fc4ff3a83c7ef4177ae84, type: 3}
     - {fileID: 4800000, guid: e94e1f7424a0a43ac8b7ed672319bb4b, type: 3}
+    - {fileID: -6465566751694194690, guid: 2173f7db90a35495bbc9c7affcd96d2e, type: 3}
     m_ErrorOnUnregisteredVariant: 0
     m_UnregisteredVariants: []

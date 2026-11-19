@@ -133,6 +133,7 @@ Shader "Hidden/UI/Default (SoftMaskable)"
 
             fixed4 frag(v2f IN) : SV_Target
             {
+                UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(IN);
                 //Round up the alpha color coming from the interpolator (to 1.0/256.0 steps)
                 //The incoming alpha could have numerical instability, which makes it very sensible to
                 //HDR color transparency blend, when it blends with the world's texture.
