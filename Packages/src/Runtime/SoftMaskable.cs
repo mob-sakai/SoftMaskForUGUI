@@ -115,6 +115,7 @@ namespace Coffee.UISoftMask
         }
 
         private Action _checkGraphic;
+        private bool _isGraphicOrderCheckScheduled;
         private MaskableGraphic _graphic;
         private Material _maskableMaterial;
         private bool _shouldRecalculateStencil;
@@ -134,12 +135,7 @@ namespace Coffee.UISoftMask
             if (TryGetComponent(out _graphic))
             {
                 // Check if the graphic is before this component.
-                var components = InternalListPool<Component>.Rent();
-                GetComponents(components);
-                var gIndex = components.IndexOf(_graphic);
-                var sIndex = components.IndexOf(this);
-                InternalListPool<Component>.Return(ref components);
-                if (sIndex < gIndex)
+                if (IsBeforeGraphic())
                 {
                     gameObject.AddComponent<SoftMaskable>();
                     Misc.Destroy(this);
@@ -147,22 +143,24 @@ namespace Coffee.UISoftMask
                 }
 
                 _graphic.SetMaterialDirty();
-            }
-            else
-            {
-                UIExtraCallbacks.onBeforeCanvasRebuild += _checkGraphic ?? (_checkGraphic = CheckGraphic);
+#if UNITY_EDITOR
+                UIExtraCallbacks.onAfterCanvasRebuild +=
+                    _updateSceneViewMatrix ?? (_updateSceneViewMatrix = UpdateSceneViewMatrix);
+#endif
             }
 
-#if UNITY_EDITOR
-            UIExtraCallbacks.onAfterCanvasRebuild +=
-                _updateSceneViewMatrix ?? (_updateSceneViewMatrix = UpdateSceneViewMatrix);
-#endif
+            // Without a graphic, this component registers no per-frame callback.
+            // SoftMask adds a SoftMaskable to every descendant, and many of them are layout containers
+            // that never get a graphic, so polling for one each frame scales with the hierarchy size.
+            // A graphic added later rebuilds its material, which calls GetModifiedMaterial on this
+            // component; the graphic is picked up there (see OnGraphicFound).
         }
 
         private void OnDisable()
         {
             SoftMaskUtils.CancelSoftMaskableOnChildren(this);
             UIExtraCallbacks.onBeforeCanvasRebuild -= _checkGraphic ?? (_checkGraphic = CheckGraphic);
+            _isGraphicOrderCheckScheduled = false;
             if (_graphic != null)
             {
                 _graphic.SetMaterialDirty();
@@ -213,6 +211,11 @@ namespace Coffee.UISoftMask
             {
                 MaterialRepository.Release(ref _maskableMaterial);
                 return baseMaterial;
+            }
+
+            if (_graphic == null && isActiveAndEnabled && TryGetComponent(out _graphic))
+            {
+                OnGraphicFound();
             }
 
             if (!isActiveAndEnabled || _graphic == null || _graphic.canvas == null || !_graphic.maskable ||
@@ -334,13 +337,45 @@ namespace Coffee.UISoftMask
             _stencilBits = Utils.GetStencilBits(transform, false, useStencil, out _mask, out _softMask);
         }
 
+        /// <summary>
+        /// Called when a graphic added after this component is found.
+        /// The graphic is masked from this rebuild on. Since it comes after this component in the
+        /// component list, this component is replaced before the next rebuild (see CheckGraphic).
+        /// Replacing it here is not possible: it would register a graphic rebuild from inside the
+        /// rebuild loop.
+        /// </summary>
+        private void OnGraphicFound()
+        {
+            if (!_isGraphicOrderCheckScheduled)
+            {
+                _isGraphicOrderCheckScheduled = true;
+                UIExtraCallbacks.onBeforeCanvasRebuild += _checkGraphic ?? (_checkGraphic = CheckGraphic);
+            }
+
+#if UNITY_EDITOR
+            UIExtraCallbacks.onAfterCanvasRebuild +=
+                _updateSceneViewMatrix ?? (_updateSceneViewMatrix = UpdateSceneViewMatrix);
+#endif
+        }
+
         private void CheckGraphic()
         {
-            if (_graphic != null || !TryGetComponent(out _graphic)) return;
-
             UIExtraCallbacks.onBeforeCanvasRebuild -= _checkGraphic ?? (_checkGraphic = CheckGraphic);
+            _isGraphicOrderCheckScheduled = false;
+            if (!isActiveAndEnabled || _graphic == null || !IsBeforeGraphic()) return;
+
             gameObject.AddComponent<SoftMaskable>();
             Misc.Destroy(this);
+        }
+
+        private bool IsBeforeGraphic()
+        {
+            var components = InternalListPool<Component>.Rent();
+            GetComponents(components);
+            var gIndex = components.IndexOf(_graphic);
+            var sIndex = components.IndexOf(this);
+            InternalListPool<Component>.Return(ref components);
+            return sIndex < gIndex;
         }
 
         public void SetMaterialDirty()
